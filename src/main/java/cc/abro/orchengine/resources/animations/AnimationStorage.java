@@ -2,14 +2,18 @@ package cc.abro.orchengine.resources.animations;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.JsonContainerLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnimationStorage {
+
+    private static final Logger log = LogManager.getLogger(AnimationStorage.class);
 
     private static final String CONFIG_PATH = "res/configs/animation.json";
 
@@ -21,21 +25,21 @@ public class AnimationStorage {
 
             for (AnimationContainer animationContainer : animationContainers) {
                 if (animationByName.containsKey(animationContainer.name)) {
-                    Global.logger.println("Animation \"" + animationContainer.name + "\" already exists", Logger.Type.ERROR);
+                    log.error("Animation \"" + animationContainer.name + "\" already exists");
                     Loader.exit();
                 }
 
                 animationByName.put(animationContainer.name, AnimationLoader.getAnimation(animationContainer.texturePaths, animationContainer.maskPath));
             }
         } catch (IOException e) {
-            Global.logger.println("Error loading animation", e, Logger.Type.ERROR);
+            log.error("Error loading animation", e);
             Loader.exit();
         }
     }
 
     public Animation getAnimation(String name) {
         if (!animationByName.containsKey(name)) {
-            Global.logger.print("Animation \"" + name + "\" not found", Logger.Type.ERROR);
+            log.error("Animation \"" + name + "\" not found");
             return null;
         }
 

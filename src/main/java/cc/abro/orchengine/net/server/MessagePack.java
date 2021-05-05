@@ -1,11 +1,15 @@
 package cc.abro.orchengine.net.server;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
 
 public class MessagePack {
+
+	private static final Logger log = LogManager.getLogger(MessagePack.class);
 
 	private LinkedList<Message> messages;//Список сообщений
 	public int id;
@@ -29,7 +33,7 @@ public class MessagePack {
 
 	public Message get() {
 		if (size() % 10 == 0) {
-			Global.logger.println("Messages detained: " + size() + " (id: " + id + ")", Logger.Type.SERVER_DEBUG);
+			log.trace("Messages detained: " + size() + " (id: " + id + ")");
 		}
 
 		return messages.removeFirst();

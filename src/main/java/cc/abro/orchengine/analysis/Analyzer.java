@@ -1,10 +1,15 @@
 package cc.abro.orchengine.analysis;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Analyzer {
+
+	private static final Logger log = LogManager.getLogger(AnimationRender.class);
 
 	//Для подсчёта fps, ups
 	public int loopsRender = 0;
@@ -112,8 +117,8 @@ public class Analyzer {
 		String str2 = analysisStringBuilder.getAnalysisString2();
 
 		//Вывод результатов в консоль
-		Global.logger.println(str1, Logger.Type.CONSOLE_FPS);
-		Global.logger.println(str2, Logger.Type.CONSOLE_FPS);
+		log.trace(str1);
+		log.trace(str2);
 
 		//Вывод результатов на монитор
 		if (SettingsStorage.LOGGER.DEBUG_MONITOR_FPS) {

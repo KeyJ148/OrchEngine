@@ -2,10 +2,12 @@ package cc.abro.orchengine.net.client.udp;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,6 +15,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class UDPControl extends NetControl {
+
+    private static final Logger log = LogManager.getLogger(UDPControl.class);
 
     private DatagramSocket socket;
     private String ip;
@@ -27,7 +31,7 @@ public class UDPControl extends NetControl {
             socket.setReceiveBufferSize(SettingsStorage.NETWORK.RECEIVE_BUF_SIZE);
             socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
         } catch (IOException e) {
-            Global.logger.println("Connection failed (UDP)", Logger.Type.ERROR);
+            log.warn("Connection failed (UDP)");
             Loader.exit();
         }
     }
@@ -45,7 +49,7 @@ public class UDPControl extends NetControl {
                 analyzeSend(data.length);
             }
         } catch (IOException e) {
-            Global.logger.println("Connection lost (UDP send)", Logger.Type.ERROR);
+            log.warn("Connection lost (UDP send)");
             Loader.exit();
         }
     }
@@ -62,7 +66,7 @@ public class UDPControl extends NetControl {
             analyzeRead(data.length);
             return new String(data);
         } catch (IOException e) {
-            Global.logger.println("Connection lost (TCP read)", Logger.Type.ERROR);
+            log.warn("Connection lost (TCP read)");
             Loader.exit();
             return null;
         }

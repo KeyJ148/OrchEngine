@@ -1,8 +1,10 @@
 package cc.abro.orchengine.resources.audios;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 
 import java.io.InputStream;
@@ -15,6 +17,8 @@ import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_memory;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
 public class AudioLoader {
+
+    private static final Logger log = LogManager.getLogger(AudioLoader.class);
 
     public static Audio getAudio(String path) {
         try (InputStream in = ResourceLoader.getResourceAsStream(path)) {
@@ -47,10 +51,10 @@ public class AudioLoader {
             alBufferData(audio.getID(), format, audioFileRawBuffer, sampleRate);
             free(audioFileRawBuffer);
 
-            Global.logger.println("Load audio \"" + path + "\" completed", Logger.Type.DEBUG_AUDIO);
+            log.debug("Load audio \"" + path + "\" completed");
             return audio;
         } catch (Exception e) {
-            Global.logger.println("Audio \"" + path + "\" not loading", Logger.Type.ERROR);
+            log.error("Audio \"" + path + "\" not loading");
             return null;
         }
     }

@@ -3,13 +3,16 @@ package cc.abro.orchengine.gameobject.components.render;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Vector2;
 import cc.abro.orchengine.gameobject.components.Position;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.resources.textures.Texture;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
 public class AnimationRender extends Rendering {
+
+    private static final Logger log = LogManager.getLogger(AnimationRender.class);
 
     private List<Texture> textures;
 
@@ -69,7 +72,7 @@ public class AnimationRender extends Rendering {
 
     public void setFrameSpeed(int frameSpeed) {
         if (frameSpeed < 0) {
-            Global.logger.println("Frame speed must be >= 0", Logger.Type.ERROR);
+            log.error("Frame speed must be >= 0");
             return;
         }
 

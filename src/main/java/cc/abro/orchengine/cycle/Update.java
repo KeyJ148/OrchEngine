@@ -2,9 +2,13 @@ package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Update {
+
+	private static final Logger log = LogManager.getLogger(Update.class);
 
 	private long startUpdateTime, lastUpdateTime = 0;//Для вычисления delta
 
@@ -29,7 +33,7 @@ public class Update {
 		if (Global.location != null) {
 			Global.location.update(delta);//Обновить все объекты в комнате
 		} else {
-			Global.logger.println("No create room! (Global.room)", Logger.Type.ERROR);
+			log.fatal("No create room! (Global.room)");
 			Loader.exit();
 		}
 

@@ -2,7 +2,9 @@ package cc.abro.orchengine.gui;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,8 @@ import java.util.Map;
  */
 public class CachedGuiPanelStorage {
 
+    private static final Logger log = LogManager.getLogger(CachedGuiPanelStorage.class);
+
     private final Map<String, CachedGuiPanel> cachedGuiPanelByName = new HashMap<>();
 
     public void registry(CachedGuiPanel cachedGuiPanel) {
@@ -20,7 +24,7 @@ public class CachedGuiPanelStorage {
 
     public void registry(String name, CachedGuiPanel cachedGuiPanel) {
         if (cachedGuiPanelByName.containsKey(name)) {
-            Global.logger.println("CachedGuiPanel \"" + name + "\" already exists", Logger.Type.ERROR);
+            log.error("CachedGuiPanel \"" + name + "\" already exists");
             Loader.exit();
         }
         cachedGuiPanelByName.put(name, cachedGuiPanel);
@@ -33,7 +37,7 @@ public class CachedGuiPanelStorage {
     @SuppressWarnings("unchecked")
     public <T> T getPanel(String name) {
         if (!cachedGuiPanelByName.containsKey(name)) {
-            Global.logger.print("CachedGuiPanel \"" + name + "\" not found", Logger.Type.ERROR);
+            log.error("CachedGuiPanel \"" + name + "\" not found");
             return null;
         }
 

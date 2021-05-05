@@ -23,8 +23,6 @@ public class Global {
 	public static Engine engine; //Главный игровой поток
 	public static Location location; //Текущая комната
 
-	public static AggregateLogger logger; //Объект для вывода лога в консоль и файл
-
 	public static AudioPlayer audioPlayer; //Объект, воспроизводящий музыку и хранящий источники музыки
 
 	public static AudioStorage audioStorage; //Объект хранящий звуки (буфферы OpenAL)
@@ -39,7 +37,7 @@ public class Global {
 	public static UDPRead udpRead; //Цикл считывания данных с сервера по UDP протоколу
 	public static Ping pingCheck;//Объект для проверки пинга
 
-	/* Объекты реализуемые вне движка и передаваемые при старте */
+	//TODO Объекты реализуемые вне движка и передаваемые при старте
 	public static GameInterface game; //Главный объект игры
 	public static ServerInterface server; //Главный объект сервера
 	public static NetGameReadInterface netGameRead; //Объект для обработки сетевых сообщений на клиенте

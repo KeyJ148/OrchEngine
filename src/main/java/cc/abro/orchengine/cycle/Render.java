@@ -2,8 +2,10 @@ package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -14,6 +16,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Render {
 
+	private static final Logger log = LogManager.getLogger(Render.class);
+
 	private long windowID; //ID окна игры для LWJGL
 	private long monitorID; //ID монитора (0 для не полноэкранного режима)
 	private int width;
@@ -22,7 +26,7 @@ public class Render {
 	public Render() {
 		//Инициализация GLFW
 		if (!glfwInit()) {
-			Global.logger.println("GLFW initialization failed", Logger.Type.ERROR);
+			log.fatal("GLFW initialization failed");
 			Loader.exit();
 		}
 
@@ -30,7 +34,7 @@ public class Render {
 		try {
 			initOpenGL();
 		} catch (Exception e) {
-			Global.logger.println("OpenGL initialization failed", e, Logger.Type.ERROR);
+			log.fatal("OpenGL initialization failed", e);
 			Loader.exit();
 		}
 	}

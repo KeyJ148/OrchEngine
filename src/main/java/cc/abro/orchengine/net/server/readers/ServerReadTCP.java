@@ -1,13 +1,17 @@
 package cc.abro.orchengine.net.server.readers;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class ServerReadTCP extends Thread {
+
+    private static final Logger log = LogManager.getLogger(ServerReadTCP.class);
 
     private int id; //номер соединения в массиве в gameServer
 
@@ -28,7 +32,7 @@ public class ServerReadTCP extends Thread {
                 }
             }
         } catch (IOException e) {
-            Global.logger.println("Player disconnect (id: " + id + ")", Logger.Type.SERVER_INFO);
+            log.info("Player disconnect (id: " + id + ")");
             GameServer.disconnect++;
             GameServer.connects[id].disconnect = true;
         }

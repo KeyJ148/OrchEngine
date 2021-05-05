@@ -7,8 +7,6 @@ import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
 import cc.abro.orchengine.implementation.ServerInterface;
-import cc.abro.orchengine.logger.AggregateLogger;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.map.Location;
 import cc.abro.orchengine.net.client.Ping;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
@@ -20,7 +18,11 @@ import cc.abro.orchengine.resources.audios.AudioStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.picocontainer.DefaultPicoContainer;
+import org.picocontainer.behaviors.Caching;
 
 import java.io.IOException;
 
@@ -28,6 +30,8 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Loader {
+
+	private static final Logger log = LogManager.getLogger(Loader.class);
 
 	public static void start(GameInterface game, NetGameReadInterface netGameRead,
 							 ServerInterface server, NetServerReadInterface netServerRead) {
@@ -42,7 +46,7 @@ public class Loader {
 			Global.engine.run();//Запуск главного цикла
 		} catch (Exception e) {
 			e.printStackTrace();
-			Global.logger.println("Unknown exception: ", e, Logger.Type.ERROR); //TODO: если logger не создан
+			log.fatal("Unknown exception: ", e); //TODO: если logger не создан
 			exit();
 		}
 	}
@@ -55,6 +59,7 @@ public class Loader {
 			exit();
 		}
 
+		/* TODO
 		Global.logger = new AggregateLogger();
 
 		//Установка настроек логирования
@@ -68,7 +73,7 @@ public class Loader {
 		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_AUDIO) Global.logger.enableType(Logger.Type.DEBUG_AUDIO);
 		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_FPS) Global.logger.enableType(Logger.Type.CONSOLE_FPS);
 		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_SERVER) Global.logger.enableType(Logger.Type.SERVER_DEBUG);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_MPS) Global.logger.enableType(Logger.Type.MPS);
+		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_MPS) Global.logger.enableType(Logger.Type.MPS);*/
 	}
 
 	//Инициализация движка перед запуском
@@ -92,7 +97,7 @@ public class Loader {
 
 		new Location(640, 480).activate(false);
 
-		Global.logger.println("Initialization end", Logger.Type.DEBUG);
+		log.info("Initialization end");
 
 		//Инициализация игры
 		Global.game.init();
@@ -107,11 +112,11 @@ public class Loader {
 			if (errorCallback != null) errorCallback.free();
 			Global.audioPlayer.close();
 
-			Global.logger.println("Exit stack trace: ", new Exception(), Logger.Type.DEBUG);
+			log.debug("Exit stack trace: ", new Exception());
 		} catch (Exception e) {
-			Global.logger.println("Unknown exception: ", e, Logger.Type.ERROR); //TODO: если logger не создан
+			log.error("Unknown exception: ", e); //TODO: если logger не создан
 		} finally {
-			Global.logger.close();
+			//Global.logger.close(); TODO
 			System.exit(0);
 		}
 	}

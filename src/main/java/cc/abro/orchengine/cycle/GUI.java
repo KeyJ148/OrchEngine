@@ -2,7 +2,9 @@ package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
@@ -14,6 +16,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GUI {
 
+    private static final Logger log = LogManager.getLogger(GUI.class);
+
     private DefaultInitializer initializer; //Инициализатор LeGUI
 
     public GUI() {
@@ -21,7 +25,7 @@ public class GUI {
             //Инициализация интерфейса
             initLeGUI();
         } catch (Exception e) {
-            Global.logger.println("LeGUI initialization failed", e, Logger.Type.ERROR);
+            log.fatal("LeGUI initialization failed", e);
             Loader.exit();
         }
     }

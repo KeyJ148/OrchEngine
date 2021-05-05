@@ -2,8 +2,10 @@ package cc.abro.orchengine.resources.masks;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Vector2;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.JsonContainerLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,14 +13,16 @@ import java.util.List;
 
 public class MaskLoader {
 
+    private static final Logger log = LogManager.getLogger(MaskLoader.class);
+
     public static Mask getMask(String path) {
         try {
             Mask mask = new Mask(loadMaskPointsFromFile(path));
 
-            Global.logger.println("Load mask \"" + path + "\" completed", Logger.Type.DEBUG_MASK);
+            log.debug("Load mask \"" + path + "\" completed");
             return mask;
         } catch (Exception e) {
-            Global.logger.println("Mask \"" + path + "\" not loading", Logger.Type.ERROR);
+            log.error("Mask \"" + path + "\" not loading");
             return null;
         }
     }

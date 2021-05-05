@@ -2,14 +2,18 @@ package cc.abro.orchengine.resources.sprites;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.JsonContainerLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SpriteStorage {
+
+    private static final Logger log = LogManager.getLogger(SpriteStorage.class);
 
     private static final String CONFIG_PATH = "res/configs/sprite.json";
 
@@ -21,21 +25,21 @@ public class SpriteStorage {
 
             for (SpriteContainer spriteContainer : spriteContainers) {
                 if (spriteByName.containsKey(spriteContainer.name)) {
-                    Global.logger.println("Sprite \"" + spriteContainer.name + "\" already exists", Logger.Type.ERROR);
+                    log.error("Sprite \"" + spriteContainer.name + "\" already exists");
                     Loader.exit();
                 }
 
                 spriteByName.put(spriteContainer.name, SpriteLoader.getSprite(spriteContainer.texturePath, spriteContainer.maskPath));
             }
         } catch (IOException e) {
-            Global.logger.println("Error loading sprites", e, Logger.Type.ERROR);
+            log.error("Error loading sprites", e);
             Loader.exit();
         }
     }
 
     public Sprite getSprite(String name) {
         if (!spriteByName.containsKey(name)) {
-            Global.logger.print("Sprite \"" + name + "\" not found", Logger.Type.ERROR);
+            log.error("Sprite \"" + name + "\" not found");
             return null;
         }
 

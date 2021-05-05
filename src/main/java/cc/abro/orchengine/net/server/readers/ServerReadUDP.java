@@ -2,17 +2,21 @@ package cc.abro.orchengine.net.server.readers;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 
 public class ServerReadUDP extends Thread {
+
+    private static final Logger log = LogManager.getLogger(ServerReadUDP.class);
 
     @Override
     public void run() {
@@ -47,7 +51,7 @@ public class ServerReadUDP extends Thread {
                 }
             }
         } catch (IOException e) {
-            Global.logger.println("UDP server socket closed", Logger.Type.SERVER_ERROR);
+            log.warn("UDP server socket closed");
             Loader.exit();
         }
     }

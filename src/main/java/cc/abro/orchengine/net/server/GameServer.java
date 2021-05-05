@@ -2,12 +2,14 @@ package cc.abro.orchengine.net.server;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
 import cc.abro.orchengine.implementation.ServerInterface;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +18,9 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
 public class GameServer {
+
+    private static final Logger log = LogManager.getLogger(GameServer.class);
+
     //Присоединение клиентов
     public static int port;
     public static int peopleMax;
@@ -73,7 +78,7 @@ public class GameServer {
                 maxPower = (str.equals("t") || str.equals("true"));
             }
         } catch (IOException e) {
-            Global.logger.println("Failed io text", Logger.Type.SERVER_ERROR);
+            log.error("Failed io text");
             Loader.exit();
         }
     }
@@ -98,17 +103,17 @@ public class GameServer {
 
             peopleNow = 0;
 
-            Global.logger.println("Server started", Logger.Type.SERVER_INFO);
+            log.info("Server started");
 
             while (peopleNow != peopleMax) {
                 connects[peopleNow] = ConnectFactory.createConnect(serverSocketTCP, socketUDP, peopleNow);
                 peopleNow++;
 
-                Global.logger.println("New client (" + peopleNow + "/" + peopleMax + ")", Logger.Type.SERVER_INFO);
+                log.info("New client (" + peopleNow + "/" + peopleMax + ")");
             }
             serverSocketTCP.close();
 
-            Global.logger.println("All users connected", Logger.Type.SERVER_INFO);
+            log.info("All users connected");
 
             //Запуск всех основных потоков
             for (Connect connect : connects) {
@@ -119,7 +124,7 @@ public class GameServer {
             processingData();//Старт бессконечно цикла с обработкой данных
         } catch (IOException e) {
             e.printStackTrace();
-            Global.logger.println("Failed server start", Logger.Type.SERVER_ERROR);
+            log.fatal("Failed server start");
             Loader.exit();
         }
     }
@@ -155,7 +160,7 @@ public class GameServer {
             }
         }
 
-        Global.logger.println("All user disconnect!", Logger.Type.SERVER_INFO);
+        log.info("All user disconnect!");
         Loader.exit();
     }
 

@@ -1,8 +1,10 @@
 package cc.abro.orchengine.resources.textures;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
@@ -13,6 +15,8 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TextureLoader {
+
+    private static final Logger log = LogManager.getLogger(TextureLoader.class);
 
     public static Texture getTexture(String path) {
         try (InputStream in = ResourceLoader.getResourceAsStream(path)) {
@@ -43,10 +47,10 @@ public class TextureLoader {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
             Texture.unbind();
 
-            Global.logger.println("Load image \"" + path + "\" completed", Logger.Type.DEBUG_TEXTURE);
+            log.debug("Load image \"" + path + "\" completed");
             return texture;
         } catch (Exception e) {
-            Global.logger.println("Image \"" + path + "\" not loading", Logger.Type.ERROR);
+            log.error("Image \"" + path + "\" not loading");
             return null;
         }
     }

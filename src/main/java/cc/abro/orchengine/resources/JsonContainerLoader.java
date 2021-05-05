@@ -1,13 +1,17 @@
 package cc.abro.orchengine.resources;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
 public class JsonContainerLoader {
+
+    private static final Logger log = LogManager.getLogger(JsonContainerLoader.class);
 
     public static <T> T loadExternalFile(Class<T> containerClass, String path) throws IOException {
         Gson gson = new Gson();
@@ -15,7 +19,7 @@ public class JsonContainerLoader {
         try (Reader reader = new FileReader(path)) {
             return gson.fromJson(reader, containerClass);
         } catch (IOException e) {
-            Global.logger.println("Unable to load external JSON file \"" + path + "\" to class " + containerClass.getName(), Logger.Type.ERROR);
+            log.error("Unable to load external JSON file \"" + path + "\" to class " + containerClass.getName());
             throw e;
         }
     }
@@ -26,7 +30,7 @@ public class JsonContainerLoader {
         try (Writer writer = new FileWriter(path)) {
             gson.toJson(containerObject, writer);
         } catch (IOException e) {
-            Global.logger.println("Unable to save external JSON file \"" + path + "\" from class " + containerObject.getClass().getName(), Logger.Type.ERROR);
+            log.error("Unable to save external JSON file \"" + path + "\" from class " + containerObject.getClass().getName());
             throw e;
         }
     }
@@ -37,7 +41,7 @@ public class JsonContainerLoader {
         try (Reader reader = new InputStreamReader(ResourceLoader.getResourceAsStream(path))) {
             return gson.fromJson(reader, containerClass);
         } catch (IOException e) {
-            Global.logger.println("Unable to load internal JSON file \"" + path + "\" to class " + containerClass.getName(), Logger.Type.ERROR);
+            log.error("Unable to load internal JSON file \"" + path + "\" to class " + containerClass.getName());
             throw e;
         }
     }

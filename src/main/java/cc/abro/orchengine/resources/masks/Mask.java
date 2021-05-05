@@ -2,8 +2,10 @@ package cc.abro.orchengine.resources.masks;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Vector2;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mask {
+
+    private static final Logger log = LogManager.getLogger(Mask.class);
 
     private int width, height;
     private Vector2<Integer>[] maskCenter;//Позиции точек в полигоне маски (относительно центра)
@@ -43,12 +47,12 @@ public class Mask {
                 maskArr.add(new Vector2(x, y));
             }
 
-            Global.logger.println("Load mask \"" + path + "\" completed", Logger.Type.DEBUG_MASK);
+            log.debug("Load mask \"" + path + "\" completed");
             Vector2<Integer>[] result = new Vector2[maskArr.size()];
 
             return maskArr.toArray(result);
         } catch (IOException e) {
-            Global.logger.println("Load mask \"" + path + "\" error", Logger.Type.ERROR);
+            log.error("Load mask \"" + path + "\" error");
         }
 
         return createDefault(width, height);
