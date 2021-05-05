@@ -289,7 +289,7 @@
     "texturePath": "res/graphics/sprites/textures/wall/home/home14.png",
     "maskPath": "res/graphics/sprites/masks/wall/home/home14.json"
   },
-	{
+  {
     "name": "home15",
     "texturePath": "res/graphics/sprites/textures/wall/home/home15.png",
     "maskPath": "res/graphics/sprites/masks/wall/home/home15.json"
