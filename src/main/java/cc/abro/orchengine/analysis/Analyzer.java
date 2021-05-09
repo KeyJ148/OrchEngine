@@ -3,13 +3,13 @@ package cc.abro.orchengine.analysis;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@Log4j2
 public class Analyzer {
-
-	private static final Logger log = LogManager.getLogger(AnimationRender.class);
 
 	//Для подсчёта fps, ups
 	public int loopsRender = 0;

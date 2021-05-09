@@ -4,14 +4,14 @@ import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+@Log4j2
 public class ServerReadTCP extends Thread {
-
-    private static final Logger log = LogManager.getLogger(ServerReadTCP.class);
 
     private int id; //номер соединения в массиве в gameServer
 

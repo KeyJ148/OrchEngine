@@ -4,6 +4,7 @@ import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -14,9 +15,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+@Log4j2
 public class Render {
-
-	private static final Logger log = LogManager.getLogger(Render.class);
 
 	private long windowID; //ID окна игры для LWJGL
 	private long monitorID; //ID монитора (0 для не полноэкранного режима)

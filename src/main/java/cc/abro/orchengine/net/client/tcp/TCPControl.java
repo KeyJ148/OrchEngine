@@ -6,15 +6,15 @@ import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
+@Log4j2
 public class TCPControl extends NetControl {
-
-	private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(TCPControl.class);
 
 	private DataInputStream in;
 	private DataOutputStream out;

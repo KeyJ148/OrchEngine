@@ -4,14 +4,14 @@ import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
+@Log4j2
 public class JsonContainerLoader {
-
-    private static final Logger log = LogManager.getLogger(JsonContainerLoader.class);
 
     public static <T> T loadExternalFile(Class<T> containerClass, String path) throws IOException {
         Gson gson = new Gson();

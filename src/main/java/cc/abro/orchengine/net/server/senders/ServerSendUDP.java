@@ -3,6 +3,7 @@ package cc.abro.orchengine.net.server.senders;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.server.GameServer;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,9 +11,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
+@Log4j2
 public class ServerSendUDP {
-
-    private static final Logger log = LogManager.getLogger(ServerSendUDP.class);
 
     public static void send(int id, int type, String str) {
         if (!GameServer.connects[id].disconnect) {

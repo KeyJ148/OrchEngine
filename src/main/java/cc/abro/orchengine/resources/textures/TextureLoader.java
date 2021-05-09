@@ -3,6 +3,7 @@ package cc.abro.orchengine.resources.textures;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
@@ -14,9 +15,8 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
+@Log4j2
 public class TextureLoader {
-
-    private static final Logger log = LogManager.getLogger(TextureLoader.class);
 
     public static Texture getTexture(String path) {
         try (InputStream in = ResourceLoader.getResourceAsStream(path)) {

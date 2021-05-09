@@ -3,12 +3,12 @@ package cc.abro.orchengine.cycle;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@Log4j2
 public class Update {
-
-	private static final Logger log = LogManager.getLogger(Update.class);
 
 	private long startUpdateTime, lastUpdateTime = 0;//Для вычисления delta
 

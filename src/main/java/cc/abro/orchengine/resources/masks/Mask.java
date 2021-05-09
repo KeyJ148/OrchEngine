@@ -4,6 +4,7 @@ import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Vector2;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,9 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 public class Mask {
-
-    private static final Logger log = LogManager.getLogger(Mask.class);
 
     private int width, height;
     private Vector2<Integer>[] maskCenter;//Позиции точек в полигоне маски (относительно центра)

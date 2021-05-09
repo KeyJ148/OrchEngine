@@ -3,6 +3,7 @@ package cc.abro.orchengine.gui;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,9 +13,8 @@ import java.util.Map;
 /**
  * Класс кеширующий готовые панели меню, чтобы сохранять все вносимые изменения в интерфейс
  */
+@Log4j2
 public class CachedGuiPanelStorage {
-
-    private static final Logger log = LogManager.getLogger(CachedGuiPanelStorage.class);
 
     private final Map<String, CachedGuiPanel> cachedGuiPanelByName = new HashMap<>();
 

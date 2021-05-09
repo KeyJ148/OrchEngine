@@ -18,6 +18,7 @@ import cc.abro.orchengine.resources.audios.AudioStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -29,9 +30,8 @@ import java.io.IOException;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 
+@Log4j2
 public class Loader {
-
-	private static final Logger log = LogManager.getLogger(Loader.class);
 
 	public static void start(GameInterface game, NetGameReadInterface netGameRead,
 							 ServerInterface server, NetServerReadInterface netServerRead) {

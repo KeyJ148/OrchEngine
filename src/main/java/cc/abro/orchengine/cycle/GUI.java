@@ -3,6 +3,7 @@ package cc.abro.orchengine.cycle;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.liquidengine.legui.DefaultInitializer;
@@ -14,9 +15,8 @@ import org.lwjgl.opengl.GL11;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.*;
 
+@Log4j2
 public class GUI {
-
-    private static final Logger log = LogManager.getLogger(GUI.class);
 
     private DefaultInitializer initializer; //Инициализатор LeGUI
 

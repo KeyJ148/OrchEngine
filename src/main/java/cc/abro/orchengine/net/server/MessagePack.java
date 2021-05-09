@@ -2,14 +2,14 @@ package cc.abro.orchengine.net.server;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
 
+@Log4j2
 public class MessagePack {
-
-	private static final Logger log = LogManager.getLogger(MessagePack.class);
 
 	private LinkedList<Message> messages;//Список сообщений
 	public int id;

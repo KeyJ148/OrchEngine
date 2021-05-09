@@ -8,15 +8,15 @@ import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 
+@Log4j2
 public class ServerReadUDP extends Thread {
-
-    private static final Logger log = LogManager.getLogger(ServerReadUDP.class);
 
     @Override
     public void run() {

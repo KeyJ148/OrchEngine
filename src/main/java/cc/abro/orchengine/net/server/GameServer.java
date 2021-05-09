@@ -8,6 +8,7 @@ import cc.abro.orchengine.implementation.ServerInterface;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,9 +18,8 @@ import java.io.InputStreamReader;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
+@Log4j2
 public class GameServer {
-
-    private static final Logger log = LogManager.getLogger(GameServer.class);
 
     //Присоединение клиентов
     public static int port;

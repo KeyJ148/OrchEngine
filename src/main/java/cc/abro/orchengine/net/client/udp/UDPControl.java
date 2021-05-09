@@ -6,6 +6,7 @@ import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,9 +15,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+@Log4j2
 public class UDPControl extends NetControl {
-
-    private static final Logger log = LogManager.getLogger(UDPControl.class);
 
     private DatagramSocket socket;
     private String ip;

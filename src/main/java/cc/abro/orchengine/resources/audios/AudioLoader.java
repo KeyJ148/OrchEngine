@@ -3,6 +3,7 @@ package cc.abro.orchengine.resources.audios;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
@@ -16,9 +17,8 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_memory;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
+@Log4j2
 public class AudioLoader {
-
-    private static final Logger log = LogManager.getLogger(AudioLoader.class);
 
     public static Audio getAudio(String path) {
         try (InputStream in = ResourceLoader.getResourceAsStream(path)) {
