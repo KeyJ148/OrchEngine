@@ -1,12 +1,9 @@
 package cc.abro.orchengine.gui;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.gameobject.GameObject;
-import cc.abro.orchengine.gameobject.components.Position;
-import cc.abro.orchengine.services.CachedGuiElementService;
-import cc.abro.orchengine.services.GuiElementService;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import java.util.function.Consumer;
 

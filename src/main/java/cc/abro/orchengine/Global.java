@@ -2,12 +2,11 @@ package cc.abro.orchengine;
 
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.gui.CachedGuiPanelStorage;
+import cc.abro.orchengine.gui.GuiPanelStorage;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
 import cc.abro.orchengine.implementation.ServerInterface;
-import cc.abro.orchengine.logger.AggregateLogger;
 import cc.abro.orchengine.map.Location;
 import cc.abro.orchengine.net.client.Ping;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
@@ -28,7 +27,7 @@ public class Global {
 	public static AudioStorage audioStorage; //Объект хранящий звуки (буфферы OpenAL)
 	public static SpriteStorage spriteStorage; //Объект хранящий спрайты
 	public static AnimationStorage animationStorage; //Объект хранящий анимации
-	public static CachedGuiPanelStorage cachedGuiPanelStorage;
+	public static GuiPanelStorage guiPanelStorage;
 
 	//TODO: убрать в главный класс Network при рефакторинге сети
 	public static TCPControl tcpControl; //Хранит настройки и работает с сетью по TCP протоколу

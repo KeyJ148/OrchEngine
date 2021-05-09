@@ -1,10 +1,11 @@
-package cc.abro.orchengine.gameobject.components.render;
+package cc.abro.orchengine.gameobject.components.gui;
 
 import cc.abro.orchengine.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.Movement;
 import cc.abro.orchengine.gameobject.components.Position;
+import cc.abro.orchengine.services.GuiElementService;
 import org.liquidengine.legui.component.Component;
 
 import java.util.Arrays;
@@ -39,6 +40,7 @@ public class GuiElement<T extends Component> extends QueueComponent {
         getGameObject().getComponent(Position.class).location.addGUIComponent(component);
     }
 
+    //TODO на removeFromGameObject с возможность переносить компоненты между объектами?
     @Override
     public void destroy() {
         getGameObject().getComponent(Position.class).location.removeGUIComponent(component);
@@ -81,5 +83,17 @@ public class GuiElement<T extends Component> extends QueueComponent {
 
     public void setMoveComponentToGameObjectPosition(boolean moveComponentToGameObjectPosition) {
         this.moveComponentToGameObjectPosition = moveComponentToGameObjectPosition;
+    }
+
+    //TODO уничтожать не объект целиком, а только GuiElement
+    //TODO мб пересмотреть способ получения/передачи координат
+    public void destroyAndCreateGuiElement(GuiElement<?> guiElement){
+        double x = isMoveComponentToGameObjectPosition()?
+                getGameObject().getComponent(Position.class).x : getComponent().getPosition().x + getComponent().getSize().x/2;
+        double y = isMoveComponentToGameObjectPosition()?
+                getGameObject().getComponent(Position.class).y : getComponent().getPosition().y + getComponent().getSize().y/2;
+        new GuiElementService().addGuiElementToLocationShiftedToCenter(guiElement, (int) x, (int) y,
+                getGameObject().getComponent(Position.class).location);
+        destroy();
     }
 }

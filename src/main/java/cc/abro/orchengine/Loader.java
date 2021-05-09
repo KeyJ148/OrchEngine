@@ -2,7 +2,7 @@ package cc.abro.orchengine;
 
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.gui.CachedGuiPanelStorage;
+import cc.abro.orchengine.gui.GuiPanelStorage;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
@@ -15,15 +15,10 @@ import cc.abro.orchengine.net.client.udp.UDPControl;
 import cc.abro.orchengine.net.client.udp.UDPRead;
 import cc.abro.orchengine.resources.animations.AnimationStorage;
 import cc.abro.orchengine.resources.audios.AudioStorage;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.picocontainer.DefaultPicoContainer;
-import org.picocontainer.behaviors.Caching;
 
 import java.io.IOException;
 
@@ -93,7 +88,7 @@ public class Loader {
 
 		Global.spriteStorage = new SpriteStorage();
 		Global.animationStorage = new AnimationStorage();
-		Global.cachedGuiPanelStorage = new CachedGuiPanelStorage();
+		Global.guiPanelStorage = new GuiPanelStorage();
 
 		new Location(640, 480).activate(false);
 
