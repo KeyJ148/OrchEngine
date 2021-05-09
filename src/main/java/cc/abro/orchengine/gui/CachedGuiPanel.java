@@ -7,10 +7,10 @@ import org.liquidengine.legui.component.ToggleButton;
 import cc.abro.orchengine.gameobject.components.render.GuiElement;
 
 /**
- * Абстрактный класс от которого наследуются классы готовых панелей меню.
+ * Абстрактный класс от которого наследуются классы готовых панелей, которые надо кешировать (например, меню).
  * Подробнее {@link GuiElement} и {@link CachedComponent}
  */
-public abstract class CachedGuiPanel extends Panel implements CachedComponent<Panel> {
+public abstract class CachedGuiPanel extends GuiPanel implements CachedComponent<Panel> {
 
     private CachedGuiElement<Panel> cachedGuiElementOnActiveLocation;
 
@@ -27,28 +27,5 @@ public abstract class CachedGuiPanel extends Panel implements CachedComponent<Pa
     @Override
     public Panel getComponent() {
         return this;
-    }
-
-    /**
-     * Инициализация панели с элементами интерфейса. Должна вызываться из самого дочернего элемента в конструкторе,
-     * чтобы инициализировать дефолтные стили.
-     */
-    public abstract void init();
-
-    public void addComponentShiftedToCenter(Component component, int x, int y, int width, int height) {
-        component.setPosition(x - width / 2, y - height / 2);
-        component.setSize(width, height);
-        add(component);
-    }
-
-    public void addComponent(Component component, int x, int y, int width, int height) {
-        component.setPosition(x, y);
-        component.setSize(width, height);
-        add(component);
-    }
-
-    public void addToggleButton(int x, int y, int width, int height) {
-        ToggleButton toggleButton = new ToggleButton();
-        addComponentShiftedToCenter(toggleButton, x, y, width, height);
     }
 }
