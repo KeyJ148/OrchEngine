@@ -99,6 +99,11 @@ public class Location {
 		Global.engine.gui.setFrameFocused(guiFrame);
 	}
 
+	//TODO как и в TODO выше
+	public boolean isActive(){
+		return Global.location == this;
+	}
+
 	private void freeze() {
 		for (GameObject gameObject : objects) {
 			if (gameObject != null) {

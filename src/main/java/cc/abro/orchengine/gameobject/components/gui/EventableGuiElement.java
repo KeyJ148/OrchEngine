@@ -11,23 +11,31 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import java.util.function.Consumer;
 
-public abstract class GuiPanelElement<T extends Component> extends GuiElement<T> implements GuiElementEventListener {
+public abstract class EventableGuiElement<T extends Component> extends GuiElement<T> {
 
-    public GuiPanelElement(T component) {
+    public EventableGuiElement(T component) {
         super(component);
     }
 
-    public GuiPanelElement(T component, boolean moveComponentToGameObjectPosition) {
+    public EventableGuiElement(T component, boolean moveComponentToGameObjectPosition) {
         super(component, moveComponentToGameObjectPosition);
     }
 
-    public GuiPanelElement(T component, int weight, int height) {
+    public EventableGuiElement(T component, int weight, int height) {
         super(component, weight, height);
     }
 
-    public GuiPanelElement(T component, boolean moveComponentToGameObjectPosition, int weight, int height) {
+    public EventableGuiElement(T component, boolean moveComponentToGameObjectPosition, int weight, int height) {
         super(component, moveComponentToGameObjectPosition, weight, height);
     }
+
+    public final void callEvent(GuiElementEvent event) {
+        if (getGameObject().getComponent(Position.class).location.isActive()){
+            processEvent(event);
+        }
+    }
+
+    protected abstract void processEvent(GuiElementEvent event);
 
     /* TODO
     public MouseClickEventListener getDestroyThisPanelMouseReleaseListener() {
