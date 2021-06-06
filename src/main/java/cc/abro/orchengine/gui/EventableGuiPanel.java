@@ -9,6 +9,7 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class EventableGuiPanel extends GuiPanel{
 
@@ -38,5 +39,9 @@ public abstract class EventableGuiPanel extends GuiPanel{
 
     protected MouseClickEventListener getMouseReleaseListenerToNotify(GuiElementEvent event){
         return getMouseReleaseListener(action -> notifyAboutEvent(event));
+    }
+
+    protected MouseClickEventListener getMouseReleaseListenerToNotify(Supplier<GuiElementEvent> eventSupplier){
+        return getMouseReleaseListener(action -> notifyAboutEvent(eventSupplier.get()));
     }
 }
