@@ -1,55 +1,50 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.components.Position;
-import cc.abro.orchengine.gui.GuiPanel;
-import cc.abro.orchengine.services.GuiElementService;
 import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
 
-import java.util.function.Consumer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class EventableGuiElement<T extends Component> extends GuiElement<T> {
 
-    public EventableGuiElement(T component) {
+    private final Map<Class<? extends GuiElementController>, GuiElementController> controllerByClass = new HashMap<>();
+
+    public EventableGuiElement(T component, List<GuiElementController> controllers) {
         super(component);
+        initControllers(controllers);
     }
 
-    public EventableGuiElement(T component, boolean moveComponentToGameObjectPosition) {
+    public EventableGuiElement(T component, List<GuiElementController> controllers,
+                               boolean moveComponentToGameObjectPosition) {
         super(component, moveComponentToGameObjectPosition);
+        initControllers(controllers);
     }
 
-    public EventableGuiElement(T component, int weight, int height) {
+    public EventableGuiElement(T component, List<GuiElementController> controllers, int weight, int height) {
         super(component, weight, height);
+        initControllers(controllers);
     }
 
-    public EventableGuiElement(T component, boolean moveComponentToGameObjectPosition, int weight, int height) {
+    public EventableGuiElement(T component, List<GuiElementController> controllers,
+                               boolean moveComponentToGameObjectPosition, int weight, int height) {
         super(component, moveComponentToGameObjectPosition, weight, height);
+        initControllers(controllers);
+    }
+
+    private void initControllers(List<GuiElementController> controllers){
+        for (GuiElementController controller : controllers){
+            controller.init(this);
+            controllerByClass.put(controller.getClass(), controller);
+        }
     }
 
     public final void callEvent(GuiElementEvent event) {
         if (getGameObject().getComponent(Position.class).location.isActive()){
-            processEvent(event);
+            if (controllerByClass.containsKey(event.getControllerClass())){
+                controllerByClass.get(event.getControllerClass()).processEvent(event);
+            }
         }
     }
-
-    protected abstract void processEvent(GuiElementEvent event);
-
-    /* TODO
-    public MouseClickEventListener getDestroyThisPanelMouseReleaseListener() {
-        return getMouseReleaseListener(event -> destroy());
-    }
-
-    public MouseClickEventListener getCreateCachedPanelMouseReleaseListener(Class<? extends GuiPanel> newGuiPanelClass) {
-        return getMouseReleaseListener(event -> createCachedPanel(newGuiPanelClass));
-    }
-
-    public MouseClickEventListener getChangeCachedPanelMouseReleaseListener(Class<? extends GuiPanel> newGuiPanelClass) {
-        return getMouseReleaseListener(event -> {
-            destroy();
-            createCachedPanel(newGuiPanelClass);
-        });
-    }*/
 }

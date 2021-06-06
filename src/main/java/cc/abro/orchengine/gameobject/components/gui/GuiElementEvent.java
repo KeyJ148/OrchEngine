@@ -1,6 +1,7 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
+@FunctionalInterface
 public interface GuiElementEvent {
 
-    GuiElementEventType getType();
+    Class<? extends GuiElementController> getControllerClass();
 }
