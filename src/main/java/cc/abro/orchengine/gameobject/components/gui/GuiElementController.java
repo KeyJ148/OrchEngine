@@ -3,7 +3,7 @@ package cc.abro.orchengine.gameobject.components.gui;
 
 import org.liquidengine.legui.component.Component;
 
-public abstract class GuiElementController {
+public abstract class GuiElementController<T extends GuiElementEvent> {
 
     private EventableGuiElement<?> guiElement;
 
@@ -18,5 +18,5 @@ public abstract class GuiElementController {
         return guiElement;
     }
 
-    protected abstract void processEvent(GuiElementEvent event);
+    protected abstract void processEvent(T event);
 }
