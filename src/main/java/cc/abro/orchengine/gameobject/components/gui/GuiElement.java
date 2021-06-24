@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GuiElement<T extends Component> extends QueueComponent {
 
-    private final T component;
+    protected final T component;
     private boolean moveComponentToGameObjectPosition;
 
     public GuiElement(T component) {
