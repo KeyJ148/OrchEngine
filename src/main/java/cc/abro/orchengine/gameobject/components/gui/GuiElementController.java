@@ -9,7 +9,7 @@ public abstract class GuiElementController<T extends GuiElementEvent> {
 
     public void init(EventableGuiElement<?> guiElement){
         if (this.guiElement != null){
-            throw new IllegalStateException();
+            throw new IllegalStateException("Object already was initialized");
         }
         this.guiElement = guiElement;
     }
@@ -17,6 +17,12 @@ public abstract class GuiElementController<T extends GuiElementEvent> {
     public EventableGuiElement<?> getGuiElement() {
         return guiElement;
     }
+
+    public boolean isProcessedEvent(T event) {
+        return getProcessedEventClass().equals(event.getClass());
+    }
+
+    protected abstract Class<T> getProcessedEventClass();
 
     protected abstract void processEvent(T event);
 }
