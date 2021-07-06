@@ -3,6 +3,7 @@ package cc.abro.orchengine;
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
 import cc.abro.orchengine.gui.GuiPanelStorage;
+import cc.abro.orchengine.gui.PanelControllersStorage;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
@@ -89,6 +90,7 @@ public class Loader {
 		Global.spriteStorage = new SpriteStorage();
 		Global.animationStorage = new AnimationStorage();
 		Global.guiPanelStorage = new GuiPanelStorage();
+		Global.panelControllersStorage = new PanelControllersStorage();
 
 		new Location(640, 480).activate(false);
 
