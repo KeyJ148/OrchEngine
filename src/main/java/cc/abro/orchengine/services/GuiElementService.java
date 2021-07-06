@@ -1,6 +1,6 @@
 package cc.abro.orchengine.services;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.GameObjectFactory;
 import cc.abro.orchengine.gameobject.components.gui.GuiElement;
@@ -8,6 +8,12 @@ import cc.abro.orchengine.map.Location;
 import org.liquidengine.legui.component.Component;
 
 public class GuiElementService {
+
+    private final Render render;
+
+    public GuiElementService(Render render){
+        this.render = render;
+    }
 
     /**
      * Добавляет {@link GuiElement} на локацию. Координаты необходимо заранее задать
@@ -51,8 +57,8 @@ public class GuiElementService {
      */
     public GameObject addGuiElementOnLocationCenter(GuiElement<?> guiElement, Location location) {
         return addGuiElementToLocationShiftedToCenter(guiElement,
-                Global.engine.render.getWidth() / 2,
-                Global.engine.render.getHeight() / 2,
+                render.getWidth() / 2,
+                render.getHeight() / 2,
                 location);
     }
 }

@@ -1,14 +1,9 @@
 package cc.abro.orchengine.net.client.udp;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -32,7 +27,7 @@ public class UDPControl extends NetControl {
             socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
         } catch (IOException e) {
             log.warn("Connection failed (UDP)");
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 
@@ -50,7 +45,7 @@ public class UDPControl extends NetControl {
             }
         } catch (IOException e) {
             log.warn("Connection lost (UDP send)");
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 
@@ -67,8 +62,7 @@ public class UDPControl extends NetControl {
             return new String(data);
         } catch (IOException e) {
             log.warn("Connection lost (TCP read)");
-            Loader.exit();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

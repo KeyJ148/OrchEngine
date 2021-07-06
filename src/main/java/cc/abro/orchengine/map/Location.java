@@ -1,6 +1,8 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.GUI;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.gui.input.keyboard.KeyboardHandler;
@@ -29,7 +31,7 @@ public class Location {
 		this.height = height;
 		mapControl = new MapControl(width, height);
 
-		guiFrame = Global.engine.gui.createFrame();
+		guiFrame = Manager.getService(GUI.class).createFrame();
 	}
 
 	public void update(long delta) {
@@ -96,7 +98,7 @@ public class Location {
 		if (Global.location != null) Global.location.freeze();
 		Global.location = this;
 		Global.location.unfreeze();
-		Global.engine.gui.setFrameFocused(guiFrame);
+		Manager.getService(GUI.class).setFrameFocused(guiFrame);
 	}
 
 	//TODO как и в TODO выше

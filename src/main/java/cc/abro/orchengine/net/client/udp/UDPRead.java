@@ -15,6 +15,8 @@ public class UDPRead extends Thread {
 	public UDPRead(NetGameReadInterface netGameRead, UDPControl udpControl){
 		this.netGameRead = netGameRead;
 		this.udpControl = udpControl;
+
+		setDaemon(true);
 	}
 
 	@Override

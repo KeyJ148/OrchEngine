@@ -1,6 +1,5 @@
 package cc.abro.orchengine.gui;
 
-import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.gameobject.components.gui.GuiElementController;
 import lombok.extern.log4j.Log4j2;
 
@@ -21,7 +20,7 @@ public class PanelControllersStorage {
                          Supplier<Set<GuiElementController>> controllersSupplier) {
         if (controllersByPanel.containsKey(panelClass)) {
             log.error("Panel class \"" + panelClass + "\" already exists");
-            Loader.exit();
+            throw new IllegalStateException("Panel class \"" + panelClass + "\" already exists");
         }
         controllersByPanel.put(panelClass, controllersSupplier);
     }

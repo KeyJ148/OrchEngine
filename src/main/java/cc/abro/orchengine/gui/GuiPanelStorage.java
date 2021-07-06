@@ -1,6 +1,5 @@
 package cc.abro.orchengine.gui;
 
-import cc.abro.orchengine.Loader;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class GuiPanelStorage {
     public void registry(String name, GuiPanel guiPanel) {
         if (guiPanelByName.containsKey(name)) {
             log.error("GuiPanel \"" + name + "\" already exists");
-            Loader.exit();
+            throw new IllegalStateException("GuiPanel \"" + name + "\" already exists");
         }
         guiPanelByName.put(name, guiPanel);
     }

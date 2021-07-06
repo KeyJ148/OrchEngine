@@ -1,6 +1,5 @@
 package cc.abro.orchengine.net.client.tcp;
 
-import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +35,7 @@ public class TCPControl extends NetControl {
 			this.out = out;
 		} catch (IOException e) {
 			log.warn("Connection failed (TCP)");
-			Loader.exit();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -51,7 +50,7 @@ public class TCPControl extends NetControl {
 			}
 		} catch (IOException e) {
 			log.warn("Connection lost (TCP send)");
-			Loader.exit();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -64,8 +63,7 @@ public class TCPControl extends NetControl {
 			return str;
 		} catch (IOException e) {
 			log.warn("Connection lost (TCP read)");
-			Loader.exit();
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 }

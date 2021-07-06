@@ -1,17 +1,18 @@
 package cc.abro.orchengine.cycle;
 
-import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.glfw.GLFW;
 
 public class Engine {
 
-	public Update update;
-	public Render render;
-	public GUI gui;
-	public Analyzer analyzer;
+	private final Update update;
+	private final Render render;
+	private final GUI gui;
+	private final Analyzer analyzer;
+
 	private FPSLimit fpsLimit;
+	private boolean isRun = true;
 
 	public Engine(Update update, Render render, GUI gui, Analyzer analyzer){
 		this.update = update;
@@ -22,7 +23,7 @@ public class Engine {
 	}
 
 	public void run() {
-		while (!GLFW.glfwWindowShouldClose(render.getWindowID())) {
+		while (!GLFW.glfwWindowShouldClose(render.getWindowID()) && isRun) {
 			//Цикл Update
 			analyzer.startUpdate();
 			update.loop(); //Обновление состояния у всех объектов в активной локации
@@ -39,7 +40,9 @@ public class Engine {
 			fpsLimit.sync(); //Ограничитель FPS (если вертикальная синхронизация отключена или не сработала)
 			analyzer.endSync();
 		}
+	}
 
-		Loader.exit();
+	public void stop(){
+		isRun = false;
 	}
 }

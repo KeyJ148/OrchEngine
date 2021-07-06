@@ -1,7 +1,7 @@
 package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
+import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPRead;
@@ -15,11 +15,15 @@ public class Update {
 	private final GameInterface game;
 	private final TCPRead tcpRead;
 	private final UDPRead udpRead;
+	private final GUI gui;
+	private final Analyzer analyzer;
 
-	public Update(GameInterface game, TCPRead tcpRead, UDPRead udpRead) {
+	public Update(GameInterface game, TCPRead tcpRead, UDPRead udpRead, GUI gui, Analyzer analyzer) {
 		this.game = game;
 		this.tcpRead = tcpRead;
 		this.udpRead = udpRead;
+		this.gui = gui;
+		this.analyzer = analyzer;
 	}
 
 	public void loop() {
@@ -33,7 +37,7 @@ public class Update {
 
 	//Обновляем игру в соответствие с временем прошедшим с последнего обновления
 	private void loop(long delta) {
-		Global.engine.gui.pollEvents();//Получение событий и Callbacks
+		gui.pollEvents();//Получение событий и Callbacks
 
 		game.update(delta);//Обновить главный игровой класс при необходимости
 
@@ -43,14 +47,14 @@ public class Update {
 		if (Global.location != null) {
 			Global.location.update(delta);//Обновить все объекты в комнате
 		} else {
-			log.fatal("No create room! (Global.room)");
-			Loader.exit();
+			log.fatal("No create location! (Global.location)");
+			throw new RuntimeException("No create location! (Global.location)");
 		}
 
 		Global.location.getMouse().update(); //Очистка истории событий мыши
 		Global.location.getKeyboard().update(); //Очистка истории событий клавиатуры
 
-		Global.engine.analyzer.update(); //Обновление состояния анализатора
+		analyzer.update(); //Обновление состояния анализатора
 	}
 
 }

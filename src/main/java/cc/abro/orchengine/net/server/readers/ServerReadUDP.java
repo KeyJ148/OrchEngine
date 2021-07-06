@@ -1,16 +1,11 @@
 package cc.abro.orchengine.net.server.readers;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -52,7 +47,7 @@ public class ServerReadUDP extends Thread {
             }
         } catch (IOException e) {
             log.warn("UDP server socket closed");
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 }

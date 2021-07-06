@@ -1,6 +1,5 @@
 package cc.abro.orchengine.resources.animations;
 
-import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
 
@@ -22,14 +21,14 @@ public class AnimationStorage {
             for (AnimationContainer animationContainer : animationContainers) {
                 if (animationByName.containsKey(animationContainer.name)) {
                     log.error("Animation \"" + animationContainer.name + "\" already exists");
-                    Loader.exit();
+                    throw new IllegalStateException("Animation \"" + animationContainer.name + "\" already exists");
                 }
 
                 animationByName.put(animationContainer.name, AnimationLoader.getAnimation(animationContainer.texturePaths, animationContainer.maskPath));
             }
         } catch (IOException e) {
             log.error("Error loading animation", e);
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 

@@ -1,5 +1,6 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
@@ -92,7 +93,7 @@ public class GuiElement<T extends Component> extends QueueComponent {
                 getGameObject().getComponent(Position.class).x : getComponent().getPosition().x + getComponent().getSize().x/2;
         double y = isMoveComponentToGameObjectPosition()?
                 getGameObject().getComponent(Position.class).y : getComponent().getPosition().y + getComponent().getSize().y/2;
-        new GuiElementService().addGuiElementToLocationShiftedToCenter(guiElement, (int) x, (int) y,
+        Manager.getService(GuiElementService.class).addGuiElementToLocationShiftedToCenter(guiElement, (int) x, (int) y,
                 getGameObject().getComponent(Position.class).location);
         destroy();
     }

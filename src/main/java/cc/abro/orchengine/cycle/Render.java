@@ -1,20 +1,22 @@
 package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.picocontainer.Startable;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Log4j2
-public class Render {
+public class Render implements Startable {
 
 	private long windowID; //ID окна игры для LWJGL
 	private long monitorID; //ID монитора (0 для не полноэкранного режима)
@@ -22,14 +24,19 @@ public class Render {
 	private int height;
 
 	private final GameInterface game;
+	private final GUI gui;
 
-	public Render(GameInterface game) {
+	public Render(GameInterface game, GUI gui) {
 		this.game = game;
+		this.gui = gui;
+	}
 
+	@Override
+	public void start() {
 		//Инициализация GLFW
 		if (!glfwInit()) {
 			log.fatal("GLFW initialization failed");
-			Loader.exit();
+			throw new RuntimeException("GLFW initialization failed");
 		}
 
 		//Инициализация и настройка окна
@@ -37,7 +44,15 @@ public class Render {
 			initOpenGL();
 		} catch (Exception e) {
 			log.fatal("OpenGL initialization failed", e);
-			Loader.exit();
+			throw e;
+		}
+
+		//Инициализация и настройка LeGUI
+		try {
+			gui.initLeGUI();
+		} catch (Exception e) {
+			log.fatal("LeGUI initialization failed", e);
+			throw e;
 		}
 	}
 
@@ -104,10 +119,18 @@ public class Render {
 
 		game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
 		Global.location.render(getWidth(), getHeight()); //Отрисовка комнаты
-		Global.engine.gui.render(); //Отрисовка интерфейса (LeGUI)
+		gui.render(); //Отрисовка интерфейса (LeGUI)
 		Global.location.getMouse().draw(); //Отрисовка курсора мыши
 	}
 
+	@Override
+	public void stop() {
+		glfwFreeCallbacks(getWindowID());
+		glfwDestroyWindow(getWindowID());
+		glfwTerminate();
+		GLFWErrorCallback errorCallback = glfwSetErrorCallback(null);
+		if (errorCallback != null) errorCallback.free();
+	}
 
 	public void vsync() {
 		glfwSwapBuffers(windowID);

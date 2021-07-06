@@ -15,6 +15,8 @@ public class TCPRead extends Thread {
 	public TCPRead(NetGameReadInterface netGameRead, TCPControl tcpControl){
 		this.netGameRead = netGameRead;
 		this.tcpControl = tcpControl;
+
+		setDaemon(true);
 	}
 
 	@Override

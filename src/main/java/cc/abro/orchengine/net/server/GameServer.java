@@ -1,16 +1,13 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.Engine;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
 import cc.abro.orchengine.implementation.ServerInterface;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -79,7 +76,7 @@ public class GameServer {
             }
         } catch (IOException e) {
             log.error("Failed io text");
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 
@@ -125,7 +122,7 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
             log.fatal("Failed server start");
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 
@@ -161,7 +158,7 @@ public class GameServer {
         }
 
         log.info("All user disconnect!");
-        Loader.exit();
+        Manager.getService(Engine.class).stop();
     }
 
 }

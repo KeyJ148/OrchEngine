@@ -1,6 +1,5 @@
 package cc.abro.orchengine.resources.sprites;
 
-import cc.abro.orchengine.Loader;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
@@ -24,14 +23,14 @@ public class SpriteStorage {
             for (SpriteContainer spriteContainer : spriteContainers) {
                 if (spriteByName.containsKey(spriteContainer.name)) {
                     log.error("Sprite \"" + spriteContainer.name + "\" already exists");
-                    Loader.exit();
+                    throw new IllegalStateException("Sprite \"" + spriteContainer.name + "\" already exists");
                 }
 
                 spriteByName.put(spriteContainer.name, SpriteLoader.getSprite(spriteContainer.texturePath, spriteContainer.maskPath));
             }
         } catch (IOException e) {
             log.error("Error loading sprites", e);
-            Loader.exit();
+            throw new RuntimeException(e);
         }
     }
 

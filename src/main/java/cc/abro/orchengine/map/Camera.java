@@ -1,9 +1,11 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.util.Vector2;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
+import cc.abro.orchengine.util.Vector2;
 
 public class Camera {
 
@@ -46,8 +48,8 @@ public class Camera {
             y = followObject.getComponent(Position.class).y;
         }
 
-        int width = Global.engine.render.getWidth();
-        int height = Global.engine.render.getHeight();
+        int width = Manager.getService(Render.class).getWidth();
+        int height = Manager.getService(Render.class).getHeight();
         int widthMap = Global.location.width;
         int heightMap = Global.location.height;
 
@@ -57,8 +59,8 @@ public class Camera {
         if (x > widthMap - width / 2) x = widthMap - width / 2;
         if (y > heightMap - height / 2) y = heightMap - height / 2;
 
-        if (Global.engine.render.getWidth() > widthMap) x = widthMap / 2;
-        if (Global.engine.render.getHeight() > heightMap) y = heightMap / 2;
+        if (Manager.getService(Render.class).getWidth() > widthMap) x = widthMap / 2;
+        if (Manager.getService(Render.class).getHeight() > heightMap) y = heightMap / 2;
     }
 
     //Преобразует координаты относительно угла карты в координаты относительно угла экрана (области видимости камеры)
@@ -70,8 +72,8 @@ public class Camera {
             absolutePosition.y = ((Double) absolutePosition.y).intValue();
 
         Vector2<Integer> relativePosition = new Vector2();
-        relativePosition.x = (int) (Global.engine.render.getWidth() / 2 - (x - (int) absolutePosition.x));
-        relativePosition.y = (int) (Global.engine.render.getHeight() / 2 - (y - (int) absolutePosition.y));
+        relativePosition.x = (int) (Manager.getService(Render.class).getWidth() / 2 - (x - (int) absolutePosition.x));
+        relativePosition.y = (int) (Manager.getService(Render.class).getHeight() / 2 - (y - (int) absolutePosition.y));
 
         return relativePosition;
     }
