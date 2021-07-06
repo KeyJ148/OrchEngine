@@ -1,13 +1,9 @@
 package cc.abro.orchengine.net.client.tcp;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.net.InetAddress;

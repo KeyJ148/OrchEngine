@@ -1,7 +1,7 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.image.Color;
 import cc.abro.orchengine.resources.textures.Texture;
 import org.lwjgl.opengl.GL11;

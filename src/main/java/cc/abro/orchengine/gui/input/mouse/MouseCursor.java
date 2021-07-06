@@ -1,7 +1,7 @@
 package cc.abro.orchengine.gui.input.mouse;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.gameobject.components.render.Rendering;

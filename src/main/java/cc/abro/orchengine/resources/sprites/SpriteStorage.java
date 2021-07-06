@@ -1,12 +1,9 @@
 package cc.abro.orchengine.resources.sprites;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,7 +16,8 @@ public class SpriteStorage {
 
     private Map<String, Sprite> spriteByName = new HashMap<>();
 
-    public SpriteStorage() {
+    //TODO now render used for queue creation in Manager.services
+    public SpriteStorage(Render render) {
         try {
             SpriteContainer[] spriteContainers = JsonContainerLoader.loadInternalFile(SpriteContainer[].class, CONFIG_PATH);
 

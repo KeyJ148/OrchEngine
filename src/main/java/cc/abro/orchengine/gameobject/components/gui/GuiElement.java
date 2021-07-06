@@ -1,6 +1,6 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.Movement;

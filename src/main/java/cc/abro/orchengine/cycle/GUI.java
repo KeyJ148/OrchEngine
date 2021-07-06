@@ -20,7 +20,11 @@ public class GUI {
 
     private DefaultInitializer initializer; //Инициализатор LeGUI
 
-    public GUI() {
+    private Render render;
+
+    public GUI(Render render) {
+        this.render = render;
+
         try {
             //Инициализация интерфейса
             initLeGUI();
@@ -33,12 +37,12 @@ public class GUI {
     private void initLeGUI() {
         Frame frame = createFrame();
 
-        initializer = new DefaultInitializer(Global.engine.render.getWindowID(), frame);
+        initializer = new DefaultInitializer(render.getWindowID(), frame);
         initializer.getRenderer().initialize();
     }
 
     public Frame createFrame() {
-        Frame frame = new Frame(Global.engine.render.getWidth(), Global.engine.render.getHeight());
+        Frame frame = new Frame(render.getWidth(), render.getHeight());
         frame.getContainer().setFocusable(true);
 
         return frame;

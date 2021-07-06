@@ -1,15 +1,20 @@
 package cc.abro.orchengine;
 
+import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
 import cc.abro.orchengine.gui.GuiPanelStorage;
 import cc.abro.orchengine.gui.PanelControllersStorage;
+import cc.abro.orchengine.cycle.GUI;
+import cc.abro.orchengine.cycle.Render;
+import cc.abro.orchengine.cycle.Update;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
 import cc.abro.orchengine.implementation.ServerInterface;
 import cc.abro.orchengine.map.Location;
-import cc.abro.orchengine.net.client.Ping;
+import cc.abro.orchengine.net.client.Connector;
+import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPControl;
@@ -30,12 +35,24 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Loader {
 
 	public static void start(GameInterface game, NetGameReadInterface netGameRead,
-							 ServerInterface server, NetServerReadInterface netServerRead) {
-		Global.game = game;
-		Global.server = server;
-		Global.netGameRead = netGameRead;
-		Global.netServerRead = netServerRead;
+							 ServerInterface server, NetServerReadInterface netServerRead){
+		Manager.addService(game);
+		Manager.addService(netGameRead);
+		Manager.addService(server);
+		Manager.addService(netServerRead);
+		tryInit();
+	}
 
+	public static void start(Class<? extends GameInterface> gameClass, Class<? extends NetGameReadInterface> netGameReadClass,
+							 Class<? extends ServerInterface> serverClass, Class<? extends NetServerReadInterface> netServerReadClass) {
+		Manager.addService(netGameReadClass);
+		Manager.addService(gameClass);
+		Manager.addService(serverClass);
+		Manager.addService(netServerReadClass);
+		tryInit();
+	}
+
+	private static void tryInit(){
 		try {
 			loggerInit();//Загрузка логгера для вывода ошибок
 			init(); //Инициализация перед запуском
@@ -74,30 +91,56 @@ public class Loader {
 
 	//Инициализация движка перед запуском
 	private static void init() {
-		Global.engine = new Engine();//Создание класса для главного цикла
-		Global.engine.init();
 
-		Global.tcpControl = new TCPControl();
-		Global.tcpRead = new TCPRead();
-		Global.udpControl = new UDPControl();
-		Global.udpRead = new UDPRead();
+		log.info("Initialization start");
 
-		Global.pingCheck = new Ping();
+		Manager.addService(Engine.class);
+		Manager.addService(Update.class);//
+		Manager.addService(Render.class);//
+		Manager.addService(GUI.class);//
+		Manager.addService(Analyzer.class);//
+		Manager.addService(TCPControl.class);
+		Manager.addService(TCPRead.class);
+		Manager.addService(UDPControl.class);
+		Manager.addService(UDPRead.class);
+		Manager.addService(PingChecker.class);
+		Manager.addService(AudioPlayer.class);
+		Manager.addService(AudioStorage.class);
+		Manager.addService(SpriteStorage.class);
+		Manager.addService(AnimationStorage.class);
+		Manager.addService(GuiPanelStorage.class);
+		Manager.addService(PanelControllersStorage.class);
 
-		Global.audioPlayer = new AudioPlayer();
-		Global.audioStorage = new AudioStorage();
+		Manager.addBean(Connector.class);
 
-		Global.spriteStorage = new SpriteStorage();
-		Global.animationStorage = new AnimationStorage();
-		Global.guiPanelStorage = new GuiPanelStorage();
-		Global.panelControllersStorage = new PanelControllersStorage();
+		Manager.start();
+
+		log.info("Initialization start");
+
+		Global.engine = Manager.getService(Engine.class);
+		//Manager.getService(AudioPlayer.class) = Manager.getService(AudioPlayer.class);
+
+		//Manager.getService(TCPControl.class) = new TCPControl();
+		//Global.tcpRead = Manager.getService(TCPRead.class);
+		//Global.udpControl = new UDPControl();
+		//Global.udpRead = Manager.getService(UDPRead.class);
+		//Global.pingCheck = new PingChecker();
+		//Manager.getService(AudioStorage.class) = new AudioStorage();
+		//Manager.getService(SpriteStorage.class) = new SpriteStorage();
+		//Manager.getService(AnimationStorage.class) = new AnimationStorage();
+		//Global.guiPanelStorage = new GuiPanelStorage();
+		//Global.panelControllersStorage = new PanelControllersStorage();
+
+		//TODO game.class -- getGameService
+		//Global.game = Manager.getService(GameInterface.class);//TODO мы должны иметь возможность внедрить зависимости в клиенте/игре в любой класс,
+		//Global.netGameRead = Manager.getService(NetGameReadInterface.class);//TODO а не только в те 4, что передаем при старте. Должен быть доступ к picoContainer
+		//Global.server = Manager.getService(ServerInterface.class);//TODO
+		//Global.netServerRead = Manager.getService(NetServerReadInterface.class);//TODO
 
 		new Location(640, 480).activate(false);
-
 		log.info("Initialization end");
 
-		//Инициализация игры
-		Global.game.init();
+		Manager.getService(GameInterface.class).init();
 	}
 
 	public static void exit() {
@@ -107,7 +150,7 @@ public class Loader {
 			glfwTerminate();
 			GLFWErrorCallback errorCallback = glfwSetErrorCallback(null);
 			if (errorCallback != null) errorCallback.free();
-			Global.audioPlayer.close();
+			Manager.stop();
 
 			log.debug("Exit stack trace: ", new Exception());
 		} catch (Exception e) {

@@ -2,11 +2,9 @@ package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -23,7 +21,11 @@ public class Render {
 	private int width;
 	private int height;
 
-	public Render() {
+	private final GameInterface game;
+
+	public Render(GameInterface game) {
+		this.game = game;
+
 		//Инициализация GLFW
 		if (!glfwInit()) {
 			log.fatal("GLFW initialization failed");
@@ -100,7 +102,7 @@ public class Render {
 	public void loop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //Очистка рендера
 
-		Global.game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
+		game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
 		Global.location.render(getWidth(), getHeight()); //Отрисовка комнаты
 		Global.engine.gui.render(); //Отрисовка интерфейса (LeGUI)
 		Global.location.getMouse().draw(); //Отрисовка курсора мыши

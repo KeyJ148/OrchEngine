@@ -1,15 +1,15 @@
 package cc.abro.orchengine.analysis;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import cc.abro.orchengine.net.client.PingChecker;
+import cc.abro.orchengine.net.client.tcp.TCPControl;
+import cc.abro.orchengine.net.client.udp.UDPControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.picocontainer.Startable;
 
 @Log4j2
-public class Analyzer {
+public class Analyzer implements Startable {
 
 	//Для подсчёта fps, ups
 	public int loopsRender = 0;
@@ -33,10 +33,24 @@ public class Analyzer {
 
 	private AnalysisStringBuilder analysisStringBuilder;
 
-	public Analyzer() {
+	private TCPControl tcpControl;
+	private UDPControl udpControl;
+	private PingChecker pingCheckerCheck;
+
+	public Analyzer(TCPControl tcpControl, UDPControl udpControl, PingChecker pingCheckerCheck) {
+		this.tcpControl = tcpControl;
+		this.udpControl = udpControl;
+		this.pingCheckerCheck = pingCheckerCheck;
+	}
+
+	@Override
+	public void start() {
 		analysisStringBuilder = new AnalysisStringBuilder(this);
 		lastAnalysis = System.currentTimeMillis();
 	}
+
+	@Override
+	public void stop() { }
 
 	public void startUpdate() {
 		startUpdate = System.nanoTime();
@@ -76,22 +90,22 @@ public class Analyzer {
 
 	//Анализ данных
 	public void analysisData() {
-		ping = Global.pingCheck.ping();
-		pingMin = Global.pingCheck.pingMin();
-		pingMid = Global.pingCheck.pingMid();
-		pingMax = Global.pingCheck.pingMax();
+		ping = pingCheckerCheck.ping();
+		pingMin = pingCheckerCheck.pingMin();
+		pingMid = pingCheckerCheck.pingMid();
+		pingMax = pingCheckerCheck.pingMax();
 
-		sendTCP = Math.round(Global.tcpControl.sizeDataSend / 1024);
-		loadTCP = Math.round(Global.tcpControl.sizeDataRead / 1024);
-		sendPackageTCP = Global.tcpControl.countPackageSend;
-		loadPackageTCP = Global.tcpControl.countPackageRead;
-		Global.tcpControl.analyzeClear();
+		sendTCP = Math.round(tcpControl.sizeDataSend / 1024);
+		loadTCP = Math.round(tcpControl.sizeDataRead / 1024);
+		sendPackageTCP = tcpControl.countPackageSend;
+		loadPackageTCP = tcpControl.countPackageRead;
+		tcpControl.analyzeClear();
 
-		sendUDP = Math.round(Global.udpControl.sizeDataSend / 1024);
-		loadUDP = Math.round(Global.udpControl.sizeDataRead / 1024);
-		sendPackageUDP = Global.udpControl.countPackageSend;
-		loadPackageUDP = Global.udpControl.countPackageRead;
-		Global.udpControl.analyzeClear();
+		sendUDP = Math.round(udpControl.sizeDataSend / 1024);
+		loadUDP = Math.round(udpControl.sizeDataRead / 1024);
+		sendPackageUDP =udpControl.countPackageSend;
+		loadPackageUDP =udpControl.countPackageRead;
+		udpControl.analyzeClear();
 
 		chunkInDepthVector = (Global.location.mapControl.getCountDepthVectors() == 0) ? 0 : Global.location.mapControl.chunkRender / Global.location.mapControl.getCountDepthVectors();
 
@@ -130,5 +144,4 @@ public class Analyzer {
 			*/
 		}
 	}
-
 }

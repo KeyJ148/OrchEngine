@@ -2,15 +2,25 @@ package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
+import cc.abro.orchengine.implementation.GameInterface;
+import cc.abro.orchengine.net.client.tcp.TCPRead;
+import cc.abro.orchengine.net.client.udp.UDPRead;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Log4j2
 public class Update {
 
 	private long startUpdateTime, lastUpdateTime = 0;//Для вычисления delta
+
+	private final GameInterface game;
+	private final TCPRead tcpRead;
+	private final UDPRead udpRead;
+
+	public Update(GameInterface game, TCPRead tcpRead, UDPRead udpRead) {
+		this.game = game;
+		this.tcpRead = tcpRead;
+		this.udpRead = udpRead;
+	}
 
 	public void loop() {
 		//При первом вызове устанавливаем текущее время
@@ -25,10 +35,10 @@ public class Update {
 	private void loop(long delta) {
 		Global.engine.gui.pollEvents();//Получение событий и Callbacks
 
-		Global.game.update(delta);//Обновить главный игровой класс при необходимости
+		game.update(delta);//Обновить главный игровой класс при необходимости
 
-		Global.tcpRead.update();//Обработать все полученные сообщения по TCP
-		Global.udpRead.update();//Обработать все полученные сообщения по UDP
+		tcpRead.update();//Обработать все полученные сообщения по TCP
+		udpRead.update();//Обработать все полученные сообщения по UDP
 
 		if (Global.location != null) {
 			Global.location.update(delta);//Обновить все объекты в комнате

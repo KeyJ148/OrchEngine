@@ -1,4 +1,4 @@
-package cc.abro.orchengine;
+package cc.abro.orchengine.util;
 
 public class Vector2<T> {
 

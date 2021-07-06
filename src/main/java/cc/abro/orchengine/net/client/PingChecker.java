@@ -1,8 +1,8 @@
 package cc.abro.orchengine.net.client;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.net.client.tcp.TCPControl;
 
-public class Ping {
+public class PingChecker {
 
 	private long pingTime;
 	private int pingSum;
@@ -15,7 +15,10 @@ public class Ping {
 
 	private boolean work = false;
 
-	public Ping() {
+	private final TCPControl tcpControl;
+
+	public PingChecker(TCPControl tcpControl) {
+		this.tcpControl = tcpControl;
 		clear();
 	}
 
@@ -42,7 +45,7 @@ public class Ping {
 		if (work) {
 			work = false;
 			pingTime = System.currentTimeMillis();
-			Global.tcpControl.send(1, "");
+			tcpControl.send(1, "");
 		}
 	}
 

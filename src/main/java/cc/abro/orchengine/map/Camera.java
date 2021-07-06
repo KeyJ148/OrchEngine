@@ -1,7 +1,7 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 
