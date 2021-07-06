@@ -3,11 +3,12 @@ package cc.abro.orchengine;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.gui.GuiPanelStorage;
-import cc.abro.orchengine.gui.PanelControllersStorage;
 import cc.abro.orchengine.cycle.GUI;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.cycle.Update;
+import cc.abro.orchengine.gui.GuiPanelStorage;
+import cc.abro.orchengine.gui.PanelControllersStorage;
+import cc.abro.orchengine.gui.input.mouse.MouseCursor;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
@@ -23,13 +24,11 @@ import cc.abro.orchengine.resources.animations.AnimationStorage;
 import cc.abro.orchengine.resources.audios.AudioStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
+import cc.abro.orchengine.services.GuiElementService;
+import cc.abro.orchengine.services.LeguiComponentService;
 import lombok.extern.log4j.Log4j2;
-import org.lwjgl.glfw.GLFWErrorCallback;
 
 import java.io.IOException;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
 
 @Log4j2
 public class Loader {
@@ -40,7 +39,7 @@ public class Loader {
 		Manager.addService(netGameRead);
 		Manager.addService(server);
 		Manager.addService(netServerRead);
-		tryInit();
+		new Loader().tryInit();
 	}
 
 	public static void start(Class<? extends GameInterface> gameClass, Class<? extends NetGameReadInterface> netGameReadClass,
@@ -49,32 +48,30 @@ public class Loader {
 		Manager.addService(gameClass);
 		Manager.addService(serverClass);
 		Manager.addService(netServerReadClass);
-		tryInit();
+		new Loader().tryInit();
 	}
 
-	private static void tryInit(){
+	public void tryInit(){
 		try {
 			loggerInit();//Загрузка логгера для вывода ошибок
 			init(); //Инициализация перед запуском
 			Global.engine.run();//Запуск главного цикла
 		} catch (Exception e) {
-			e.printStackTrace();
-			log.fatal("Unknown exception: ", e); //TODO: если logger не создан
-			exit();
+			logException(e);
+		} finally {
+			stop();
 		}
 	}
 
-	private static void loggerInit() {
+	private void loggerInit() {
 		try {
 			SettingsStorageHandler.init();//Загрузка настроек
 		} catch (IOException e) {
 			e.printStackTrace();
-			exit();
+			stop();
 		}
 
 		/* TODO
-		Global.logger = new AggregateLogger();
-
 		//Установка настроек логирования
 		Global.logger.enableType(Logger.Type.INFO);
 		Global.logger.enableType(Logger.Type.SERVER_INFO);
@@ -90,15 +87,12 @@ public class Loader {
 	}
 
 	//Инициализация движка перед запуском
-	private static void init() {
-
-		log.info("Initialization start");
-
+	private void init() {
 		Manager.addService(Engine.class);
-		Manager.addService(Update.class);//
-		Manager.addService(Render.class);//
-		Manager.addService(GUI.class);//
-		Manager.addService(Analyzer.class);//
+		Manager.addService(Update.class);
+		Manager.addService(Render.class);
+		Manager.addService(GUI.class);
+		Manager.addService(Analyzer.class);
 		Manager.addService(TCPControl.class);
 		Manager.addService(TCPRead.class);
 		Manager.addService(UDPControl.class);
@@ -110,56 +104,40 @@ public class Loader {
 		Manager.addService(AnimationStorage.class);
 		Manager.addService(GuiPanelStorage.class);
 		Manager.addService(PanelControllersStorage.class);
+		Manager.addService(GuiElementService.class);
+		Manager.addService(LeguiComponentService.class);
 
 		Manager.addBean(Connector.class);
-
-		Manager.start();
+		Manager.addBean(MouseCursor.class);
 
 		log.info("Initialization start");
 
+		Manager.start();
 		Global.engine = Manager.getService(Engine.class);
-		//Manager.getService(AudioPlayer.class) = Manager.getService(AudioPlayer.class);
 
-		//Manager.getService(TCPControl.class) = new TCPControl();
-		//Global.tcpRead = Manager.getService(TCPRead.class);
-		//Global.udpControl = new UDPControl();
-		//Global.udpRead = Manager.getService(UDPRead.class);
-		//Global.pingCheck = new PingChecker();
-		//Manager.getService(AudioStorage.class) = new AudioStorage();
-		//Manager.getService(SpriteStorage.class) = new SpriteStorage();
-		//Manager.getService(AnimationStorage.class) = new AnimationStorage();
-		//Global.guiPanelStorage = new GuiPanelStorage();
-		//Global.panelControllersStorage = new PanelControllersStorage();
-
-		//TODO game.class -- getGameService
-		//Global.game = Manager.getService(GameInterface.class);//TODO мы должны иметь возможность внедрить зависимости в клиенте/игре в любой класс,
-		//Global.netGameRead = Manager.getService(NetGameReadInterface.class);//TODO а не только в те 4, что передаем при старте. Должен быть доступ к picoContainer
-		//Global.server = Manager.getService(ServerInterface.class);//TODO
-		//Global.netServerRead = Manager.getService(NetServerReadInterface.class);//TODO
-
-		new Location(640, 480).activate(false);
 		log.info("Initialization end");
 
+		new Location(640, 480).activate(false);
 		Manager.getService(GameInterface.class).init();
 	}
 
-	public static void exit() {
+	private void stop() {
 		try {
-			glfwFreeCallbacks(Global.engine.render.getWindowID());
-			glfwDestroyWindow(Global.engine.render.getWindowID());
-			glfwTerminate();
-			GLFWErrorCallback errorCallback = glfwSetErrorCallback(null);
-			if (errorCallback != null) errorCallback.free();
 			Manager.stop();
-
 			log.debug("Exit stack trace: ", new Exception());
 		} catch (Exception e) {
-			log.error("Unknown exception: ", e); //TODO: если logger не создан
+			logException(e);
 		} finally {
-			//Global.logger.close(); TODO
-			System.exit(0);
+			System.exit(0); //TODO remove, but then process not end
 		}
 	}
 
-
+	private void logException(Exception e){
+		e.printStackTrace();
+		try {
+			log.fatal("Unknown exception: ", e);
+		} catch (Exception logException){
+			logException.printStackTrace();
+		}
+	}
 }
