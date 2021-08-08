@@ -11,7 +11,7 @@ import java.util.Map;
 @Log4j2
 public class SpriteStorage {
 
-    private static final String CONFIG_PATH = "res/configs/sprite.json";
+    private static final String CONFIG_PATH = "configs/sprite.json";
 
     private Map<String, Sprite> spriteByName = new HashMap<>();
 

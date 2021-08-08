@@ -10,7 +10,7 @@ import java.util.Map;
 @Log4j2
 public class AnimationStorage {
 
-    private static final String CONFIG_PATH = "res/configs/animation.json";
+    private static final String CONFIG_PATH = "configs/animation.json";
 
     private Map<String, Animation> animationByName = new HashMap<>();
 

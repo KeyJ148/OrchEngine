@@ -10,7 +10,7 @@ import java.util.Map;
 @Log4j2
 public class AudioStorage {
 
-    private static final String CONFIG_PATH = "res/configs/audio.json";
+    private static final String CONFIG_PATH = "configs/audio.json";
 
     private Map<String, Audio> audioByName = new HashMap<>();
 

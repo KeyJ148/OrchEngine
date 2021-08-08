@@ -8,7 +8,7 @@ import java.io.IOException;
 public class SettingsLoader {
 
     private static final String PATH_EXTERNAL = "settings/";
-    private static final String PATH_INTERNAL = "res/settings/";
+    private static final String PATH_INTERNAL = "settings/";
 
     public static <T> T loadExternalSettings(Class<T> settingsContainerClass) throws IOException {
         String path = PATH_EXTERNAL + getSettingsFileName(settingsContainerClass);
