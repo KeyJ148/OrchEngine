@@ -136,7 +136,6 @@ public class Analyzer implements Startable {
 
 		//Вывод результатов на монитор
 		if (SettingsStorage.LOGGER.DEBUG_MONITOR_FPS) {
-			//TODO: надпись - компонент объекта
 			//Отрисвока надписей
 			/*
 			addTitle(new Title(1, getHeight()-27,strAnalysis1, Color.black, 12, Font.BOLD));

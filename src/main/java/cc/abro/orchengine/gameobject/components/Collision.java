@@ -64,8 +64,8 @@ public class Collision extends QueueComponent {
     public void checkCollisionFromRoom() {
         if (collisionObjects.size() == 0) return;
 
-        for (int i = 0; i < Global.location.objects.size(); i++) {//Цикл перебора всех объектов в комнате
-            GameObject objectFromRoom = Global.location.objects.get(i);
+        for (int i = 0; i < Global.location.getObjectsVectorSize(); i++) {//Цикл перебора всех объектов в комнате
+            GameObject objectFromRoom = Global.location.getObject(i);
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) { //Цикл перебора объектов, с которыми надо проверять столкновение
                     if ((objectFromRoom.getClass().equals(collisionObject)) //Если с эти объектом надо проверять столкновени

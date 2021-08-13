@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public class SettingsLoader {
 
+    //TODO возможность указывать путь, для загрузки настроек с клиента, например. Ошибка при наличие двух конфигов с одним именем по одному пути
     private static final String PATH_EXTERNAL = "settings/";
     private static final String PATH_INTERNAL = "settings/";
 

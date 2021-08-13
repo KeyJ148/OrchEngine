@@ -18,8 +18,7 @@ public class Location {
 	public Background background = new Background(); //Фон карты (цвет и текстура)
 	public Camera camera = new Camera(); //Положение камеры в этой локации
 
-	//TODO: Сделать приватными и immutable getter / iterator
-	public Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
+	private Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
 	public MapControl mapControl; //Массив со всеми чанками и объектами
 
 	private Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
@@ -63,6 +62,18 @@ public class Location {
 		return count;
 	}
 
+	public GameObject getObject(int id) {
+		return objects.get(id);
+	}
+
+	public int getObjectsVectorSize() {
+		return objects.size();
+	}
+
+	public Vector<GameObject> getObjects() {
+		return new Vector<>(objects);
+	}
+
 	//Добавление объекта в комнату
 	public void objAdd(GameObject gameObject) {
 		if (gameObject.isDestroy()) throw new IllegalArgumentException("Obj was destroy");
@@ -84,7 +95,6 @@ public class Location {
 		activate(true);
 	}
 
-	//TODO вынести вызов в отдельный менеджер с activate, который бы делал freeze и unfreeze, он жн меняет Global.location
 	public void activate(boolean saveInput) {
 		//Перенести нажатые клавиши и настройки мыши/курсора или нет
 		if (saveInput) {
@@ -101,7 +111,6 @@ public class Location {
 		Manager.getService(GUI.class).setFrameFocused(guiFrame);
 	}
 
-	//TODO как и в TODO выше
 	public boolean isActive(){
 		return Global.location == this;
 	}

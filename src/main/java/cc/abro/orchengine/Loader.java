@@ -70,20 +70,6 @@ public class Loader {
 			e.printStackTrace();
 			stop();
 		}
-
-		/* TODO
-		//Установка настроек логирования
-		Global.logger.enableType(Logger.Type.INFO);
-		Global.logger.enableType(Logger.Type.SERVER_INFO);
-		if (SettingsStorage.LOGGER.ERROR_CONSOLE) Global.logger.enableType(Logger.Type.ERROR);
-		if (SettingsStorage.LOGGER.ERROR_CONSOLE_SERVER) Global.logger.enableType(Logger.Type.SERVER_ERROR);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE) Global.logger.enableType(Logger.Type.DEBUG);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_IMAGE) Global.logger.enableType(Logger.Type.DEBUG_TEXTURE);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_MASK) Global.logger.enableType(Logger.Type.DEBUG_MASK);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_AUDIO) Global.logger.enableType(Logger.Type.DEBUG_AUDIO);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_FPS) Global.logger.enableType(Logger.Type.CONSOLE_FPS);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_SERVER) Global.logger.enableType(Logger.Type.SERVER_DEBUG);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_MPS) Global.logger.enableType(Logger.Type.MPS);*/
 	}
 
 	//Инициализация движка перед запуском
@@ -128,7 +114,7 @@ public class Loader {
 		} catch (Exception e) {
 			logException(e);
 		} finally {
-			System.exit(0); //TODO remove, but then process not end
+			System.exit(0);
 		}
 	}
 

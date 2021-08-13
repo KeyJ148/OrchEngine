@@ -51,7 +51,7 @@ public class MapControl {
 	}
 
 	public void del(int id) {
-		GameObject gameObject = Global.location.objects.get(id);
+		GameObject gameObject = Global.location.getObject(id);
 		int depth = gameObject.getComponent(Position.class).depth;
 
 		DepthVector dv;

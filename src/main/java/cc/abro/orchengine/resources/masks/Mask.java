@@ -22,8 +22,6 @@ public class Mask {
             width = Math.max(width, maskPoint.x);
             height = Math.max(height, maskPoint.y);
         }
-        //TODO: переделать все на List
-        //TODO: избавиться от высоты и ширины
 
         this.maskDefault = maskArray;
         this.maskCenter = center(maskArray, width, height);

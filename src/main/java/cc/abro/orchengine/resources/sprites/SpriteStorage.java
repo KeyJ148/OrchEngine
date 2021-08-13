@@ -1,6 +1,5 @@
 package cc.abro.orchengine.resources.sprites;
 
-import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
 
@@ -15,8 +14,7 @@ public class SpriteStorage {
 
     private Map<String, Sprite> spriteByName = new HashMap<>();
 
-    //TODO now render used for queue creation in Manager.services
-    public SpriteStorage(Render render) {
+    public SpriteStorage() {
         try {
             SpriteContainer[] spriteContainers = JsonContainerLoader.loadInternalFile(SpriteContainer[].class, CONFIG_PATH);
 
