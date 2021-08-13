@@ -10,7 +10,7 @@ public class SpriteLoader {
     public static Sprite getSprite(String texturePath, String maskPath) {
         Texture texture = TextureLoader.getTexture(texturePath);
         Mask mask = (maskPath != null) ?
-                MaskLoader.getMask(maskPath) :
+                MaskLoader.getMask(maskPath, texture.getWidth(), texture.getHeight()) :
                 MaskLoader.createDefaultMask(texture.getWidth(), texture.getHeight());
 
         return new Sprite(texture, mask);

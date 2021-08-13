@@ -81,7 +81,8 @@ public class Collision extends QueueComponent {
     public boolean checkCollision(GameObject gameObject2) {
         GameObject gameObject1 = getGameObject();
 
-        if (gameObject1.getComponent(Position.class) == null || !gameObject1.hasComponent(Collision.class) || gameObject2.getComponent(Position.class) == null || !gameObject2.hasComponent(Collision.class))
+        if (gameObject1.getComponent(Position.class) == null || !gameObject1.hasComponent(Collision.class) ||
+                gameObject2.getComponent(Position.class) == null || !gameObject2.hasComponent(Collision.class))
             return false;
         Position pos1 = gameObject1.getComponent(Position.class);
         Position pos2 = gameObject2.getComponent(Position.class);

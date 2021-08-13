@@ -1,12 +1,8 @@
 package cc.abro.orchengine.resources.masks;
 
 import cc.abro.orchengine.util.Vector2;
-import cc.abro.orchengine.resources.ResourceLoader;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -16,52 +12,13 @@ public class Mask {
     private Vector2<Integer>[] maskCenter;//Позиции точек в полигоне маски (относительно центра)
     private Vector2<Integer>[] maskDefault;//Позиции точек в полигоне маски (относительно верхнего левого угла)
 
-    public Mask(List<Vector2<Integer>> mask) {
-        Vector2<Integer>[] maskArray = mask.toArray(new Vector2[0]);
-        for (Vector2<Integer> maskPoint : maskArray) {
-            width = Math.max(width, maskPoint.x);
-            height = Math.max(height, maskPoint.y);
-        }
+    public Mask(List<Vector2<Integer>> mask, int width, int height) {
+        this.width = width;
+        this.height = height;
 
+        Vector2<Integer>[] maskArray = mask.toArray(new Vector2[0]);
         this.maskDefault = maskArray;
         this.maskCenter = center(maskArray, width, height);
-    }
-
-    //Загрузка маски из файла
-    public Vector2<Integer>[] loadFromResources(String path, int width, int height) {
-        try (BufferedReader reader = ResourceLoader.getResourceAsBufferedReader(path)) {
-
-
-            ArrayList<Vector2<Integer>> maskArr = new ArrayList<>();
-            String s;
-
-            while ((s = reader.readLine()) != null) {
-                int x = Integer.parseInt(s.substring(0, s.indexOf(' ')));
-                int y = Integer.parseInt(s.substring(s.indexOf(' ') + 1));
-                maskArr.add(new Vector2(x, y));
-            }
-
-            log.debug("Load mask \"" + path + "\" completed");
-            Vector2<Integer>[] result = new Vector2[maskArr.size()];
-
-            return maskArr.toArray(result);
-        } catch (IOException e) {
-            log.error("Load mask \"" + path + "\" error");
-        }
-
-        return createDefault(width, height);
-    }
-
-    //Создание маски по границам исходной картинки (относительно левого верхнего угла)
-    public Vector2<Integer>[] createDefault(int width, int height) {
-        Vector2<Integer>[] mask = new Vector2[4];
-
-        mask[0] = new Vector2(0, 0);
-        mask[1] = new Vector2(width - 1, 0);
-        mask[2] = new Vector2(width - 1, height - 1);
-        mask[3] = new Vector2(0, height - 1);
-
-        return mask;
     }
 
     //Установка координат маски относительно центра объекта (изначально относительно левого верхнего угла)
