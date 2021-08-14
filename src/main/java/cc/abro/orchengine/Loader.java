@@ -10,9 +10,6 @@ import cc.abro.orchengine.gui.GuiPanelStorage;
 import cc.abro.orchengine.gui.PanelControllersStorage;
 import cc.abro.orchengine.gui.input.mouse.MouseCursor;
 import cc.abro.orchengine.implementation.GameInterface;
-import cc.abro.orchengine.implementation.NetGameReadInterface;
-import cc.abro.orchengine.implementation.NetServerReadInterface;
-import cc.abro.orchengine.implementation.ServerInterface;
 import cc.abro.orchengine.map.Location;
 import cc.abro.orchengine.net.client.Connector;
 import cc.abro.orchengine.net.client.PingChecker;
@@ -29,66 +26,40 @@ import cc.abro.orchengine.resources.sprites.SpriteStorage;
 import cc.abro.orchengine.services.GuiElementService;
 import cc.abro.orchengine.services.LeguiComponentService;
 import lombok.extern.log4j.Log4j2;
-
-import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
 
 @Log4j2
 public class Loader {
 
-	public static void start(GameInterface game, NetGameReadInterface netGameRead,
-							 ServerInterface server, NetServerReadInterface netServerRead){
-		Manager.addService(game);
-		Manager.addService(netGameRead);
-		Manager.addService(server);
-		Manager.addService(netServerRead);
-		new Loader().tryInit();
-	}
-
-	public static void start(Class<? extends GameInterface> gameClass, Class<? extends NetGameReadInterface> netGameReadClass,
-							 Class<? extends ServerInterface> serverClass, Class<? extends NetServerReadInterface> netServerReadClass) {
-		Manager.addService(netGameReadClass);
-		Manager.addService(gameClass);
-		Manager.addService(serverClass);
-		Manager.addService(netServerReadClass);
-		new Loader().tryInit();
-	}
-
-	public static void start(GameInterface game, NetGameReadInterface netGameRead,
-							 ServerInterface server, NetServerReadInterface netServerRead, Profile profile){
-		Profiles.initProfile(profile);
-		start(game, netGameRead, server, netServerRead);
-	}
-
-	public static void start(Class<? extends GameInterface> gameClass, Class<? extends NetGameReadInterface> netGameReadClass,
-							 Class<? extends ServerInterface> serverClass, Class<? extends NetServerReadInterface> netServerReadClass,
-							 Profile profile) {
-		Profiles.initProfile(profile);
-		start(gameClass, netGameReadClass, serverClass, netServerReadClass);
-	}
-
-	public void tryInit(){
+	void tryInit(){
 		try {
-			loggerInit();//Загрузка логгера для вывода ошибок
-			init(); //Инициализация перед запуском
-			Global.engine.run();//Запуск главного цикла
-			stop(); //Освобождение ресурсов
+			Thread.currentThread().setName("Engine");
+			registryShutdownCallback(); //Регистрация скриптов для корректного освобождения ресурсов при завершение программы
+			SettingsStorageHandler.init(); //Загрузка настроек, в том числе для логгера
+			initServicesList(); //Инициализация списка сервисов перед запуском
+			initBeansList(); //Инициализация списка бинов перед запуском
+			initServices(); //Запуск всех сервисов
+			initGame();//Вызов инициализации у класса игры
+			Global.engine.run();//Запуск главного цикла движка
 		} catch (Exception e) {
-			logException(e);
-			stop(e);
+			logException("The game ended with an error: ", e);
+			throw new RuntimeException(e);
+		} finally {
+			if (Profiles.getActiveProfile() != Profile.TESTS){
+				System.exit(0); //Завершение программы, будет вызван callback для освобождения ресурсов
+			} else {
+				stop(); //Если это автотесты, то не завершаем приложение, а просто высвобождаем ресурсы и возвращаем управление обратно
+			}
 		}
 	}
 
-	private void loggerInit() {
-		try {
-			SettingsStorageHandler.init();//Загрузка настроек
-		} catch (IOException e) {
-			e.printStackTrace();
-			stop();
-		}
+	private void registryShutdownCallback() {
+		Thread shutdownCallbackThread = new Thread(this::stop);
+		shutdownCallbackThread.setName("ShutdownHook");
+		Runtime.getRuntime().addShutdownHook(shutdownCallbackThread);
 	}
 
-	//Инициализация движка перед запуском
-	private void init() {
+	private void initServicesList() {
 		Manager.addService(Engine.class);
 		Manager.addService(Update.class);
 		Manager.addService(Render.class);
@@ -107,41 +78,45 @@ public class Loader {
 		Manager.addService(PanelControllersStorage.class);
 		Manager.addService(GuiElementService.class);
 		Manager.addService(LeguiComponentService.class);
-
-		Manager.addBean(Connector.class);
-		Manager.addBean(MouseCursor.class);
-
-		log.info("Initialization start");
-
-		Manager.start();
-		Global.engine = Manager.getService(Engine.class);
-
-		log.info("Initialization end");
-
-		new Location(640, 480).activate(false);
-		Manager.getService(GameInterface.class).init();
 	}
 
-	private void stop(Exception e) {
-		stop();
-		throw new RuntimeException(e);
+	private void initBeansList() {
+		Manager.addBean(Connector.class);
+		Manager.addBean(MouseCursor.class);
+	}
+
+	private void initServices() {
+		log.info("Initialize engine...");
+		Manager.start();
+		Global.engine = Manager.getService(Engine.class);
+		log.info("Initialize engine complete");
+	}
+
+	private void initGame() {
+		log.info("Initialize game...");
+		new Location(640, 480).activate(false);
+		Manager.getService(GameInterface.class).init();
+		log.info("Initialize game complete");
+	}
+
+	private void logException(String text, Exception e){
+		e.printStackTrace();
+		try {
+			log.fatal(text, e);
+		} catch (Exception logException){
+			logException.printStackTrace();
+		}
 	}
 
 	private void stop() {
 		try {
+			log.debug("Shutting down all services...");
 			Manager.stop();
-			log.debug("Exit stack trace: ", new Exception());
+			log.debug("Shutting down all services complete");
 		} catch (Exception e) {
-			logException(e);
+			logException("Stopping services ended with an error: ", e);
 		}
-	}
-
-	private void logException(Exception e){
-		e.printStackTrace();
-		try {
-			log.fatal("Unknown exception: ", e);
-		} catch (Exception logException){
-			logException.printStackTrace();
-		}
+		log.debug("Shutting down logger");
+		LogManager.shutdown();
 	}
 }

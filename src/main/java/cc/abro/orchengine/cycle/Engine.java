@@ -23,7 +23,7 @@ public class Engine {
 	}
 
 	public void run() {
-		while (!GLFW.glfwWindowShouldClose(render.getWindowID()) && isRun) {
+		while (isRun) {
 			//Цикл Update
 			analyzer.startUpdate();
 			update.loop(); //Обновление состояния у всех объектов в активной локации
@@ -39,6 +39,11 @@ public class Engine {
 			render.vsync(); //Вертикальная синхронизация
 			fpsLimit.sync(); //Ограничитель FPS (если вертикальная синхронизация отключена или не сработала)
 			analyzer.endSync();
+
+			//Если пользователь закрыл окно, то запускаем процесс остановки движка
+			if (GLFW.glfwWindowShouldClose(render.getWindowID())){
+				stop();
+			}
 		}
 	}
 
