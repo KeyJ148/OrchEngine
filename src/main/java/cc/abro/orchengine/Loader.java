@@ -71,10 +71,10 @@ public class Loader {
 			loggerInit();//Загрузка логгера для вывода ошибок
 			init(); //Инициализация перед запуском
 			Global.engine.run();//Запуск главного цикла
+			stop(); //Освобождение ресурсов
 		} catch (Exception e) {
 			logException(e);
-		} finally {
-			stop();
+			stop(e);
 		}
 	}
 
@@ -122,14 +122,17 @@ public class Loader {
 		Manager.getService(GameInterface.class).init();
 	}
 
+	private void stop(Exception e) {
+		stop();
+		throw new RuntimeException(e);
+	}
+
 	private void stop() {
 		try {
 			Manager.stop();
 			log.debug("Exit stack trace: ", new Exception());
 		} catch (Exception e) {
 			logException(e);
-		} finally {
-			System.exit(0);
 		}
 	}
 
