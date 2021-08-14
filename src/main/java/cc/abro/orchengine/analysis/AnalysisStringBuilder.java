@@ -75,6 +75,14 @@ public class AnalysisStringBuilder {
         sb.append(")");
         sb.append("          ");
 
+        sb.append("Memory: ");
+        sb.append((analyzer.totalMem - analyzer.freeMem) / 1024 / 1024 );
+        sb.append("/");
+        sb.append(analyzer.totalMem / 1024 / 1024 );
+        sb.append("/");
+        sb.append(analyzer.maxMem / 1024 / 1024 );
+        sb.append(" MB          ");
+
         return sb.toString();
     }
 }

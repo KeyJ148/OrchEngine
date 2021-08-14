@@ -29,6 +29,9 @@ public class Analyzer implements Startable {
 	public int sendTCP = 0, loadTCP = 0, sendPackageTCP = 0, loadPackageTCP = 0;
 	public int sendUDP = 0, loadUDP = 0, sendPackageUDP = 0, loadPackageUDP = 0;
 
+	//Использование памяти
+	public long freeMem = 0, totalMem = 0, maxMem = 0;
+
 	public int chunkInDepthVector;
 
 	private AnalysisStringBuilder analysisStringBuilder;
@@ -107,6 +110,10 @@ public class Analyzer implements Startable {
 		loadPackageUDP =udpControl.countPackageRead;
 		udpControl.analyzeClear();
 
+		freeMem = Runtime.getRuntime().freeMemory();
+		totalMem = Runtime.getRuntime().totalMemory();
+		maxMem = Runtime.getRuntime().maxMemory();
+
 		chunkInDepthVector = (Global.location.mapControl.getCountDepthVectors() == 0) ? 0 : Global.location.mapControl.chunkRender / Global.location.mapControl.getCountDepthVectors();
 
 		//Для строк отладки, иначе делние на 0
@@ -131,8 +138,8 @@ public class Analyzer implements Startable {
 		String str2 = analysisStringBuilder.getAnalysisString2();
 
 		//Вывод результатов в консоль
-		log.trace(str1);
-		log.trace(str2);
+		log.warn(str1);
+		log.warn(str2);
 
 		//Вывод результатов на монитор
 		if (SettingsStorage.LOGGER.DEBUG_MONITOR_FPS) {
