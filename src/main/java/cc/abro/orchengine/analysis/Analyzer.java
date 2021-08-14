@@ -138,8 +138,8 @@ public class Analyzer implements Startable {
 		String str2 = analysisStringBuilder.getAnalysisString2();
 
 		//Вывод результатов в консоль
-		log.warn(str1);
-		log.warn(str2);
+		log.trace(str1);
+		log.trace(str2);
 
 		//Вывод результатов на монитор
 		if (SettingsStorage.LOGGER.DEBUG_MONITOR_FPS) {
