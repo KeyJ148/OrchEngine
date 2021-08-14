@@ -1,5 +1,6 @@
 package cc.abro.orchengine.cycle;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.implementation.GameInterface;
@@ -48,7 +49,7 @@ public class Update {
 			Global.location.update(delta);//Обновить все объекты в комнате
 		} else {
 			log.fatal("No create location! (Global.location)");
-			throw new RuntimeException("No create location! (Global.location)");
+			throw new EngineException("No create location! (Global.location)");
 		}
 
 		Global.location.getMouse().update(); //Очистка истории событий мыши

@@ -1,5 +1,6 @@
 package cc.abro.orchengine.resources.audios;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
 
@@ -30,7 +31,7 @@ public class AudioStorage {
             }
         } catch (IOException e) {
             log.error("Error loading audios", e);
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 

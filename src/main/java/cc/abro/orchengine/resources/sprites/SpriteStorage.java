@@ -1,5 +1,6 @@
 package cc.abro.orchengine.resources.sprites;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
 
@@ -28,7 +29,7 @@ public class SpriteStorage {
             }
         } catch (IOException e) {
             log.error("Error loading sprites", e);
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 

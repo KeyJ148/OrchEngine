@@ -1,5 +1,6 @@
 package cc.abro.orchengine.net.server.readers;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
@@ -47,7 +48,7 @@ public class ServerReadUDP extends Thread {
             }
         } catch (IOException e) {
             log.warn("UDP server socket closed");
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 }

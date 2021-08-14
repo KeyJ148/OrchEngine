@@ -1,5 +1,6 @@
 package cc.abro.orchengine.cycle;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.Global;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
@@ -36,7 +37,7 @@ public class Render implements Startable {
 		//Инициализация GLFW
 		if (!glfwInit()) {
 			log.fatal("GLFW initialization failed");
-			throw new RuntimeException("GLFW initialization failed");
+			throw new EngineException("GLFW initialization failed");
 		}
 
 		//Инициализация и настройка окна

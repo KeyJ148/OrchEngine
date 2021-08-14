@@ -1,5 +1,6 @@
 package cc.abro.orchengine.net.client.udp;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
@@ -27,7 +28,7 @@ public class UDPControl extends NetControl {
             socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
         } catch (IOException e) {
             log.warn("Connection failed (UDP)");
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 
@@ -45,7 +46,7 @@ public class UDPControl extends NetControl {
             }
         } catch (IOException e) {
             log.warn("Connection lost (UDP send)");
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 
@@ -62,7 +63,7 @@ public class UDPControl extends NetControl {
             return new String(data);
         } catch (IOException e) {
             log.warn("Connection lost (TCP read)");
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 }

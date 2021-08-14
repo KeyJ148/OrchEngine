@@ -1,5 +1,6 @@
 package cc.abro.orchengine.net.server;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.Engine;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
@@ -36,6 +37,7 @@ public class GameServer {
     public static NetServerReadInterface inetServerRead;
 
     public static void initSettings(String args[], ServerInterface server, NetServerReadInterface inetServerRead) {
+        Thread.currentThread().setName("Server");
         GameServer.server = server;
         GameServer.inetServerRead = inetServerRead;
 
@@ -76,7 +78,7 @@ public class GameServer {
             }
         } catch (IOException e) {
             log.error("Failed io text");
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 
@@ -122,7 +124,7 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
             log.fatal("Failed server start");
-            throw new RuntimeException(e);
+            throw new EngineException(e);
         }
     }
 

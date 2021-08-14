@@ -1,5 +1,8 @@
 package cc.abro.orchengine.profiles;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class Profiles {
 
     private static final String ENV_NAME = "ORCHENGINE_PROFILE";
@@ -10,6 +13,7 @@ public class Profiles {
     public static synchronized void initProfile(Profile profile) {
         if (activeProfile == null){
             activeProfile = profile;
+            log.debug("Set profile from code: " + activeProfile);
         } else {
             throw new IllegalStateException("Profile must be initialized before first getting it");
         }
@@ -20,6 +24,7 @@ public class Profiles {
             synchronized (Profile.class) {
                 if (activeProfile == null){
                     activeProfile = getProfileFromEnv();
+                    log.debug("Set profile from environment: " + activeProfile);
                 }
             }
         }
