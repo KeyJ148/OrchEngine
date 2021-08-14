@@ -20,6 +20,8 @@ import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPControl;
 import cc.abro.orchengine.net.client.udp.UDPRead;
+import cc.abro.orchengine.profiles.Profile;
+import cc.abro.orchengine.profiles.Profiles;
 import cc.abro.orchengine.resources.animations.AnimationStorage;
 import cc.abro.orchengine.resources.audios.AudioStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
@@ -49,6 +51,19 @@ public class Loader {
 		Manager.addService(serverClass);
 		Manager.addService(netServerReadClass);
 		new Loader().tryInit();
+	}
+
+	public static void start(GameInterface game, NetGameReadInterface netGameRead,
+							 ServerInterface server, NetServerReadInterface netServerRead, Profile profile){
+		Profiles.initProfile(profile);
+		start(game, netGameRead, server, netServerRead);
+	}
+
+	public static void start(Class<? extends GameInterface> gameClass, Class<? extends NetGameReadInterface> netGameReadClass,
+							 Class<? extends ServerInterface> serverClass, Class<? extends NetServerReadInterface> netServerReadClass,
+							 Profile profile) {
+		Profiles.initProfile(profile);
+		start(gameClass, netGameReadClass, serverClass, netServerReadClass);
 	}
 
 	public void tryInit(){
