@@ -1,12 +1,8 @@
 package cc.abro.orchengine.net.server.readers;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -27,9 +23,7 @@ public class ServerReadTCP extends Thread {
         try {
             while (true) {
                 str = GameServer.connects[id].in.readUTF();
-                synchronized (GameServer.connects[id].messagePack) {//Защита от одновременной работы с массивом
-                    GameServer.connects[id].messagePack.add(str, MessagePack.Message.InetType.TCP);
-                }
+                GameServer.connects[id].messagePack.add(str, MessagePack.Message.InetType.TCP);
             }
         } catch (IOException e) {
             log.info("Player disconnect (id: " + id + ")");
