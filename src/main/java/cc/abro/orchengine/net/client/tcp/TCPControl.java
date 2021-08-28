@@ -1,6 +1,7 @@
 package cc.abro.orchengine.net.client.tcp;
 
 import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.net.client.ConnectException;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +37,7 @@ public class TCPControl extends NetControl {
 			this.out = out;
 		} catch (IOException e) {
 			log.warn("Connection failed (TCP)");
-			throw new EngineException(e);
+			throw new ConnectException(e);
 		}
 	}
 
