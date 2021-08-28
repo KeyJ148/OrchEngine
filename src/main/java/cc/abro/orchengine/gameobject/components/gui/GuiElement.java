@@ -75,7 +75,7 @@ public class GuiElement<T extends Component> extends QueueComponent {
         return GuiElement.class;
     }
 
-    public Component getComponent() {
+    public T getComponent() {
         return component;
     }
 
