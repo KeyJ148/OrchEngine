@@ -4,41 +4,46 @@ import cc.abro.orchengine.Global;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.udp.UDPControl;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
 import org.picocontainer.Startable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 public class Analyzer implements Startable {
 
 	//Для подсчёта fps, ups
-	public int loopsRender = 0;
-	public int loopsUpdate = 0;
-	public int loopsSync = 0;
+	protected int loopsRender = 0;
+	protected int loopsUpdate = 0;
+	protected int loopsSync = 0;
 	private long startUpdate, startRender, startSync, lastAnalysis;
 
 	//Для подсчёта быстродействия
-	public long durationUpdate = 0;
-	public long durationRender = 0;
-	public long durationSync = 0;
+	protected long durationUpdate = 0;
+	protected long durationRender = 0;
+	protected long durationSync = 0;
 
 	//Пинг
-	public int ping = 0, pingMin = 0, pingMax = 0, pingMid = 0;
+	protected int ping = 0, pingMin = 0, pingMax = 0, pingMid = 0;
 
 	//Скорость сети
-	public int sendTCP = 0, loadTCP = 0, sendPackageTCP = 0, loadPackageTCP = 0;
-	public int sendUDP = 0, loadUDP = 0, sendPackageUDP = 0, loadPackageUDP = 0;
+	protected int sendTCP = 0, loadTCP = 0, sendPackageTCP = 0, loadPackageTCP = 0;
+	protected int sendUDP = 0, loadUDP = 0, sendPackageUDP = 0, loadPackageUDP = 0;
 
 	//Использование памяти
-	public long freeMem = 0, totalMem = 0, maxMem = 0;
+	protected long freeMem = 0, totalMem = 0, maxMem = 0;
 
-	public int chunkInDepthVector;
+	//Использование чанков
+	protected int chunkInDepthVector;
+
+	//Результаты анализа построчно
+	private List<String> analysisResultStrings;
 
 	private AnalysisStringBuilder analysisStringBuilder;
-
-	private TCPControl tcpControl;
-	private UDPControl udpControl;
-	private PingChecker pingCheckerCheck;
+	private final TCPControl tcpControl;
+	private final UDPControl udpControl;
+	private final PingChecker pingCheckerCheck;
 
 	public Analyzer(TCPControl tcpControl, UDPControl udpControl, PingChecker pingCheckerCheck) {
 		this.tcpControl = tcpControl;
@@ -87,12 +92,17 @@ public class Analyzer implements Startable {
 		if (System.currentTimeMillis() < lastAnalysis + 1000) return;
 
 		analysisData();
-		outputResult();
+		generateResult();
+		logToConsole();
 		clearData();
 	}
 
+	public List<String> getAnalysisResult() {
+		return new ArrayList<>(analysisResultStrings);
+	}
+
 	//Анализ данных
-	public void analysisData() {
+	private void analysisData() {
 		ping = pingCheckerCheck.ping();
 		pingMin = pingCheckerCheck.pingMin();
 		pingMid = pingCheckerCheck.pingMid();
@@ -123,7 +133,7 @@ public class Analyzer implements Startable {
 	}
 
 	//Обнуление счётчиков
-	public void clearData() {
+	private void clearData() {
 		lastAnalysis = System.currentTimeMillis();
 		loopsUpdate = 0;
 		loopsRender = 0;
@@ -131,23 +141,14 @@ public class Analyzer implements Startable {
 		durationRender = 0;
 	}
 
-	//Вывод результатов
-	public void outputResult() {
+	//Сохранение результатов
+	private void generateResult() {
 		//Получение строк с результатами
-		String str1 = analysisStringBuilder.getAnalysisString1();
-		String str2 = analysisStringBuilder.getAnalysisString2();
+		analysisResultStrings = List.of(analysisStringBuilder.getAnalysisString1(),
+				analysisStringBuilder.getAnalysisString2());
+	}
 
-		//Вывод результатов в консоль
-		log.trace(str1);
-		log.trace(str2);
-
-		//Вывод результатов на монитор
-		if (SettingsStorage.LOGGER.DEBUG_MONITOR_FPS) {
-			//Отрисвока надписей
-			/*
-			addTitle(new Title(1, getHeight()-27,strAnalysis1, Color.black, 12, Font.BOLD));
-			addTitle(new Title(1, getHeight()-15,strAnalysis2, Color.black, 12, Font.BOLD));
-			*/
-		}
+	private void logToConsole() {
+		analysisResultStrings.forEach(log::trace);
 	}
 }
