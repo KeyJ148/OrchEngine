@@ -1,12 +1,12 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
 import cc.abro.orchengine.Manager;
-import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.Movement;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.services.GuiElementService;
+import cc.abro.orchengine.util.Vector2;
 import org.liquidengine.legui.component.Component;
 
 import java.util.Arrays;
@@ -42,6 +42,7 @@ public class GuiElement<T extends Component> extends QueueComponent {
     }
 
     //TODO на removeFromGameObject с возможность переносить компоненты между объектами?
+    //TODO Проверить все вызовы этого и дочерних destroy
     @Override
     public void destroy() {
         getGameObject().getComponent(Position.class).location.removeGUIComponent(component);
@@ -86,14 +87,20 @@ public class GuiElement<T extends Component> extends QueueComponent {
         this.moveComponentToGameObjectPosition = moveComponentToGameObjectPosition;
     }
 
-    //TODO уничтожать не объект целиком, а только GuiElement
     //TODO мб пересмотреть способ получения/передачи координат
-    public void destroyAndCreateGuiElement(GuiElement<?> guiElement){
+    public Vector2<Double> getPosition() {
         double x = isMoveComponentToGameObjectPosition()?
                 getGameObject().getComponent(Position.class).x : getComponent().getPosition().x + getComponent().getSize().x/2;
         double y = isMoveComponentToGameObjectPosition()?
                 getGameObject().getComponent(Position.class).y : getComponent().getPosition().y + getComponent().getSize().y/2;
-        Manager.getService(GuiElementService.class).addGuiElementToLocationShiftedToCenter(guiElement, (int) x, (int) y,
+        return new Vector2<>(x, y);
+    }
+
+    //TODO уничтожать не объект целиком, а только GuiElement
+    public void destroyAndCreateGuiElement(GuiElement<?> guiElement){
+        Vector2<Double> position = getPosition();
+        Manager.getService(GuiElementService.class).addGuiElementToLocationShiftedToCenter(guiElement,
+                position.x.intValue(), position.y.intValue(),
                 getGameObject().getComponent(Position.class).location);
         destroy();
     }

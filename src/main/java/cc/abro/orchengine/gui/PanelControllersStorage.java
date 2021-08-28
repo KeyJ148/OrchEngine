@@ -9,7 +9,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * Класс кеширующий готовые панели меню, чтобы сохранять все вносимые изменения в интерфейс
+ * Класс кеширующий контроллеры закешированных панелей меню. Используется при переключении между
+ * закешированными панелями меню.
  */
 @Log4j2
 public class PanelControllersStorage {
@@ -34,13 +35,3 @@ public class PanelControllersStorage {
         return controllersByPanel.get(panelClass).get();
     }
 }
-/*
-    public static final Map<Class<? extends EventableGuiPanel>, Supplier<Set<GuiElementController>>> CONTROLLERS_BY_PANEL = Map.ofEntries(
-            Map.entry(SettingsMenuGuiPanel.class, () -> Set.of(new ClickChangePanelController(), new ClickConfirmController())),
-            Map.entry(CreateGameMenuGuiPanel.class, () -> Set.of(new ClickChangePanelController(), new ClickCreateController())),
-            Map.entry(ConnectMenuGuiPanel.class, () -> Set.of(new ClickChangePanelController())),
-            Map.entry(MainMenuGuiPanel.class, () -> Set.of(new ClickChangePanelController(), new ClickExitController())),
-            Map.entry(ListOfServersMenuGuiPanel.class, () -> Set.of(new ClickChangePanelController())),
-            Map.entry(ConnectByIPMenuGuiPanel.class, () -> Set.of(new ClickChangePanelController(), new ClickConnectController()))
-    );
-*/
