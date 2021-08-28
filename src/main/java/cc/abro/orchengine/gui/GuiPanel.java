@@ -2,10 +2,6 @@ package cc.abro.orchengine.gui;
 
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
-
-import java.util.function.Consumer;
 
 /**
  * Абстрактный класс от которого наследуются классы готовых панелей. Панель используется для группирования элементов
@@ -13,12 +9,6 @@ import java.util.function.Consumer;
  *
  */
 public abstract class GuiPanel extends Panel {
-
-    /**
-     * Инициализация панели с элементами интерфейса. Должна вызываться из самого дочернего элемента в конструкторе,
-     * чтобы инициализировать стандартные стили.
-     */
-    public abstract void init();
 
     public void addComponent(Component component, int x, int y, int width, int height) {
         component.setPosition(x, y);
