@@ -28,6 +28,10 @@ public class Color extends java.awt.Color {
         this((int) (255 * r), (int) (255 * g), (int) (255 * b), (int) (255 * a));
     }
 
+    public Color(int[] rgb) {
+        super(rgb[0], rgb[1], rgb[2]);
+    }
+
     public Color(java.awt.Color color) {
         this(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
@@ -50,6 +54,10 @@ public class Color extends java.awt.Color {
 
     public Vector4f getVector4f() {
         return new Vector4f(getFloatRed(), getFloatGreen(), getFloatBlue(), getFloatAlpha());
+    }
+
+    public int[] getRGBArray() {
+        return new int[] { getRed(), getGreen(), getBlue() };
     }
 
     public void bind() {
