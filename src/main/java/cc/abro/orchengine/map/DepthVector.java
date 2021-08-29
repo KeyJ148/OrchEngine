@@ -1,20 +1,27 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.util.Vector2;
+import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.GameObject;
+import cc.abro.orchengine.gameobject.components.Collision;
 import cc.abro.orchengine.gameobject.components.Movement;
 import cc.abro.orchengine.gameobject.components.Position;
+import cc.abro.orchengine.gameobject.components.render.Rendering;
+import cc.abro.orchengine.util.Vector2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DepthVector {
 
 	private int depth;
 	private MapControl mc;
-	private ArrayList<ArrayList<Chunk>> chunks = new ArrayList<>();
 	//Двумерный динамический массив хранит все Чанки
 	//Внешний массив хранит сортировку массивов по координате y
 	//Внутренний массив имеет чанки с одинаковой y, но разными x
+	private ArrayList<ArrayList<Chunk>> chunks = new ArrayList<>();
+	//Объекты чьи текстура или маска больше размера чанка, и поэтому их необходимо обрабатывать всегда
+	private Set<Integer> unsuitableObjects = new HashSet<>();
 
 	public DepthVector(MapControl mc, int depth, GameObject gameObject) {
 		this.mc = mc;
@@ -24,11 +31,26 @@ public class DepthVector {
 	}
 
 	public void add(GameObject gameObject) {
-		getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y).add(gameObject.getComponent(Position.class).id);
+		if (isObjectSmallerThenChunk(gameObject)) {
+			getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
+					.add(gameObject.getComponent(Position.class).id);
+		} else {
+			if (gameObject.hasComponent(Rendering.class)){
+				System.out.println("TEST: " + gameObject.getComponent(Rendering.class).getWidth() + " " + gameObject.getComponent(Rendering.class).getHeight());
+			} else {
+				System.out.println("TEST!!!!");
+			}
+			unsuitableObjects.add(gameObject.getComponent(Position.class).id);
+		}
 	}
 
 	public void del(GameObject gameObject) {
-		getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y).del(gameObject.getComponent(Position.class).id);
+		if (!unsuitableObjects.contains(gameObject.getComponent(Position.class).id)) {
+			getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
+					.del(gameObject.getComponent(Position.class).id);
+		} else {
+			unsuitableObjects.remove(gameObject.getComponent(Position.class).id);
+		}
 	}
 
 	public int getDepth() {
@@ -53,8 +75,8 @@ public class DepthVector {
 		Chunk chunk = getChunk(x, y);
 		int chunkPosX = chunk.getPosWidth();
 		int chunkPosY = chunk.getPosHeight();
-		int rangeX = (int) Math.ceil((double) width / 2 / mc.chunkSize);//В чанках
-		int rangeY = (int) Math.ceil((double) height / 2 / mc.chunkSize);//В чанках
+		int rangeX = (int) Math.ceil((double) width / 2 / mc.getChunkSize())+2;//В чанках
+		int rangeY = (int) Math.ceil((double) height / 2 / mc.getChunkSize())+2;//В чанках
 
 		for (int i = chunkPosX - rangeX; i <= chunkPosX + rangeX; i++) {
 			for (int j = chunkPosY - rangeY; j <= chunkPosY + rangeY; j++) {
@@ -64,6 +86,27 @@ public class DepthVector {
 				}
 			}
 		}
+
+		//Рендер объектов не помещающихся в чанке
+		for (int id : unsuitableObjects) {
+			if (Global.location.getObjectsVectorSize() > id && Global.location.getObject(id) != null) {
+				GameObject gameObject = Global.location.getObject(id);
+				gameObject.draw();
+			}
+		}
+	}
+
+	private boolean isObjectSmallerThenChunk(GameObject gameObject){
+		boolean isSmaller = true;
+		if (gameObject.hasComponent(Rendering.class)){
+			isSmaller &= gameObject.getComponent(Rendering.class).getWidth() < mc.getChunkSize() &&
+					gameObject.getComponent(Rendering.class).getHeight() < mc.getChunkSize();
+		}
+		if (gameObject.hasComponent(Collision.class)) {
+			isSmaller &= gameObject.getComponent(Collision.class).getMask().getWidth() < mc.getChunkSize() &&
+					gameObject.getComponent(Collision.class).getMask().getHeight() < mc.getChunkSize();
+		}
+		return isSmaller;
 	}
 
 	private Chunk getChunk(int x, int y) {
@@ -141,9 +184,9 @@ public class DepthVector {
 	}
 
 	private Vector2<Integer> getPoint(int x, int y) {
-		int delta = mc.borderSize / mc.chunkSize - 1;//delta=0 (1-1)
-		int posWidth = (int) Math.ceil((double) x / mc.chunkSize + delta);//-1 т.к. нумерация в массиве с 0
-		int posHeight = (int) Math.ceil((double) y / mc.chunkSize + delta);//+1 т.к. добавлена обводка карты толщиной в 1 чанк для обработки выхода за карту
+		int delta = mc.borderSize / mc.getChunkSize() - 1;//delta=0 (1-1)
+		int posWidth = (int) Math.ceil((double) x / mc.getChunkSize() + delta);//-1 т.к. нумерация в массиве с 0
+		int posHeight = (int) Math.ceil((double) y / mc.getChunkSize() + delta);//+1 т.к. добавлена обводка карты толщиной в 1 чанк для обработки выхода за карту
 		return new Vector2<Integer>(posWidth, posHeight);
 	}
 }
