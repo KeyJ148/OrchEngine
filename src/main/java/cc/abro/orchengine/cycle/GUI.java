@@ -60,6 +60,6 @@ public class GUI {
     }
 
     public void setFrameFocused(Frame frame) {
-        initializer.getContext();
+        initializer.getContext().setFocusedGui(frame.getContainer());
     }
 }
