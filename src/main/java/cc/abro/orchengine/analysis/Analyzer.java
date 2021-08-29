@@ -14,6 +14,8 @@ import java.util.List;
 @Log4j2
 public class Analyzer implements Startable {
 
+	public static final int STRING_COUNT = 2;
+
 	//Для подсчёта fps, ups
 	protected int loopsRender = 0;
 	protected int loopsUpdate = 0;
