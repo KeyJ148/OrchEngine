@@ -35,11 +35,6 @@ public class DepthVector {
 			getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
 					.add(gameObject.getComponent(Position.class).id);
 		} else {
-			if (gameObject.hasComponent(Rendering.class)){
-				System.out.println("TEST: " + gameObject.getComponent(Rendering.class).getWidth() + " " + gameObject.getComponent(Rendering.class).getHeight());
-			} else {
-				System.out.println("TEST!!!!");
-			}
 			unsuitableObjects.add(gameObject.getComponent(Position.class).id);
 		}
 	}
