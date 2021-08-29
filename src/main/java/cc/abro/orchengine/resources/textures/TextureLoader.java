@@ -1,11 +1,7 @@
 package cc.abro.orchengine.resources.textures;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
@@ -18,35 +14,43 @@ import static org.lwjgl.opengl.GL11.*;
 @Log4j2
 public class TextureLoader {
 
+    //TODO переделать весь класс в сервис по работе с текстурами
+    public static ByteBuffer getByteBufferFromBufferedImage(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        int[] pixels = new int[width * height];
+        image.getRGB(0, 0, width, height, pixels, 0, width);
+
+        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = pixels[y * width + x];
+
+                buffer.put((byte) ((pixel >> 16) & 0xFF));
+                buffer.put((byte) ((pixel >> 8) & 0xFF));
+                buffer.put((byte) (pixel & 0xFF));
+                buffer.put((byte) ((pixel >> 24) & 0xFF));
+            }
+        }
+        buffer.flip();
+        return buffer;
+    }
+
+    public static Texture createTexture(BufferedImage image) {
+        ByteBuffer buffer = getByteBufferFromBufferedImage(image);
+        Texture texture = new Texture(image);
+        texture.bind();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        Texture.unbind();
+        return texture;
+    }
+
     public static Texture getTexture(String path) {
         try (InputStream in = ResourceLoader.getResourceAsStream(path)) {
-            BufferedImage image = ImageIO.read(in);
-            int width = image.getWidth();
-            int height = image.getHeight();
-
-            int[] pixels = new int[width * height];
-            image.getRGB(0, 0, width, height, pixels, 0, width);
-
-            ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    int pixel = pixels[y * width + x];
-
-                    buffer.put((byte) ((pixel >> 16) & 0xFF));
-                    buffer.put((byte) ((pixel >> 8) & 0xFF));
-                    buffer.put((byte) (pixel & 0xFF));
-                    buffer.put((byte) ((pixel >> 24) & 0xFF));
-                }
-            }
-            buffer.flip();
-
-            Texture texture = new Texture(width, height);
-            texture.bind();
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-            Texture.unbind();
-
+            Texture texture = createTexture(ImageIO.read(in));
             log.debug("Load image \"" + path + "\" completed");
             return texture;
         } catch (Exception e) {

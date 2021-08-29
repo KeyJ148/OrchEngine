@@ -1,25 +1,19 @@
 package cc.abro.orchengine.resources.textures;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
 
     private final int id;
-    private int width, height;
+    private final BufferedImage image;
 
-    public Texture(int width, int height) {
-        this.width = width;
-        this.height = height;
-
+    public Texture(BufferedImage image) {
+        this.image = image;
         id = glGenTextures();
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public void bind() {
@@ -37,6 +31,22 @@ public class Texture {
     public int getId() {
         return id;
     }
+
+    public int getWidth() {
+        return image.getWidth();
+    }
+
+    public int getHeight() {
+        return image.getHeight();
+    }
+
+    public BufferedImage getImage() {
+        ColorModel colorModel = image.getColorModel();
+        boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
+        WritableRaster raster = image.copyData(image.getRaster().createCompatibleWritableRaster());
+        return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
+    }
+
 
     @Override
     public boolean equals(Object o) {
