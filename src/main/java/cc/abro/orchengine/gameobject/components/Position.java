@@ -26,7 +26,7 @@ public class Position extends QueueComponent {
     public Position(double x, double y, int depth, double directionDraw) {
         this.x = x;
         this.y = y;
-        this.depth = -depth;
+        this.depth = -depth; //TODO переименовать на z везде
         setDirectionDraw(directionDraw);
     }
 
