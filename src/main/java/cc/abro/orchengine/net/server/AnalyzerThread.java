@@ -20,11 +20,11 @@ public class AnalyzerThread extends Thread {
                 StringBuilder sb = new StringBuilder();
                 sb.append("MPS: ");
                 for (int i = 0; i < GameServer.peopleMax; i++) {
-                    sb.append(String.valueOf(GameServer.connects[i].numberSend));
+                    sb.append(GameServer.connects[i].numberSend);
                     if (i != GameServer.peopleMax - 1) sb.append(" | ");
                     GameServer.connects[i].numberSend = 0;
                 }
-                log.trace(sb.toString());
+                log.debug(sb.toString());
             }
 
             try {

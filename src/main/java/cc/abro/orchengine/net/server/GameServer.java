@@ -133,7 +133,7 @@ public class GameServer {
 
         long lastUpdate = System.nanoTime();//Для update
         long startUpdate;
-        while (disconnect != peopleMax) {
+        while (disconnect != Math.max(peopleMax - 1, 1) ) {
             startUpdate = System.nanoTime();
             server.update(System.nanoTime() - lastUpdate);
             lastUpdate = startUpdate; //Начало предыдущего update, чтобы длительность update тоже учитывалась
