@@ -1,6 +1,6 @@
 package cc.abro.orchengine.net.client.tcp;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.net.client.Message;
 
 import java.util.ArrayList;
@@ -9,12 +9,22 @@ public class TCPRead extends Thread {
 
 	private volatile ArrayList<Message> messages = new ArrayList<>();
 
+	private final NetGameReadInterface netGameRead;
+	private final TCPControl tcpControl;
+
+	public TCPRead(NetGameReadInterface netGameRead, TCPControl tcpControl){
+		this.netGameRead = netGameRead;
+		this.tcpControl = tcpControl;
+
+		setDaemon(true);
+	}
+
 	@Override
 	public void run() {
 		//Постоянный обмен данными на TCP
 		String str;
 		while (true) {
-			str = Global.tcpControl.read();
+			str = tcpControl.read();
 
 			int type = Integer.parseInt(str.split(" ")[0]);
 			String data = str.substring(str.indexOf(" ") + 1);
@@ -31,7 +41,7 @@ public class TCPRead extends Thread {
 		synchronized (messages) {
 			for (int i = 0; i < messages.size(); i++) {
 				Message message = messages.get(i);
-				Global.netGameRead.readTCP(message);
+				netGameRead.readTCP(message);
 			}
 
 			messages.clear();

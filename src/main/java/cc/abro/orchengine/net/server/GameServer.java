@@ -1,13 +1,14 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
+import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.Engine;
 import cc.abro.orchengine.implementation.NetServerReadInterface;
 import cc.abro.orchengine.implementation.ServerInterface;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +16,9 @@ import java.io.InputStreamReader;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
+@Log4j2
 public class GameServer {
+
     //Присоединение клиентов
     public static int port;
     public static int peopleMax;
@@ -34,6 +37,7 @@ public class GameServer {
     public static NetServerReadInterface inetServerRead;
 
     public static void initSettings(String args[], ServerInterface server, NetServerReadInterface inetServerRead) {
+        Thread.currentThread().setName("Server");
         GameServer.server = server;
         GameServer.inetServerRead = inetServerRead;
 
@@ -73,8 +77,8 @@ public class GameServer {
                 maxPower = (str.equals("t") || str.equals("true"));
             }
         } catch (IOException e) {
-            Global.logger.println("Failed io text", Logger.Type.SERVER_ERROR);
-            Loader.exit();
+            log.error("Failed io text");
+            throw new EngineException(e);
         }
     }
 
@@ -98,17 +102,17 @@ public class GameServer {
 
             peopleNow = 0;
 
-            Global.logger.println("Server started", Logger.Type.SERVER_INFO);
+            log.info("Server started");
 
             while (peopleNow != peopleMax) {
                 connects[peopleNow] = ConnectFactory.createConnect(serverSocketTCP, socketUDP, peopleNow);
                 peopleNow++;
 
-                Global.logger.println("New client (" + peopleNow + "/" + peopleMax + ")", Logger.Type.SERVER_INFO);
+                log.info("New client (" + peopleNow + "/" + peopleMax + ")");
             }
             serverSocketTCP.close();
 
-            Global.logger.println("All users connected", Logger.Type.SERVER_INFO);
+            log.info("All users connected");
 
             //Запуск всех основных потоков
             for (Connect connect : connects) {
@@ -119,8 +123,8 @@ public class GameServer {
             processingData();//Старт бессконечно цикла с обработкой данных
         } catch (IOException e) {
             e.printStackTrace();
-            Global.logger.println("Failed server start", Logger.Type.SERVER_ERROR);
-            Loader.exit();
+            log.fatal("Failed server start");
+            throw new EngineException(e);
         }
     }
 
@@ -129,7 +133,7 @@ public class GameServer {
 
         long lastUpdate = System.nanoTime();//Для update
         long startUpdate;
-        while (disconnect != peopleMax) {
+        while (disconnect != Math.max(peopleMax - 1, 1) ) {
             startUpdate = System.nanoTime();
             server.update(System.nanoTime() - lastUpdate);
             lastUpdate = startUpdate; //Начало предыдущего update, чтобы длительность update тоже учитывалась
@@ -137,10 +141,8 @@ public class GameServer {
             for (int i = 0; i < GameServer.peopleMax; i++) {
                 MessagePack.Message message = null;
 
-                synchronized (GameServer.connects[i].messagePack) {//Защита от одновременной работы с массивом
-                    if (GameServer.connects[i].messagePack.haveMessage()) {//Если у игрока имеются сообщения
-                        message = GameServer.connects[i].messagePack.get();//Читаем сообщение
-                    }
+                if (GameServer.connects[i].messagePack.haveMessage()) {//Если у игрока имеются сообщения
+                    message = GameServer.connects[i].messagePack.get();//Читаем сообщение
                 }
 
                 if (message != null) {
@@ -155,8 +157,8 @@ public class GameServer {
             }
         }
 
-        Global.logger.println("All user disconnect!", Logger.Type.SERVER_INFO);
-        Loader.exit();
+        log.info("All user disconnect!");
+        Manager.getService(Engine.class).stop();
     }
 
 }

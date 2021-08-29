@@ -1,120 +1,122 @@
 package cc.abro.orchengine;
 
+import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.gui.CachedGuiPanelStorage;
+import cc.abro.orchengine.cycle.GUI;
+import cc.abro.orchengine.cycle.Render;
+import cc.abro.orchengine.cycle.Update;
+import cc.abro.orchengine.gui.GuiPanelStorage;
+import cc.abro.orchengine.gui.PanelControllersStorage;
+import cc.abro.orchengine.gui.input.mouse.MouseCursor;
 import cc.abro.orchengine.implementation.GameInterface;
-import cc.abro.orchengine.implementation.NetGameReadInterface;
-import cc.abro.orchengine.implementation.NetServerReadInterface;
-import cc.abro.orchengine.implementation.ServerInterface;
-import cc.abro.orchengine.logger.AggregateLogger;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.map.Location;
-import cc.abro.orchengine.net.client.Ping;
+import cc.abro.orchengine.net.client.Connector;
+import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPControl;
 import cc.abro.orchengine.net.client.udp.UDPRead;
+import cc.abro.orchengine.profiles.Profile;
+import cc.abro.orchengine.profiles.Profiles;
 import cc.abro.orchengine.resources.animations.AnimationStorage;
 import cc.abro.orchengine.resources.audios.AudioStorage;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
-import org.lwjgl.glfw.GLFWErrorCallback;
+import cc.abro.orchengine.services.GuiElementService;
+import cc.abro.orchengine.services.LeguiComponentService;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
 
-import java.io.IOException;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-
+@Log4j2
 public class Loader {
 
-	public static void start(GameInterface game, NetGameReadInterface netGameRead,
-							 ServerInterface server, NetServerReadInterface netServerRead) {
-		Global.game = game;
-		Global.server = server;
-		Global.netGameRead = netGameRead;
-		Global.netServerRead = netServerRead;
-
+	void tryInit(){
 		try {
-			loggerInit();//Загрузка логгера для вывода ошибок
-			init(); //Инициализация перед запуском
-			Global.engine.run();//Запуск главного цикла
+			Thread.currentThread().setName("Engine");
+			registryShutdownCallback(); //Регистрация скриптов для корректного освобождения ресурсов при завершение программы
+			SettingsStorageHandler.init(); //Загрузка настроек, в том числе для логгера
+			initServicesList(); //Инициализация списка сервисов перед запуском
+			initBeansList(); //Инициализация списка бинов перед запуском
+			initServices(); //Запуск всех сервисов
+			initGame();//Вызов инициализации у класса игры
+			Global.engine.run();//Запуск главного цикла движка
 		} catch (Exception e) {
-			e.printStackTrace();
-			Global.logger.println("Unknown exception: ", e, Logger.Type.ERROR); //TODO: если logger не создан
-			exit();
-		}
-	}
-
-	private static void loggerInit() {
-		try {
-			SettingsStorageHandler.init();//Загрузка настроек
-		} catch (IOException e) {
-			e.printStackTrace();
-			exit();
-		}
-
-		Global.logger = new AggregateLogger();
-
-		//Установка настроек логирования
-		Global.logger.enableType(Logger.Type.INFO);
-		Global.logger.enableType(Logger.Type.SERVER_INFO);
-		if (SettingsStorage.LOGGER.ERROR_CONSOLE) Global.logger.enableType(Logger.Type.ERROR);
-		if (SettingsStorage.LOGGER.ERROR_CONSOLE_SERVER) Global.logger.enableType(Logger.Type.SERVER_ERROR);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE) Global.logger.enableType(Logger.Type.DEBUG);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_IMAGE) Global.logger.enableType(Logger.Type.DEBUG_TEXTURE);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_MASK) Global.logger.enableType(Logger.Type.DEBUG_MASK);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_AUDIO) Global.logger.enableType(Logger.Type.DEBUG_AUDIO);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_FPS) Global.logger.enableType(Logger.Type.CONSOLE_FPS);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_SERVER) Global.logger.enableType(Logger.Type.SERVER_DEBUG);
-		if (SettingsStorage.LOGGER.DEBUG_CONSOLE_MPS) Global.logger.enableType(Logger.Type.MPS);
-	}
-
-	//Инициализация движка перед запуском
-	private static void init() {
-		Global.engine = new Engine();//Создание класса для главного цикла
-		Global.engine.init();
-
-		Global.tcpControl = new TCPControl();
-		Global.tcpRead = new TCPRead();
-		Global.udpControl = new UDPControl();
-		Global.udpRead = new UDPRead();
-
-		Global.pingCheck = new Ping();
-
-		Global.audioPlayer = new AudioPlayer();
-		Global.audioStorage = new AudioStorage();
-
-		Global.spriteStorage = new SpriteStorage();
-		Global.animationStorage = new AnimationStorage();
-		Global.cachedGuiPanelStorage = new CachedGuiPanelStorage();
-
-		new Location(640, 480).activate(false);
-
-		Global.logger.println("Initialization end", Logger.Type.DEBUG);
-
-		//Инициализация игры
-		Global.game.init();
-	}
-
-	public static void exit() {
-		try {
-			glfwFreeCallbacks(Global.engine.render.getWindowID());
-			glfwDestroyWindow(Global.engine.render.getWindowID());
-			glfwTerminate();
-			GLFWErrorCallback errorCallback = glfwSetErrorCallback(null);
-			if (errorCallback != null) errorCallback.free();
-			Global.audioPlayer.close();
-
-			Global.logger.println("Exit stack trace: ", new Exception(), Logger.Type.DEBUG);
-		} catch (Exception e) {
-			Global.logger.println("Unknown exception: ", e, Logger.Type.ERROR); //TODO: если logger не создан
+			logException("The game ended with an error: ", e);
+			throw new RuntimeException(e);
 		} finally {
-			Global.logger.close();
-			System.exit(0);
+			if (Profiles.getActiveProfile() != Profile.TESTS){
+				System.exit(0); //Завершение программы, будет вызван callback для освобождения ресурсов
+			} else {
+				stop(); //Если это автотесты, то не завершаем приложение, а просто высвобождаем ресурсы и возвращаем управление обратно
+			}
 		}
 	}
 
+	private void registryShutdownCallback() {
+		Thread shutdownCallbackThread = new Thread(this::stop);
+		shutdownCallbackThread.setName("ShutdownHook");
+		Runtime.getRuntime().addShutdownHook(shutdownCallbackThread);
+	}
 
+	private void initServicesList() {
+		Manager.addService(Engine.class);
+		Manager.addService(Update.class);
+		Manager.addService(Render.class);
+		Manager.addService(GUI.class);
+		Manager.addService(Analyzer.class);
+		Manager.addService(TCPControl.class);
+		Manager.addService(TCPRead.class);
+		Manager.addService(UDPControl.class);
+		Manager.addService(UDPRead.class);
+		Manager.addService(PingChecker.class);
+		Manager.addService(AudioPlayer.class);
+		Manager.addService(AudioStorage.class);
+		Manager.addService(SpriteStorage.class);
+		Manager.addService(AnimationStorage.class);
+		Manager.addService(GuiPanelStorage.class);
+		Manager.addService(PanelControllersStorage.class);
+		Manager.addService(GuiElementService.class);
+		Manager.addService(LeguiComponentService.class);
+	}
+
+	private void initBeansList() {
+		Manager.addBean(Connector.class);
+		Manager.addBean(MouseCursor.class);
+	}
+
+	private void initServices() {
+		log.info("Initialize engine...");
+		Manager.start();
+		Global.engine = Manager.getService(Engine.class);
+		log.info("Initialize engine complete");
+	}
+
+	private void initGame() {
+		log.info("Initialize game...");
+		new Location(640, 480).activate(false);
+		Manager.getService(GameInterface.class).init();
+		log.info("Initialize game complete");
+	}
+
+	private void logException(String text, Exception e){
+		e.printStackTrace();
+		try {
+			log.fatal(text, e);
+		} catch (Exception logException){
+			logException.printStackTrace();
+		}
+	}
+
+	private void stop() {
+		try {
+			log.debug("Shutting down all services...");
+			Manager.stop();
+			log.debug("Shutting down all services complete");
+		} catch (Exception e) {
+			logException("Stopping services ended with an error: ", e);
+		}
+		log.debug("Shutting down logger");
+		LogManager.shutdown();
+	}
 }

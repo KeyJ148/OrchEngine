@@ -1,7 +1,7 @@
 package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.map.Location;
 
@@ -26,8 +26,7 @@ public class Position extends QueueComponent {
     public Position(double x, double y, int depth, double directionDraw) {
         this.x = x;
         this.y = y;
-        //TODO: поменять -depth на depth после замены в position и далее depth на z
-        this.depth = -depth;
+        this.depth = -depth; //TODO переименовать на z везде
         setDirectionDraw(directionDraw);
     }
 

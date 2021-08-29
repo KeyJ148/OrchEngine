@@ -1,17 +1,17 @@
 package cc.abro.orchengine.net.server.readers;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 
+@Log4j2
 public class ServerReadUDP extends Thread {
 
     @Override
@@ -22,7 +22,6 @@ public class ServerReadUDP extends Thread {
         int portSender;
         try {
             int size = SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
-            ;
 
             while (true) {
                 //Ждем сообщение
@@ -38,17 +37,14 @@ public class ServerReadUDP extends Thread {
                 for (Connect connect : GameServer.connects) {
                     if (connect.ipRemote.equals(ipSender) && connect.portUDP == portSender) {
                         //Добавляем в очередь сообщений
-                        synchronized (connect.messagePack) {//Защита от одновременной работы с массивом
-                            connect.messagePack.add(str, MessagePack.Message.InetType.UDP);
-                        }
-
+                        connect.messagePack.add(str, MessagePack.Message.InetType.UDP);
                         break;
                     }
                 }
             }
         } catch (IOException e) {
-            Global.logger.println("UDP server socket closed", Logger.Type.SERVER_ERROR);
-            Loader.exit();
+            log.warn("UDP server socket closed");
+            throw new EngineException(e);
         }
     }
 }

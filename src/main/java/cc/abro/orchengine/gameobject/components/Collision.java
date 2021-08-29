@@ -1,7 +1,7 @@
 package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
@@ -64,8 +64,8 @@ public class Collision extends QueueComponent {
     public void checkCollisionFromRoom() {
         if (collisionObjects.size() == 0) return;
 
-        for (int i = 0; i < Global.location.objects.size(); i++) {//Цикл перебора всех объектов в комнате
-            GameObject objectFromRoom = Global.location.objects.get(i);
+        for (int i = 0; i < Global.location.getObjectsVectorSize(); i++) {//Цикл перебора всех объектов в комнате
+            GameObject objectFromRoom = Global.location.getObject(i);
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) { //Цикл перебора объектов, с которыми надо проверять столкновение
                     if ((objectFromRoom.getClass().equals(collisionObject)) //Если с эти объектом надо проверять столкновени
@@ -81,7 +81,8 @@ public class Collision extends QueueComponent {
     public boolean checkCollision(GameObject gameObject2) {
         GameObject gameObject1 = getGameObject();
 
-        if (gameObject1.getComponent(Position.class) == null || !gameObject1.hasComponent(Collision.class) || gameObject2.getComponent(Position.class) == null || !gameObject2.hasComponent(Collision.class))
+        if (gameObject1.getComponent(Position.class) == null || !gameObject1.hasComponent(Collision.class) ||
+                gameObject2.getComponent(Position.class) == null || !gameObject2.hasComponent(Collision.class))
             return false;
         Position pos1 = gameObject1.getComponent(Position.class);
         Position pos2 = gameObject2.getComponent(Position.class);

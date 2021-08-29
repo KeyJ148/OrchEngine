@@ -7,8 +7,9 @@ import java.io.IOException;
 
 public class SettingsLoader {
 
+    //TODO возможность указывать путь, для загрузки настроек с клиента, например. Ошибка при наличие двух конфигов с одним именем по одному пути
     private static final String PATH_EXTERNAL = "settings/";
-    private static final String PATH_INTERNAL = "res/settings/";
+    private static final String PATH_INTERNAL = "settings/";
 
     public static <T> T loadExternalSettings(Class<T> settingsContainerClass) throws IOException {
         String path = PATH_EXTERNAL + getSettingsFileName(settingsContainerClass);

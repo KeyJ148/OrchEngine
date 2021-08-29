@@ -20,7 +20,7 @@ public class SettingsStorageHandler {
         SettingsStorage.MUSIC = initExternalSettingsOrDefaultFromInternal(SettingsStorage.Music.class);
     }
 
-    private static <T> T initExternalSettingsOrDefaultFromInternal(Class<T> settingsContainerClass) throws IOException {
+    public static <T> T initExternalSettingsOrDefaultFromInternal(Class<T> settingsContainerClass) throws IOException {
         try {
             return SettingsLoader.loadExternalSettings(settingsContainerClass);
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package cc.abro.orchengine.gameobject.components.particles;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.util.Vector2;
 import cc.abro.orchengine.resources.textures.Texture;
 import org.lwjgl.opengl.GL11;
 

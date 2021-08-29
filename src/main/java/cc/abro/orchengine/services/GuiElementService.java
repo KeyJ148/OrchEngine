@@ -1,34 +1,64 @@
 package cc.abro.orchengine.services;
 
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.GameObjectFactory;
-import cc.abro.orchengine.gameobject.components.render.GuiElement;
+import cc.abro.orchengine.gameobject.components.gui.GuiElement;
 import cc.abro.orchengine.map.Location;
 import org.liquidengine.legui.component.Component;
 
 public class GuiElementService {
 
-    public GameObject addComponentToLocationShiftedToCenter(Component component, Location location) {
+    private final Render render;
+
+    public GuiElementService(Render render){
+        this.render = render;
+    }
+
+    /**
+     * Добавляет {@link GuiElement} на локацию. Координаты необходимо заранее задать
+     * в компоненте (находящейся в {@link GuiElement}).
+     */
+    public GameObject addGuiElementToLocationShiftedToCenter(GuiElement<?> guiElement, Location location) {
         GameObject gameObject = GameObjectFactory.create();
         location.objAdd(gameObject);
-        gameObject.setComponent(new GuiElement<>(component));
+        gameObject.setComponent(guiElement);
         return gameObject;
     }
 
-    public GameObject addComponentToLocationShiftedToCenter(Component component, int x, int y, Location location) {
+    /**
+     * Добавляет {@link GuiElement} на локацию в указанные координаты. Левый верхний угол компоненты
+     * (находящейся в {@link GuiElement}) будет находится в переданных координатах.
+     */
+    public GameObject addGuiElementToLocation(GuiElement<?> guiElement, int x, int y, Location location) {
+        guiElement.getComponent().setPosition(x, y);
+        GameObject gameObject = GameObjectFactory.create();
+        location.objAdd(gameObject);
+        gameObject.setComponent(guiElement);
+        return gameObject;
+    }
+
+    /**
+     * Добавляет {@link GuiElement} на локацию в указанные координаты. Центр компоненты
+     * (находящейся в {@link GuiElement}) будет находится в переданных координатах.
+     */
+    public GameObject addGuiElementToLocationShiftedToCenter(GuiElement<?> guiElement, int x, int y, Location location) {
+        Component component = guiElement.getComponent();
         component.setPosition(x - component.getSize().x / 2, y - component.getSize().y / 2);
         GameObject gameObject = GameObjectFactory.create();
         location.objAdd(gameObject);
-        gameObject.setComponent(new GuiElement<>(component));
+        gameObject.setComponent(guiElement);
         return gameObject;
     }
 
-    //Координаты (x;y) задают левый верхний угол компоненты
-    public GameObject addComponentToLocation(Component component, int x, int y, Location location) {
-        component.setPosition(x, y);
-        GameObject gameObject = GameObjectFactory.create();
-        location.objAdd(gameObject);
-        gameObject.setComponent(new GuiElement<>(component));
-        return gameObject;
+    /**
+     * Добавляет {@link GuiElement} в центр локации. Центр компоненты (находящейся в {@link GuiElement})
+     * будет находится в центре локации.
+     */
+    public GameObject addGuiElementOnLocationCenter(GuiElement<?> guiElement, Location location) {
+        return addGuiElementToLocationShiftedToCenter(guiElement,
+                render.getWidth() / 2,
+                render.getHeight() / 2,
+                location);
     }
 }

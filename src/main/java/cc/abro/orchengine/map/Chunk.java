@@ -39,8 +39,8 @@ public class Chunk {
 
 	public void render() {
 		for (int id : number) {
-			if (Global.location.objects.size() > id && Global.location.objects.get(id) != null) {
-				GameObject gameObject = Global.location.objects.get(id);
+			if (Global.location.getObjectsVectorSize() > id && Global.location.getObject(id) != null) {
+				GameObject gameObject = Global.location.getObject(id);
 				gameObject.draw();
 			}
 		}

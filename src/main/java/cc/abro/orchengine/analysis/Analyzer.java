@@ -1,37 +1,67 @@
 package cc.abro.orchengine.analysis;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
+import cc.abro.orchengine.net.client.PingChecker;
+import cc.abro.orchengine.net.client.tcp.TCPControl;
+import cc.abro.orchengine.net.client.udp.UDPControl;
+import lombok.extern.log4j.Log4j2;
+import org.picocontainer.Startable;
 
-public class Analyzer {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@Log4j2
+public class Analyzer implements Startable {
+
+	public static final int STRING_COUNT = 2;
 
 	//Для подсчёта fps, ups
-	public int loopsRender = 0;
-	public int loopsUpdate = 0;
-	public int loopsSync = 0;
+	protected int loopsRender = 0;
+	protected int loopsUpdate = 0;
+	protected int loopsSync = 0;
 	private long startUpdate, startRender, startSync, lastAnalysis;
 
 	//Для подсчёта быстродействия
-	public long durationUpdate = 0;
-	public long durationRender = 0;
-	public long durationSync = 0;
+	protected long durationUpdate = 0;
+	protected long durationRender = 0;
+	protected long durationSync = 0;
 
 	//Пинг
-	public int ping = 0, pingMin = 0, pingMax = 0, pingMid = 0;
+	protected int ping = 0, pingMin = 0, pingMax = 0, pingMid = 0;
 
 	//Скорость сети
-	public int sendTCP = 0, loadTCP = 0, sendPackageTCP = 0, loadPackageTCP = 0;
-	public int sendUDP = 0, loadUDP = 0, sendPackageUDP = 0, loadPackageUDP = 0;
+	protected int sendTCP = 0, loadTCP = 0, sendPackageTCP = 0, loadPackageTCP = 0;
+	protected int sendUDP = 0, loadUDP = 0, sendPackageUDP = 0, loadPackageUDP = 0;
 
-	public int chunkInDepthVector;
+	//Использование памяти
+	protected long freeMem = 0, totalMem = 0, maxMem = 0;
+
+	//Использование чанков
+	protected int chunkInDepthVector;
+
+	//Результаты анализа построчно
+	private List<String> analysisResultStrings = Collections.emptyList();
 
 	private AnalysisStringBuilder analysisStringBuilder;
+	private final TCPControl tcpControl;
+	private final UDPControl udpControl;
+	private final PingChecker pingCheckerCheck;
 
-	public Analyzer() {
+	public Analyzer(TCPControl tcpControl, UDPControl udpControl, PingChecker pingCheckerCheck) {
+		this.tcpControl = tcpControl;
+		this.udpControl = udpControl;
+		this.pingCheckerCheck = pingCheckerCheck;
+	}
+
+	@Override
+	public void start() {
 		analysisStringBuilder = new AnalysisStringBuilder(this);
 		lastAnalysis = System.currentTimeMillis();
 	}
+
+	@Override
+	public void stop() { }
 
 	public void startUpdate() {
 		startUpdate = System.nanoTime();
@@ -65,28 +95,37 @@ public class Analyzer {
 		if (System.currentTimeMillis() < lastAnalysis + 1000) return;
 
 		analysisData();
-		outputResult();
+		generateResult();
+		logToConsole();
 		clearData();
 	}
 
+	public List<String> getAnalysisResult() {
+		return new ArrayList<>(analysisResultStrings);
+	}
+
 	//Анализ данных
-	public void analysisData() {
-		ping = Global.pingCheck.ping();
-		pingMin = Global.pingCheck.pingMin();
-		pingMid = Global.pingCheck.pingMid();
-		pingMax = Global.pingCheck.pingMax();
+	private void analysisData() {
+		ping = pingCheckerCheck.ping();
+		pingMin = pingCheckerCheck.pingMin();
+		pingMid = pingCheckerCheck.pingMid();
+		pingMax = pingCheckerCheck.pingMax();
 
-		sendTCP = Math.round(Global.tcpControl.sizeDataSend / 1024);
-		loadTCP = Math.round(Global.tcpControl.sizeDataRead / 1024);
-		sendPackageTCP = Global.tcpControl.countPackageSend;
-		loadPackageTCP = Global.tcpControl.countPackageRead;
-		Global.tcpControl.analyzeClear();
+		sendTCP = Math.round(tcpControl.sizeDataSend / 1024);
+		loadTCP = Math.round(tcpControl.sizeDataRead / 1024);
+		sendPackageTCP = tcpControl.countPackageSend;
+		loadPackageTCP = tcpControl.countPackageRead;
+		tcpControl.analyzeClear();
 
-		sendUDP = Math.round(Global.udpControl.sizeDataSend / 1024);
-		loadUDP = Math.round(Global.udpControl.sizeDataRead / 1024);
-		sendPackageUDP = Global.udpControl.countPackageSend;
-		loadPackageUDP = Global.udpControl.countPackageRead;
-		Global.udpControl.analyzeClear();
+		sendUDP = Math.round(udpControl.sizeDataSend / 1024);
+		loadUDP = Math.round(udpControl.sizeDataRead / 1024);
+		sendPackageUDP =udpControl.countPackageSend;
+		loadPackageUDP =udpControl.countPackageRead;
+		udpControl.analyzeClear();
+
+		freeMem = Runtime.getRuntime().freeMemory();
+		totalMem = Runtime.getRuntime().totalMemory();
+		maxMem = Runtime.getRuntime().maxMemory();
 
 		chunkInDepthVector = (Global.location.mapControl.getCountDepthVectors() == 0) ? 0 : Global.location.mapControl.chunkRender / Global.location.mapControl.getCountDepthVectors();
 
@@ -97,7 +136,7 @@ public class Analyzer {
 	}
 
 	//Обнуление счётчиков
-	public void clearData() {
+	private void clearData() {
 		lastAnalysis = System.currentTimeMillis();
 		loopsUpdate = 0;
 		loopsRender = 0;
@@ -105,25 +144,14 @@ public class Analyzer {
 		durationRender = 0;
 	}
 
-	//Вывод результатов
-	public void outputResult() {
+	//Сохранение результатов
+	private void generateResult() {
 		//Получение строк с результатами
-		String str1 = analysisStringBuilder.getAnalysisString1();
-		String str2 = analysisStringBuilder.getAnalysisString2();
-
-		//Вывод результатов в консоль
-		Global.logger.println(str1, Logger.Type.CONSOLE_FPS);
-		Global.logger.println(str2, Logger.Type.CONSOLE_FPS);
-
-		//Вывод результатов на монитор
-		if (SettingsStorage.LOGGER.DEBUG_MONITOR_FPS) {
-			//TODO: надпись - компонент объекта
-			//Отрисвока надписей
-			/*
-			addTitle(new Title(1, getHeight()-27,strAnalysis1, Color.black, 12, Font.BOLD));
-			addTitle(new Title(1, getHeight()-15,strAnalysis2, Color.black, 12, Font.BOLD));
-			*/
-		}
+		analysisResultStrings = List.of(analysisStringBuilder.getAnalysisString1(),
+				analysisStringBuilder.getAnalysisString2());
 	}
 
+	private void logToConsole() {
+		analysisResultStrings.forEach(log::trace);
+	}
 }

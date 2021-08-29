@@ -11,7 +11,7 @@ public class MapControl {
 	private ArrayList<DepthVector> depthVectors = new ArrayList<DepthVector>(); //Массив с DepthVector хранящий чанки
 	public int numberWidth;//Кол-во чанков
 	public int numberHeight;
-	public final int chunkSize = 100;
+	private final int chunkSize = 100;
 	public final int borderSize = 100;
 	public int chunkRender = 0;//Кол-во отрисованных чанков
 
@@ -51,7 +51,7 @@ public class MapControl {
 	}
 
 	public void del(int id) {
-		GameObject gameObject = Global.location.objects.get(id);
+		GameObject gameObject = Global.location.getObject(id);
 		int depth = gameObject.getComponent(Position.class).depth;
 
 		DepthVector dv;
@@ -86,5 +86,9 @@ public class MapControl {
 
 	public int getCountDepthVectors() {
 		return depthVectors.size();
+	}
+
+	public int getChunkSize() {
+		return chunkSize;
 	}
 }

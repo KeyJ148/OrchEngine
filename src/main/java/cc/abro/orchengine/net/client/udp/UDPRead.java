@@ -1,6 +1,6 @@
 package cc.abro.orchengine.net.client.udp;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.implementation.NetGameReadInterface;
 import cc.abro.orchengine.net.client.Message;
 
 import java.util.ArrayList;
@@ -9,12 +9,22 @@ public class UDPRead extends Thread {
 
 	private volatile ArrayList<Message> messages = new ArrayList<>();
 
+	private final NetGameReadInterface netGameRead;
+	private final UDPControl udpControl;
+
+	public UDPRead(NetGameReadInterface netGameRead, UDPControl udpControl){
+		this.netGameRead = netGameRead;
+		this.udpControl = udpControl;
+
+		setDaemon(true);
+	}
+
 	@Override
 	public void run() {
 		//Постоянный обмен данными на UDP
 		String str;
 		while (true) {
-			str = Global.udpControl.read();
+			str = udpControl.read();
 
 			int type = Integer.parseInt(str.split(" ")[0]);
 			String data = str.substring(str.indexOf(" ") + 1);
@@ -31,7 +41,7 @@ public class UDPRead extends Thread {
 		synchronized (messages) {
 			for (int i = 0; i < messages.size(); i++) {
 				Message message = messages.get(i);
-				Global.netGameRead.readUDP(message);
+				netGameRead.readUDP(message);
 			}
 
 			messages.clear();

@@ -1,9 +1,13 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class AnalyzerThread extends Thread {
+
+    public AnalyzerThread() {
+        setName("ServerAnalyzer");
+    }
 
     @Override
     public void run() {
@@ -13,13 +17,14 @@ public class AnalyzerThread extends Thread {
         while (true) {
             if (System.currentTimeMillis() > timeAnalysis + timeAnalysisDelta) {//Анализ MPS
                 timeAnalysis = System.currentTimeMillis();
-                Global.logger.print("[MPS] ", Logger.Type.MPS);
+                StringBuilder sb = new StringBuilder();
+                sb.append("MPS: ");
                 for (int i = 0; i < GameServer.peopleMax; i++) {
-                    Global.logger.print(String.valueOf(GameServer.connects[i].numberSend), Logger.Type.MPS);
-                    if (i != GameServer.peopleMax - 1) Global.logger.print(" | ", Logger.Type.MPS);
+                    sb.append(GameServer.connects[i].numberSend);
+                    if (i != GameServer.peopleMax - 1) sb.append(" | ");
                     GameServer.connects[i].numberSend = 0;
                 }
-                Global.logger.println("", Logger.Type.MPS);
+                log.debug(sb.toString());
             }
 
             try {

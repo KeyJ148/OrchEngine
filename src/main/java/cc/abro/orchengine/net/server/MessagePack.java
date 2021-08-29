@@ -1,17 +1,18 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
+import lombok.extern.log4j.Log4j2;
 
-import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
+@Log4j2
 public class MessagePack {
 
-	private LinkedList<Message> messages;//Список сообщений
+	private final BlockingQueue<Message> messages;//Список сообщений
 	public int id;
 
 	public MessagePack(int id) {
-		this.messages = new LinkedList<>();
+		this.messages = new LinkedBlockingQueue<>();
 		this.id = id;
 	}
 
@@ -29,10 +30,10 @@ public class MessagePack {
 
 	public Message get() {
 		if (size() % 10 == 0) {
-			Global.logger.println("Messages detained: " + size() + " (id: " + id + ")", Logger.Type.SERVER_DEBUG);
+			log.trace("Messages detained: " + size() + " (id: " + id + ")");
 		}
 
-		return messages.removeFirst();
+		return messages.poll();
 	}
 
 	public int size() {
@@ -40,15 +41,12 @@ public class MessagePack {
 	}
 
 	public boolean haveMessage() {
-		if (messages.isEmpty()) return false;
-		return true;
+		return !messages.isEmpty();
 	}
 
 	public static class Message {
 
 		public enum InetType {TCP, UDP}
-
-		;
 
 		public int type;
 		public String text;

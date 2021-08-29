@@ -1,17 +1,17 @@
 package cc.abro.orchengine.resources.animations;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.resources.JsonContainerLoader;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 public class AnimationStorage {
 
-    private static final String CONFIG_PATH = "res/configs/animation.json";
+    private static final String CONFIG_PATH = "configs/animation.json";
 
     private Map<String, Animation> animationByName = new HashMap<>();
 
@@ -21,21 +21,21 @@ public class AnimationStorage {
 
             for (AnimationContainer animationContainer : animationContainers) {
                 if (animationByName.containsKey(animationContainer.name)) {
-                    Global.logger.println("Animation \"" + animationContainer.name + "\" already exists", Logger.Type.ERROR);
-                    Loader.exit();
+                    log.error("Animation \"" + animationContainer.name + "\" already exists");
+                    throw new IllegalStateException("Animation \"" + animationContainer.name + "\" already exists");
                 }
 
                 animationByName.put(animationContainer.name, AnimationLoader.getAnimation(animationContainer.texturePaths, animationContainer.maskPath));
             }
         } catch (IOException e) {
-            Global.logger.println("Error loading animation", e, Logger.Type.ERROR);
-            Loader.exit();
+            log.error("Error loading animation", e);
+            throw new EngineException(e);
         }
     }
 
     public Animation getAnimation(String name) {
         if (!animationByName.containsKey(name)) {
-            Global.logger.print("Animation \"" + name + "\" not found", Logger.Type.ERROR);
+            log.error("Animation \"" + name + "\" not found");
             return null;
         }
 

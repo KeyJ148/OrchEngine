@@ -1,13 +1,13 @@
 package cc.abro.orchengine.net.server.senders;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.logger.Logger;
 import cc.abro.orchengine.net.server.GameServer;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
+@Log4j2
 public class ServerSendUDP {
 
     public static void send(int id, int type, String str) {
@@ -22,7 +22,7 @@ public class ServerSendUDP {
 
                 GameServer.connects[id].numberSend++; //Кол-во отправленных пакетов
             } catch (IOException e) {
-                Global.logger.print("Send message failed (UDP)", Logger.Type.SERVER_ERROR);
+                log.warn("Send message failed (UDP)");
             }
         }
     }

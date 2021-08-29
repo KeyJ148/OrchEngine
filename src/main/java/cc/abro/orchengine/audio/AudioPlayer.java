@@ -7,8 +7,7 @@ import cc.abro.orchengine.resources.audios.Audio;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCCapabilities;
-import org.lwjgl.openal.ALCapabilities;
+import org.picocontainer.Startable;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,19 +15,25 @@ import java.util.List;
 
 import static org.lwjgl.openal.ALC10.*;
 
-public class AudioPlayer {
+public class AudioPlayer implements Startable{
 
-    private List<AudioSource> audioSources = new LinkedList<>();
+    private final List<AudioSource> audioSources = new LinkedList<>();
     private long context, device;
 
-    public AudioPlayer() {
+    @Override
+    public void start() {
         String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         device = alcOpenDevice(defaultDeviceName);
         int[] attributes = {0};
         context = alcCreateContext(device, attributes);
         alcMakeContextCurrent(context);
-        ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
-        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+        AL.createCapabilities(ALC.createCapabilities(device));
+    }
+
+    @Override
+    public void stop() {
+        alcDestroyContext(context);
+        alcCloseDevice(device);
     }
 
     public void playSoundEffect(Audio audio, int x, int y, int range) {
@@ -78,10 +83,5 @@ public class AudioPlayer {
                 it.remove();
             }
         }
-    }
-
-    public void close() {
-        alcDestroyContext(context);
-        alcCloseDevice(device);
     }
 }

@@ -1,15 +1,16 @@
 package cc.abro.orchengine.net.client.tcp;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.net.client.ConnectException;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
+@Log4j2
 public class TCPControl extends NetControl {
 
 	private DataInputStream in;
@@ -35,8 +36,8 @@ public class TCPControl extends NetControl {
 			this.in = in;
 			this.out = out;
 		} catch (IOException e) {
-			Global.logger.println("Connection failed (TCP)", Logger.Type.ERROR);
-			Loader.exit();
+			log.warn("Connection failed (TCP)");
+			throw new ConnectException(e);
 		}
 	}
 
@@ -50,8 +51,8 @@ public class TCPControl extends NetControl {
 				analyzeSend(str.length() * 2);
 			}
 		} catch (IOException e) {
-			Global.logger.println("Connection lost (TCP send)", Logger.Type.ERROR);
-			Loader.exit();
+			log.warn("Connection lost (TCP send)");
+			throw new EngineException(e);
 		}
 	}
 
@@ -63,9 +64,8 @@ public class TCPControl extends NetControl {
 
 			return str;
 		} catch (IOException e) {
-			Global.logger.println("Connection lost (TCP read)", Logger.Type.ERROR);
-			Loader.exit();
-			return null;
+			log.warn("Connection lost (TCP read)");
+			throw new EngineException(e);
 		}
 	}
 }

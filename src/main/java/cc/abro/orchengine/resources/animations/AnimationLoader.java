@@ -17,7 +17,7 @@ public class AnimationLoader {
         }
 
         Mask mask = (maskPath != null) ?
-                MaskLoader.getMask(maskPath) :
+                MaskLoader.getMask(maskPath, textures.get(0).getWidth(), textures.get(0).getHeight()) :
                 MaskLoader.createDefaultMask(textures.get(0).getWidth(), textures.get(0).getHeight());
 
         return new Animation(textures, mask);

@@ -1,12 +1,12 @@
 package cc.abro.orchengine.gui.input.mouse;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
 import cc.abro.orchengine.gameobject.components.render.SpriteRender;
 import cc.abro.orchengine.resources.textures.Texture;
+import cc.abro.orchengine.util.Vector2;
 import org.lwjgl.BufferUtils;
 
 import java.nio.DoubleBuffer;
@@ -18,7 +18,11 @@ public class MouseCursor {
     private GameObject cursor;
     private boolean captureCursor = false;
 
-    public MouseCursor() {
+    private final Render render;
+
+    public MouseCursor(Render render) {
+        this.render = render;
+
         //Создание объекта курсора (используется компонент Position и Sprite)
         cursor = new GameObject();
         cursor.setComponent(new Position(0, 0, -1000));
@@ -46,14 +50,14 @@ public class MouseCursor {
 
     public void setTexture(Texture texture) {
         //Отключение стнадартного курсора
-        glfwSetInputMode(Global.engine.render.getWindowID(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(render.getWindowID(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         //Присвоение текстуры объекту курсора
         cursor.setComponent(new SpriteRender(texture));
     }
 
     public void setDefaultTexture() {
         //Включение стнадартного курсора
-        glfwSetInputMode(Global.engine.render.getWindowID(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(render.getWindowID(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         //Отключение текстуры у объекта курсора
         cursor.removeComponent(Rendering.class);
     }
@@ -67,18 +71,18 @@ public class MouseCursor {
         DoubleBuffer bufX = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer bufY = BufferUtils.createDoubleBuffer(1);
 
-        glfwGetCursorPos(Global.engine.render.getWindowID(), bufX, bufY);
+        glfwGetCursorPos(render.getWindowID(), bufX, bufY);
         Vector2<Integer> mousePos = new Vector2<>((int) bufX.get(), (int) bufY.get());
 
         if (captureCursor) captureInWindow(mousePos);
-        glfwSetCursorPos(Global.engine.render.getWindowID(), mousePos.x, mousePos.y);
+        glfwSetCursorPos(render.getWindowID(), mousePos.x, mousePos.y);
         return mousePos;
     }
 
     //Если позиция мыши выходит за пределы окна, то функция нормализует значения в mousePos
     private void captureInWindow(Vector2<Integer> mousePos) {
-        int width = Global.engine.render.getWidth();
-        int height = Global.engine.render.getHeight();
+        int width = render.getWidth();
+        int height = render.getHeight();
 
         if (mousePos.x < 0) mousePos.x = 0;
         if (mousePos.x > width) mousePos.x = width;

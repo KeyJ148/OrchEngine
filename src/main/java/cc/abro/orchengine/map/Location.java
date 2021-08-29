@@ -1,6 +1,8 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.GUI;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.gui.input.keyboard.KeyboardHandler;
@@ -16,8 +18,7 @@ public class Location {
 	public Background background = new Background(); //Фон карты (цвет и текстура)
 	public Camera camera = new Camera(); //Положение камеры в этой локации
 
-	//TODO: Сделать приватными и immutable getter / iterator
-	public Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
+	private Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
 	public MapControl mapControl; //Массив со всеми чанками и объектами
 
 	private Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
@@ -29,7 +30,7 @@ public class Location {
 		this.height = height;
 		mapControl = new MapControl(width, height);
 
-		guiFrame = Global.engine.gui.createFrame();
+		guiFrame = Manager.getService(GUI.class).createFrame();
 	}
 
 	public void update(long delta) {
@@ -61,6 +62,18 @@ public class Location {
 		return count;
 	}
 
+	public GameObject getObject(int id) {
+		return objects.get(id);
+	}
+
+	public int getObjectsVectorSize() {
+		return objects.size();
+	}
+
+	public Vector<GameObject> getObjects() {
+		return new Vector<>(objects);
+	}
+
 	//Добавление объекта в комнату
 	public void objAdd(GameObject gameObject) {
 		if (gameObject.isDestroy()) throw new IllegalArgumentException("Obj was destroy");
@@ -82,7 +95,6 @@ public class Location {
 		activate(true);
 	}
 
-	//TODO вынести вызов в отдельный менеджер с activate, который бы делал freeze и unfreeze, он жн меняет Global.location
 	public void activate(boolean saveInput) {
 		//Перенести нажатые клавиши и настройки мыши/курсора или нет
 		if (saveInput) {
@@ -96,7 +108,11 @@ public class Location {
 		if (Global.location != null) Global.location.freeze();
 		Global.location = this;
 		Global.location.unfreeze();
-		Global.engine.gui.setFrameFocused(guiFrame);
+		Manager.getService(GUI.class).setFrameFocused(guiFrame);
+	}
+
+	public boolean isActive(){
+		return Global.location == this;
 	}
 
 	private void freeze() {

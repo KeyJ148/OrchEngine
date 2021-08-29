@@ -1,9 +1,11 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Vector2;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.image.Color;
 import cc.abro.orchengine.resources.textures.Texture;
+import cc.abro.orchengine.util.Vector2;
 import org.lwjgl.opengl.GL11;
 
 public class Background {
@@ -86,7 +88,7 @@ public class Background {
         int fillW = (width - Global.location.width) / 2;
         int fillH = (height - Global.location.height) / 2;
 
-        if (Global.engine.render.getWidth() > Global.location.width) {
+        if (Manager.getService(Render.class).getWidth() > Global.location.width) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);
@@ -108,7 +110,7 @@ public class Background {
             GL11.glVertex2f(width - fillW, height);
             GL11.glEnd();
         }
-        if (Global.engine.render.getHeight() > Global.location.height) {
+        if (Manager.getService(Render.class).getHeight() > Global.location.height) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);

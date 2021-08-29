@@ -1,17 +1,17 @@
 package cc.abro.orchengine.resources.audios;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.resources.JsonContainerLoader;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 public class AudioStorage {
 
-    private static final String CONFIG_PATH = "res/configs/audio.json";
+    private static final String CONFIG_PATH = "configs/audio.json";
 
     private Map<String, Audio> audioByName = new HashMap<>();
 
@@ -23,21 +23,21 @@ public class AudioStorage {
                 String name = entry.getKey();
                 String path = entry.getValue();
                 if (audioByName.containsKey(name)) {
-                    Global.logger.println("Audio \"" + name + "\" already exists", Logger.Type.ERROR);
-                    Loader.exit();
+                    log.error("Audio \"" + name + "\" already exists");
+                    throw new IllegalStateException("Audio \"" + name + "\" already exists");
                 }
 
                 audioByName.put(name, AudioLoader.getAudio(path));
             }
         } catch (IOException e) {
-            Global.logger.println("Error loading audios", e, Logger.Type.ERROR);
-            Loader.exit();
+            log.error("Error loading audios", e);
+            throw new EngineException(e);
         }
     }
 
     public Audio getAudio(String name) {
         if (!audioByName.containsKey(name)) {
-            Global.logger.print("Audio \"" + name + "\" not found", Logger.Type.ERROR);
+            log.error("Audio \"" + name + "\" not found");
             return null;
         }
 

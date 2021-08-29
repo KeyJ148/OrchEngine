@@ -1,37 +1,59 @@
 package cc.abro.orchengine.cycle;
 
+import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.Global;
-import cc.abro.orchengine.Loader;
-import cc.abro.orchengine.logger.Logger;
+import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import lombok.extern.log4j.Log4j2;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.picocontainer.Startable;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Render {
+@Log4j2
+public class Render implements Startable {
 
 	private long windowID; //ID окна игры для LWJGL
 	private long monitorID; //ID монитора (0 для не полноэкранного режима)
 	private int width;
 	private int height;
 
-	public Render() {
+	private final GameInterface game;
+	private final GUI gui;
+
+	public Render(GameInterface game, GUI gui) {
+		this.game = game;
+		this.gui = gui;
+	}
+
+	@Override
+	public void start() {
 		//Инициализация GLFW
 		if (!glfwInit()) {
-			Global.logger.println("GLFW initialization failed", Logger.Type.ERROR);
-			Loader.exit();
+			log.fatal("GLFW initialization failed");
+			throw new EngineException("GLFW initialization failed");
 		}
 
 		//Инициализация и настройка окна
 		try {
 			initOpenGL();
 		} catch (Exception e) {
-			Global.logger.println("OpenGL initialization failed", e, Logger.Type.ERROR);
-			Loader.exit();
+			log.fatal("OpenGL initialization failed", e);
+			throw e;
+		}
+
+		//Инициализация и настройка LeGUI
+		try {
+			gui.initLeGUI();
+		} catch (Exception e) {
+			log.fatal("LeGUI initialization failed", e);
+			throw e;
 		}
 	}
 
@@ -96,12 +118,20 @@ public class Render {
 	public void loop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //Очистка рендера
 
-		Global.game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
+		game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
 		Global.location.render(getWidth(), getHeight()); //Отрисовка комнаты
-		Global.engine.gui.render(); //Отрисовка интерфейса (LeGUI)
+		gui.render(); //Отрисовка интерфейса (LeGUI)
 		Global.location.getMouse().draw(); //Отрисовка курсора мыши
 	}
 
+	@Override
+	public void stop() {
+		glfwFreeCallbacks(getWindowID());
+		glfwDestroyWindow(getWindowID());
+		glfwTerminate();
+		GLFWErrorCallback errorCallback = glfwSetErrorCallback(null);
+		if (errorCallback != null) errorCallback.free();
+	}
 
 	public void vsync() {
 		glfwSwapBuffers(windowID);

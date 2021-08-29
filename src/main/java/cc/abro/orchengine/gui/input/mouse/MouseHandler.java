@@ -1,5 +1,6 @@
 package cc.abro.orchengine.gui.input.mouse;
 
+import cc.abro.orchengine.Manager;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.event.MouseClickEvent;
 
@@ -16,7 +17,7 @@ public class MouseHandler {
 
 	public MouseHandler(Frame frame) {
 		//Создание объекта для обработки курсора
-		cursor = new MouseCursor();
+		cursor = Manager.createBean(MouseCursor.class);
 
 		//Создание объекта фиксирующего все события мыши
 		eventHistory = new MouseEventHistory(frame);
