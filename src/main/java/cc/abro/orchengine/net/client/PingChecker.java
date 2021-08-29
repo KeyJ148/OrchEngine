@@ -74,4 +74,8 @@ public class PingChecker {
 	public int pingMin() {
 		return (pingMin == 1000) ? 0 : pingMin;
 	}
+
+	public int getPing() {
+		return ping;
+	}
 }
