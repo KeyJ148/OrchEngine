@@ -44,4 +44,12 @@ public abstract class EventableGuiPanel extends GuiPanel{
     protected MouseClickEventListener getMouseReleaseListenerToNotify(Supplier<GuiElementEvent> eventSupplier){
         return getMouseReleaseListener(action -> notifyAboutEvent(eventSupplier.get()));
     }
+
+    protected MouseClickEventListener getMouseReleaseListenerToNotifyEvents(List<GuiElementEvent> events){
+        return getMouseReleaseListener(action -> events.forEach(this::notifyAboutEvent));
+    }
+
+    protected MouseClickEventListener getMouseReleaseListenerToNotifyEvents(Supplier<List<GuiElementEvent>> events){
+        return getMouseReleaseListener(action -> events.get().forEach(this::notifyAboutEvent));
+    }
 }
