@@ -14,9 +14,9 @@ public class ClickChangePanelController extends GuiElementController<ClickChange
 
     @Override
     public void processEvent(ClickChangePanelGuiEvent event) {
-        EventableGuiPanel guiPanel = Manager.getService(GuiPanelStorage.class).getPanel(event.getNextPanelClass());
+        EventableGuiPanel guiPanel = event.getNextPanelSupplier().get();
         EventableGuiPanelElement<EventableGuiPanel> guiElement = new EventableGuiPanelElement<>(
-                guiPanel, Manager.getService(PanelControllersStorage.class).getControllers(event.getNextPanelClass()));
+                guiPanel, event.getControllersSupplier().get());
         getGuiElement().destroyAndCreateGuiElement(guiElement);
     }
 }
