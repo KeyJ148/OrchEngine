@@ -28,7 +28,7 @@ public class Manager {
         return picoContainerBeans.getComponent(beanClass);
     }
 
-    protected static void start(){
+    public static void start(){
         picoContainerServices.start();
     }
 
