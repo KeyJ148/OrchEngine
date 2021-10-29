@@ -1,8 +1,6 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
 
-import org.liquidengine.legui.component.Component;
-
 public abstract class GuiElementController<T extends GuiElementEvent> {
 
     private EventableGuiElement<?> guiElement;
