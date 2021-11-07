@@ -1,14 +1,14 @@
 package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.gameobject.GameObject;
-import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.location.LocationManager;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Follower extends QueueComponent {
+public class Follower extends Component {
 
     public GameObject followUpGameObject;
     public boolean followDirectionDraw;
@@ -58,12 +58,12 @@ public class Follower extends QueueComponent {
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryUpdateComponents() {
+    public List<Class<? extends Component>> getPreliminaryUpdateComponents() {
         return Arrays.asList(Movement.class);
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryDrawComponents() {
+    public List<Class<? extends Component>> getPreliminaryDrawComponents() {
         return Arrays.asList();
     }
 }

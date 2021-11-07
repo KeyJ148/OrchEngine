@@ -1,7 +1,7 @@
 package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Manager;
-import cc.abro.orchengine.gameobject.QueueComponent;
+import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.util.Vector2;
@@ -9,7 +9,7 @@ import cc.abro.orchengine.util.Vector2;
 import java.util.Arrays;
 import java.util.List;
 
-public class Position extends QueueComponent {
+public class Position extends Component {
 
     public double x;
     public double y;
@@ -37,11 +37,6 @@ public class Position extends QueueComponent {
 
     @Override
     protected void drawComponent() {
-    }
-
-    @Override
-    public void destroy() {
-        getGameObject().getLocation().getMap().objDel(id);
     }
 
     public double getDirectionDraw() {
@@ -73,12 +68,12 @@ public class Position extends QueueComponent {
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryUpdateComponents() {
+    public List<Class<? extends Component>> getPreliminaryUpdateComponents() {
         return Arrays.asList();
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryDrawComponents() {
+    public List<Class<? extends Component>> getPreliminaryDrawComponents() {
         return Arrays.asList();
     }
 }

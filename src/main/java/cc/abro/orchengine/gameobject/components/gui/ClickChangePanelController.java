@@ -1,9 +1,6 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
-import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gui.EventableGuiPanel;
-import cc.abro.orchengine.gui.GuiPanelStorage;
-import cc.abro.orchengine.gui.PanelControllersStorage;
 
 public class ClickChangePanelController extends GuiElementController<ClickChangePanelGuiEvent> {
 

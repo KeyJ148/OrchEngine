@@ -2,7 +2,6 @@ package cc.abro.orchengine.gameobject.components.gui;
 
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
-import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.Movement;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.services.GuiElementService;
@@ -12,7 +11,7 @@ import org.liquidengine.legui.component.Component;
 import java.util.Arrays;
 import java.util.List;
 
-public class GuiElement<T extends Component> extends QueueComponent {
+public class GuiElement<T extends Component> extends cc.abro.orchengine.gameobject.Component {
 
     protected final T component;
     private boolean moveComponentToGameObjectPosition;
@@ -36,8 +35,8 @@ public class GuiElement<T extends Component> extends QueueComponent {
     }
 
     @Override
-    public void addToGameObject(GameObject gameObject) {
-        super.addToGameObject(gameObject);
+    public void notifyAboutAddToGameObject(GameObject gameObject) {
+        super.notifyAboutAddToGameObject(gameObject);
         getGameObject().getLocation().getGuiLocationFrame().getGuiFrame().getContainer().add(component);
     }
 
@@ -61,12 +60,12 @@ public class GuiElement<T extends Component> extends QueueComponent {
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryUpdateComponents() {
+    public List<Class<? extends Component>> getPreliminaryUpdateComponents() {
         return Arrays.asList(Movement.class);
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryDrawComponents() {
+    public List<Class<? extends Component>> getPreliminaryDrawComponents() {
         return Arrays.asList();
     }
 

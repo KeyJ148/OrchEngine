@@ -1,13 +1,13 @@
 package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Manager;
-import cc.abro.orchengine.gameobject.QueueComponent;
+import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.location.LocationManager;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Movement extends QueueComponent {
+public class Movement extends Component {
     public double speed; //На сколько пикселей объект смещается за 1 секунду
     private double direction; //0, 360 - в право, против часовой - движение
 
@@ -77,12 +77,12 @@ public class Movement extends QueueComponent {
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryUpdateComponents() {
+    public List<Class<? extends Component>> getPreliminaryUpdateComponents() {
         return Arrays.asList();
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryDrawComponents() {
+    public List<Class<? extends Component>> getPreliminaryDrawComponents() {
         return Arrays.asList();
     }
 }
