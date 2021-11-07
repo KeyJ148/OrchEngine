@@ -30,19 +30,17 @@ public class LocationManager {
     //Сделать комнату активной (update и render), одновременно может быть максимум одна активная комната
     public void setActiveLocation(Location location, boolean saveInput) {
         //Перенести нажатые клавиши и настройки мыши/курсора или нет
-        if (saveInput) {
-            location.getGuiLocationFrame().keyboard = new KeyboardHandler(
-                    location.getGuiLocationFrame().getGuiFrame(),
-                    activeLocation.getGuiLocationFrame().getKeyboard());
-            location.getGuiLocationFrame().mouse = new MouseHandler(
-                    location.getGuiLocationFrame().getGuiFrame(),
-                    activeLocation.getGuiLocationFrame().getMouse());
+        GuiLocationFrame newFrame = location.getGuiLocationFrame();
+        if (activeLocation != null && saveInput) {
+            GuiLocationFrame oldFrame = activeLocation.getGuiLocationFrame();
+            newFrame.keyboard = new KeyboardHandler(newFrame.getGuiFrame(), oldFrame.getKeyboard());
+            newFrame.mouse = new MouseHandler(newFrame.getGuiFrame(), oldFrame.getMouse());
         } else {
-            location.getGuiLocationFrame().keyboard = new KeyboardHandler(location.getGuiLocationFrame().getGuiFrame());
-            location.getGuiLocationFrame().mouse = new MouseHandler(location.getGuiLocationFrame().getGuiFrame());
+            newFrame.keyboard = new KeyboardHandler(newFrame.getGuiFrame());
+            newFrame.mouse = new MouseHandler(newFrame.getGuiFrame());
         }
         activeLocation = location;
-        guiService.setFrameFocused(location.getGuiLocationFrame().getGuiFrame());
+        guiService.setFrameFocused(newFrame.getGuiFrame());
     }
 
     public Set<Location> getUpdatedLocations() {

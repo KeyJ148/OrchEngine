@@ -1,5 +1,7 @@
 package cc.abro.orchengine.gameobject;
 
+import cc.abro.orchengine.location.Location;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ public class GameObject {
 
     private Map<Class<? extends QueueComponent>, QueueComponent> components = new HashMap<>();
     private boolean destroy = false;
+    private Location location;
 
     public GameObject() {
         this(new ArrayList<>());
@@ -64,5 +67,13 @@ public class GameObject {
 
     public boolean isDestroy() {
         return destroy;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

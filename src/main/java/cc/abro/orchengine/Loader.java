@@ -95,7 +95,7 @@ public class Loader {
 
 	private void initGame() {
 		log.info("Initialize game...");
-		Manager.getService(LocationManager.class).setActiveLocation(new Location(640, 480), false);
+		Manager.getService(LocationManager.class).setActiveLocation(new Location(640, 480));
 		Manager.getService(GameInterface.class).init();
 		log.info("Initialize game complete");
 	}
