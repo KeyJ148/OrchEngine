@@ -1,6 +1,6 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 
@@ -51,7 +51,7 @@ public class MapControl {
 	}
 
 	public void del(int id) {
-		GameObject gameObject = Global.location.getObject(id);
+		GameObject gameObject = Manager.getService(LocationManager.class).getActiveLocation().getObject(id);
 		int depth = gameObject.getComponent(Position.class).depth;
 
 		DepthVector dv;

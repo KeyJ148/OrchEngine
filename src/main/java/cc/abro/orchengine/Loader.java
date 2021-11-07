@@ -11,6 +11,7 @@ import cc.abro.orchengine.gui.PanelControllersStorage;
 import cc.abro.orchengine.gui.input.mouse.MouseCursor;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.map.Location;
+import cc.abro.orchengine.map.LocationManager;
 import cc.abro.orchengine.net.client.Connector;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
@@ -40,7 +41,7 @@ public class Loader {
 			initBeansList(); //Инициализация списка бинов перед запуском
 			initServices(); //Запуск всех сервисов
 			initGame();//Вызов инициализации у класса игры
-			Global.engine.run();//Запуск главного цикла движка
+			Manager.getService(Engine.class).run();//Запуск главного цикла движка
 		} catch (Exception e) {
 			logException("The game ended with an error: ", e);
 			throw new RuntimeException(e);
@@ -78,6 +79,7 @@ public class Loader {
 		Manager.addService(PanelControllersStorage.class);
 		Manager.addService(GuiElementService.class);
 		Manager.addService(LeguiComponentService.class);
+		Manager.addService(LocationManager.class);
 	}
 
 	private void initBeansList() {
@@ -88,7 +90,6 @@ public class Loader {
 	private void initServices() {
 		log.info("Initialize engine...");
 		Manager.start();
-		Global.engine = Manager.getService(Engine.class);
 		log.info("Initialize engine complete");
 	}
 

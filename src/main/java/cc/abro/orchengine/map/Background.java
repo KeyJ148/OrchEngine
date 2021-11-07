@@ -1,6 +1,5 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.image.Color;
@@ -85,10 +84,10 @@ public class Background {
         GL11.glLoadIdentity();
         outsideMapColor.bind();
 
-        int fillW = (width - Global.location.width) / 2;
-        int fillH = (height - Global.location.height) / 2;
+        int fillW = (width - Manager.getService(LocationManager.class).getActiveLocation().width) / 2;
+        int fillH = (height - Manager.getService(LocationManager.class).getActiveLocation().height) / 2;
 
-        if (Manager.getService(Render.class).getWidth() > Global.location.width) {
+        if (Manager.getService(Render.class).getWidth() > Manager.getService(LocationManager.class).getActiveLocation().width) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);
@@ -110,7 +109,7 @@ public class Background {
             GL11.glVertex2f(width - fillW, height);
             GL11.glEnd();
         }
-        if (Manager.getService(Render.class).getHeight() > Global.location.height) {
+        if (Manager.getService(Render.class).getHeight() > Manager.getService(LocationManager.class).getActiveLocation().height) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);

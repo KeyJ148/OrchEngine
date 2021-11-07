@@ -1,6 +1,7 @@
 package cc.abro.orchengine.analysis;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.map.LocationManager;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.udp.UDPControl;
@@ -127,9 +128,9 @@ public class Analyzer implements Startable {
 		totalMem = Runtime.getRuntime().totalMemory();
 		maxMem = Runtime.getRuntime().maxMemory();
 
-		chunkInDepthVector = (Global.location.mapControl.getCountDepthVectors() == 0) ? 0 : Global.location.mapControl.chunkRender / Global.location.mapControl.getCountDepthVectors();
+		chunkInDepthVector = (Manager.getService(LocationManager.class).getActiveLocation().mapControl.getCountDepthVectors() == 0) ? 0 : Manager.getService(LocationManager.class).getActiveLocation().mapControl.chunkRender / Manager.getService(LocationManager.class).getActiveLocation().mapControl.getCountDepthVectors();
 
-		//Для строк отладки, иначе делние на 0
+		//Для строк отладки, иначе деление на 0
 		if (loopsRender == 0) loopsRender = 1;
 		if (loopsUpdate == 0) loopsUpdate = 1;
 		if (loopsSync == 0) loopsSync = 1;

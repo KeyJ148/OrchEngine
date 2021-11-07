@@ -1,11 +1,7 @@
 package cc.abro.orchengine.resources.audios;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.gameobject.components.render.AnimationRender;
 import cc.abro.orchengine.resources.ResourceLoader;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 
 import java.io.InputStream;

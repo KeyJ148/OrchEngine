@@ -8,17 +8,15 @@ public class Engine {
 
 	private final Update update;
 	private final Render render;
-	private final GUI gui;
 	private final Analyzer analyzer;
 
-	private FPSLimit fpsLimit;
+	private final FPSLimit fpsLimit;
 	private boolean isRun = true;
 
-	public Engine(Update update, Render render, GUI gui, Analyzer analyzer){
+	public Engine(Update update, Render render, Analyzer analyzer){
 		this.update = update;
 		this.render = render;
 		this.analyzer = analyzer;
-		this.gui = gui;
 		this.fpsLimit = new FPSLimit(SettingsStorage.DISPLAY.FPS_LIMIT);
 	}
 

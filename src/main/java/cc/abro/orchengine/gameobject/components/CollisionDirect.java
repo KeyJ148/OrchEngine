@@ -1,11 +1,12 @@
 package cc.abro.orchengine.gameobject.components;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.util.Vector2;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.image.Color;
+import cc.abro.orchengine.map.LocationManager;
 import cc.abro.orchengine.resources.masks.Mask;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import cc.abro.orchengine.util.Vector2;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class CollisionDirect extends Collision {
 
         separationCollisions();
         for (Integer id : dynamicId) { //Проверяем столкновения со всеми перемещающимися объектами
-            GameObject objectFromRoom = Global.location.getObject(id);
+            GameObject objectFromRoom = Manager.getService(LocationManager.class).getActiveLocation().getObject(id);
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class) && checkCollision(objectFromRoom)) {
                 informListeners(objectFromRoom); //Информируем об этом всех слушателей
             }
@@ -61,7 +62,7 @@ public class CollisionDirect extends Collision {
         GL11.glLoadIdentity();
         Color.BLUE.bind();
 
-        Vector2<Integer> relativePosition = Global.location.camera.toRelativePosition(new Vector2(positionCollision.x - 10, positionCollision.y - 10));
+        Vector2<Integer> relativePosition = Manager.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2(positionCollision.x - 10, positionCollision.y - 10));
         int x = relativePosition.x;
         int y = relativePosition.y;
         int w = 20;
@@ -81,8 +82,8 @@ public class CollisionDirect extends Collision {
     //Поиск в общем массиве id, которые динамичны и сталкиваются с этим объектом
     //Также поиск статичных объектов для проверки столкновения при помощи траектории
     private void separationCollisions() {
-        for (int i = start; i < Global.location.getObjectsVectorSize(); i++) {//Цикл перебора объектов в комнате
-            GameObject gameObjectFromRoom = Global.location.getObject(i);
+        for (int i = start; i < Manager.getService(LocationManager.class).getActiveLocation().getObjectsVectorSize(); i++) {//Цикл перебора объектов в комнате
+            GameObject gameObjectFromRoom = Manager.getService(LocationManager.class).getActiveLocation().getObject(i);
             if (gameObjectFromRoom != null && gameObjectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) {//Цикл перебора объектов с которыми надо проверять столкновения
                     if (gameObjectFromRoom.getClass().equals(collisionObject)) {//Если с объектом из комнаты надо проверять столкновения
@@ -94,7 +95,7 @@ public class CollisionDirect extends Collision {
             }
         }
 
-        this.start = Global.location.getObjectsVectorSize();
+        this.start = Manager.getService(LocationManager.class).getActiveLocation().getObjectsVectorSize();
     }
 
     //Расчёт столкновения прямолинейно перемещающегося объекта с статичным объектом obj

@@ -1,8 +1,9 @@
 package cc.abro.orchengine.audio;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.map.Camera;
+import cc.abro.orchengine.map.LocationManager;
 import cc.abro.orchengine.resources.audios.Audio;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.openal.AL;
@@ -44,7 +45,7 @@ public class AudioPlayer implements Startable{
         звука находится на таком же расстояние от объекта танка (игрока) как и раньше
         Условие (Camera.getFollowObject() != null) исправляет этот баг
         */
-        Camera camera = Global.location.camera;
+        Camera camera = Manager.getService(LocationManager.class).getActiveLocation().camera;
         double listenerX = camera.getX();
         double listenerY = camera.getY();
 

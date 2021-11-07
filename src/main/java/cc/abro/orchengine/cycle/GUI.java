@@ -1,7 +1,7 @@
 package cc.abro.orchengine.cycle;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.map.LocationManager;
 import lombok.extern.log4j.Log4j2;
 import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.animation.AnimatorProvider;
@@ -36,7 +36,7 @@ public class GUI {
         initializer.getContext().updateGlfwWindow();
 
         //Отрисовка интерфейса
-        initializer.getRenderer().render(Global.location.getGuiFrame(), initializer.getContext());
+        initializer.getRenderer().render(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame(), initializer.getContext());
 
         //Нормализация параметров OpenGL после отрисовки интерфейса
         glDisable(GL_DEPTH_TEST);
@@ -49,11 +49,11 @@ public class GUI {
         glfwPollEvents();
 
         //Обработка событий (Системных и GUI)
-        initializer.getSystemEventProcessor().processEvents(Global.location.getGuiFrame(), initializer.getContext());
+        initializer.getSystemEventProcessor().processEvents(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame(), initializer.getContext());
         initializer.getGuiEventProcessor().processEvents();
 
         //Перерасположить компоненты
-        LayoutManager.getInstance().layout(Global.location.getGuiFrame());
+        LayoutManager.getInstance().layout(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame());
 
         //Запуск анимаций
         AnimatorProvider.getAnimator().runAnimations();

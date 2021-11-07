@@ -1,6 +1,5 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
@@ -50,8 +49,8 @@ public class Camera {
 
         int width = Manager.getService(Render.class).getWidth();
         int height = Manager.getService(Render.class).getHeight();
-        int widthMap = Global.location.width;
-        int heightMap = Global.location.height;
+        int widthMap = Manager.getService(LocationManager.class).getActiveLocation().width;
+        int heightMap = Manager.getService(LocationManager.class).getActiveLocation().height;
 
         if (x < width / 2) x = width / 2;
         if (y < height / 2) y = height / 2;
