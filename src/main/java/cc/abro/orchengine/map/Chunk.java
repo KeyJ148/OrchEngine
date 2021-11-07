@@ -1,6 +1,6 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
 
 import java.util.ArrayList;
@@ -39,8 +39,8 @@ public class Chunk {
 
 	public void render() {
 		for (int id : number) {
-			if (Global.location.getObjectsVectorSize() > id && Global.location.getObject(id) != null) {
-				GameObject gameObject = Global.location.getObject(id);
+			if (Manager.getService(LocationManager.class).getActiveLocation().getObjectsVectorSize() > id && Manager.getService(LocationManager.class).getActiveLocation().getObject(id) != null) {
+				GameObject gameObject = Manager.getService(LocationManager.class).getActiveLocation().getObject(id);
 				gameObject.draw();
 			}
 		}

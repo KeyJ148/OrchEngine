@@ -1,8 +1,9 @@
 package cc.abro.orchengine.gameobject.components;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
+import cc.abro.orchengine.map.LocationManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Follower extends QueueComponent {
         getGameObject().getComponent(Position.class).y = followUpGameObject.getComponent(Position.class).y;
         if (followDirectionDraw)
             getGameObject().getComponent(Position.class).setDirectionDraw(followUpGameObject.getComponent(Position.class).getDirectionDraw());
-        Global.location.mapControl.update(getGameObject());
+        Manager.getService(LocationManager.class).getActiveLocation().mapControl.update(getGameObject());
     }
 
     @Override

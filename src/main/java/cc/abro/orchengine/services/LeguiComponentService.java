@@ -1,6 +1,5 @@
 package cc.abro.orchengine.services;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.gui.GuiElement;
 import cc.abro.orchengine.map.Location;

@@ -1,6 +1,5 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.Global;
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.GUI;
 import cc.abro.orchengine.gameobject.GameObject;
@@ -98,21 +97,23 @@ public class Location {
 	public void activate(boolean saveInput) {
 		//Перенести нажатые клавиши и настройки мыши/курсора или нет
 		if (saveInput) {
-			keyboard = new KeyboardHandler(guiFrame, Global.location.getKeyboard());
-			mouse = new MouseHandler(guiFrame, Global.location.getMouse());
+			keyboard = new KeyboardHandler(guiFrame, Manager.getService(LocationManager.class).getActiveLocation().getKeyboard());
+			mouse = new MouseHandler(guiFrame, Manager.getService(LocationManager.class).getActiveLocation().getMouse());
 		} else {
 			keyboard = new KeyboardHandler(guiFrame);
 			mouse = new MouseHandler(guiFrame);
 		}
 
-		if (Global.location != null) Global.location.freeze();
-		Global.location = this;
-		Global.location.unfreeze();
+		if (Manager.getService(LocationManager.class).getActiveLocation() != null){
+			Manager.getService(LocationManager.class).getActiveLocation().freeze();
+		}
+		Manager.getService(LocationManager.class).setActiveLocation(this);
+		Manager.getService(LocationManager.class).getActiveLocation().unfreeze();
 		Manager.getService(GUI.class).setFrameFocused(guiFrame);
 	}
 
 	public boolean isActive(){
-		return Global.location == this;
+		return Manager.getService(LocationManager.class).getActiveLocation() == this;
 	}
 
 	private void freeze() {

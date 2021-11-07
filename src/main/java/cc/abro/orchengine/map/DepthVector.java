@@ -1,6 +1,6 @@
 package cc.abro.orchengine.map;
 
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Collision;
 import cc.abro.orchengine.gameobject.components.Movement;
@@ -84,8 +84,8 @@ public class DepthVector {
 
 		//Рендер объектов не помещающихся в чанке
 		for (int id : unsuitableObjects) {
-			if (Global.location.getObjectsVectorSize() > id && Global.location.getObject(id) != null) {
-				GameObject gameObject = Global.location.getObject(id);
+			if (Manager.getService(LocationManager.class).getActiveLocation().getObjectsVectorSize() > id && Manager.getService(LocationManager.class).getActiveLocation().getObject(id) != null) {
+				GameObject gameObject = Manager.getService(LocationManager.class).getActiveLocation().getObject(id);
 				gameObject.draw();
 			}
 		}

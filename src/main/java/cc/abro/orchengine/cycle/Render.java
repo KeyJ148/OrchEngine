@@ -1,8 +1,9 @@
 package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.EngineException;
-import cc.abro.orchengine.Global;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.implementation.GameInterface;
+import cc.abro.orchengine.map.LocationManager;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -119,9 +120,9 @@ public class Render implements Startable {
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //Очистка рендера
 
 		game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
-		Global.location.render(getWidth(), getHeight()); //Отрисовка комнаты
+		Manager.getService(LocationManager.class).getActiveLocation().render(getWidth(), getHeight()); //Отрисовка комнаты
 		gui.render(); //Отрисовка интерфейса (LeGUI)
-		Global.location.getMouse().draw(); //Отрисовка курсора мыши
+		Manager.getService(LocationManager.class).getActiveLocation().getMouse().draw(); //Отрисовка курсора мыши
 	}
 
 	@Override

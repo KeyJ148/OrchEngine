@@ -1,9 +1,10 @@
 package cc.abro.orchengine.gameobject.components;
 
-import cc.abro.orchengine.Global;
-import cc.abro.orchengine.util.Vector2;
+import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.map.Location;
+import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.util.Vector2;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +63,7 @@ public class Position extends QueueComponent {
             relativePosition.y = (int) y;
             return relativePosition;
         } else {
-            return Global.location.camera.toRelativePosition(new Vector2<>(x, y));
+            return Manager.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2<>(x, y));
         }
     }
 
