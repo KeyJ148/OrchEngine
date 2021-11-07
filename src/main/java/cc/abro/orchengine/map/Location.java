@@ -1,12 +1,11 @@
 package cc.abro.orchengine.map;
 
 import cc.abro.orchengine.Manager;
-import cc.abro.orchengine.cycle.GUI;
+import cc.abro.orchengine.services.GuiService;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.gui.input.keyboard.KeyboardHandler;
 import cc.abro.orchengine.gui.input.mouse.MouseHandler;
-import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Frame;
 
 import java.util.Vector;
@@ -20,16 +19,20 @@ public class Location {
 	private Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
 	public MapControl mapControl; //Массив со всеми чанками и объектами
 
-	private Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
-	private KeyboardHandler keyboard; //Объект хранящий события клавитуры
-	private MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
+	private final Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
+	protected KeyboardHandler keyboard; //Объект хранящий события клавитуры
+	protected MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
 
 	public Location(int width, int height) {
 		this.width = width;
 		this.height = height;
 		mapControl = new MapControl(width, height);
 
-		guiFrame = Manager.getService(GUI.class).createFrame();
+		guiFrame = Manager.getService(GuiService.class).createFrame();
+	}
+
+	public void pollEvents() {
+		Manager.getService(GuiService.class).pollEvents(getGuiFrame());
 	}
 
 	public void update(long delta) {
@@ -50,6 +53,9 @@ public class Location {
 	public void render(int x, int y, int width, int height) {
 		background.render(x, y, width, height, camera);
 		mapControl.render(x, y, width, height);
+
+		Manager.getService(GuiService.class).render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
+		getMouse().draw(); //Отрисовка курсора мыши
 	}
 
 	public int objCount() {
@@ -90,49 +96,6 @@ public class Location {
 		objects.set(id, null);
 	}
 
-	public void activate() {
-		activate(true);
-	}
-
-	public void activate(boolean saveInput) {
-		//Перенести нажатые клавиши и настройки мыши/курсора или нет
-		if (saveInput) {
-			keyboard = new KeyboardHandler(guiFrame, Manager.getService(LocationManager.class).getActiveLocation().getKeyboard());
-			mouse = new MouseHandler(guiFrame, Manager.getService(LocationManager.class).getActiveLocation().getMouse());
-		} else {
-			keyboard = new KeyboardHandler(guiFrame);
-			mouse = new MouseHandler(guiFrame);
-		}
-
-		if (Manager.getService(LocationManager.class).getActiveLocation() != null){
-			Manager.getService(LocationManager.class).getActiveLocation().freeze();
-		}
-		Manager.getService(LocationManager.class).setActiveLocation(this);
-		Manager.getService(LocationManager.class).getActiveLocation().unfreeze();
-		Manager.getService(GUI.class).setFrameFocused(guiFrame);
-	}
-
-	public boolean isActive(){
-		return Manager.getService(LocationManager.class).getActiveLocation() == this;
-	}
-
-	private void freeze() {
-		for (GameObject gameObject : objects) {
-			if (gameObject != null) {
-				gameObject.freeze();
-			}
-		}
-	}
-
-	//Сделать комнату активной (update и render), одновременно может быть максимум одна активная комната
-	private void unfreeze() {
-		for (GameObject gameObject : objects) {
-			if (gameObject != null) {
-				gameObject.unfreeze();
-			}
-		}
-	}
-
 	//Удаление всех объектов в комнате
 	public void destroy() {
 		for (int i = 0; i < objects.size(); i++) {
@@ -140,10 +103,13 @@ public class Location {
 		}
 	}
 
+	public boolean isActive(){
+		return Manager.getService(LocationManager.class).getActiveLocation() == this;
+	}
+
 	public Frame getGuiFrame() {
 		return guiFrame;
 	}
-
 
 	public KeyboardHandler getKeyboard() {
 		return keyboard;
@@ -152,15 +118,4 @@ public class Location {
 	public MouseHandler getMouse() {
 		return mouse;
 	}
-
-	//Добавление GUI элемента в комнату
-	public void addGUIComponent(Component component) {
-		guiFrame.getContainer().add(component);
-	}
-
-	//Удаление GUI элемента из комнаты
-	public void removeGUIComponent(Component component) {
-		guiFrame.getContainer().remove(component);
-	}
-
 }

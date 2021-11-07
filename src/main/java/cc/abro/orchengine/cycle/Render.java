@@ -1,11 +1,12 @@
 package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.EngineException;
-import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.map.LocationManager;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
+import org.liquidengine.legui.DefaultInitializer;
+import org.liquidengine.legui.component.Frame;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -20,17 +21,18 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @Log4j2
 public class Render implements Startable {
 
+	private final GameInterface game;
+	private final LocationManager locationManager;
+
 	private long windowID; //ID окна игры для LWJGL
 	private long monitorID; //ID монитора (0 для не полноэкранного режима)
+	private DefaultInitializer leguiInitializer; //Инициализатор LeGUI
 	private int width;
 	private int height;
 
-	private final GameInterface game;
-	private final GUI gui;
-
-	public Render(GameInterface game, GUI gui) {
+	public Render(GameInterface game, LocationManager locationManager) {
 		this.game = game;
-		this.gui = gui;
+		this.locationManager = locationManager;
 	}
 
 	@Override
@@ -51,7 +53,8 @@ public class Render implements Startable {
 
 		//Инициализация и настройка LeGUI
 		try {
-			gui.initLeGUI();
+			leguiInitializer = new DefaultInitializer(getWindowID(), new Frame());
+			leguiInitializer.getRenderer().initialize();
 		} catch (Exception e) {
 			log.fatal("LeGUI initialization failed", e);
 			throw e;
@@ -120,9 +123,7 @@ public class Render implements Startable {
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //Очистка рендера
 
 		game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
-		Manager.getService(LocationManager.class).getActiveLocation().render(getWidth(), getHeight()); //Отрисовка комнаты
-		gui.render(); //Отрисовка интерфейса (LeGUI)
-		Manager.getService(LocationManager.class).getActiveLocation().getMouse().draw(); //Отрисовка курсора мыши
+		locationManager.getActiveLocation().render(getWidth(), getHeight()); //Отрисовка комнаты
 	}
 
 	@Override
@@ -152,5 +153,9 @@ public class Render implements Startable {
 
 	public long getMonitorID() {
 		return monitorID;
+	}
+
+	public DefaultInitializer getLeguiInitializer() {
+		return leguiInitializer;
 	}
 }

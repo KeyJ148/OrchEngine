@@ -20,11 +20,5 @@ public abstract class Component {
     public void destroy() {
     }
 
-    public void freeze() {
-    }
-
-    public void unfreeze() {
-    }
-
     public abstract Class getComponentClass();
 }
