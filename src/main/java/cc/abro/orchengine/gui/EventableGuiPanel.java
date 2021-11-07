@@ -27,16 +27,6 @@ public abstract class EventableGuiPanel extends GuiPanel{
         listeners.forEach(l -> l.callEvent(event));
     }
 
-    @SuppressWarnings("unchecked")
-    protected MouseClickEventListener getMouseReleaseListener(Consumer<MouseClickEvent<Component>> mouseReleaseAction) {
-        return event -> {
-            event.getTargetComponent().setFocused(false);
-            if (event.getAction() == MouseClickEvent.MouseClickAction.RELEASE) {
-                mouseReleaseAction.accept(event);
-            }
-        };
-    }
-
     protected MouseClickEventListener getMouseReleaseListenerToNotify(GuiElementEvent event){
         return getMouseReleaseListener(action -> notifyAboutEvent(event));
     }
@@ -51,5 +41,15 @@ public abstract class EventableGuiPanel extends GuiPanel{
 
     protected MouseClickEventListener getMouseReleaseListenerToNotifyEvents(Supplier<List<GuiElementEvent>> events){
         return getMouseReleaseListener(action -> events.get().forEach(this::notifyAboutEvent));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected MouseClickEventListener getMouseReleaseListener(Consumer<MouseClickEvent<Component>> mouseReleaseAction) {
+        return event -> {
+            event.getTargetComponent().setFocused(false);
+            if (event.getAction() == MouseClickEvent.MouseClickAction.RELEASE) {
+                mouseReleaseAction.accept(event);
+            }
+        };
     }
 }
