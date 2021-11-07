@@ -19,12 +19,7 @@ public class GameObject {
     }
 
     public GameObject(Collection<Component> initComponents) {
-        this(new ComponentsContainer(initComponents));
-    }
-
-    public GameObject(ComponentsContainer components) {
-        this.components = components;
-        components.notifyAboutAddToGameObject(this);
+        components = new ComponentsContainer(initComponents);
     }
 
     public void update(long delta) {

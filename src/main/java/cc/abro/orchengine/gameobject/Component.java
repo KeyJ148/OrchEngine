@@ -62,9 +62,6 @@ public abstract class Component {
     public void destroy() {}
 
     public GameObject getGameObject() {
-        if (gameObject == null){
-            gameObject = parentContainer.getGameObject();
-        }
         return gameObject;
     }
 
