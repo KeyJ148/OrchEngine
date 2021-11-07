@@ -38,14 +38,14 @@ public class GuiElement<T extends Component> extends QueueComponent {
     @Override
     public void addToGameObject(GameObject gameObject) {
         super.addToGameObject(gameObject);
-        getGameObject().getComponent(Position.class).location.getGuiLocationFrame().getGuiFrame().getContainer().add(component);
+        getGameObject().getLocation().getGuiLocationFrame().getGuiFrame().getContainer().add(component);
     }
 
     //TODO на removeFromGameObject с возможность переносить компоненты между объектами?
     //TODO Проверить все вызовы этого и дочерних destroy
     @Override
     public void destroy() {
-        getGameObject().getComponent(Position.class).location.getGuiLocationFrame().getGuiFrame().getContainer().remove(component);
+        getGameObject().getLocation().getGuiLocationFrame().getGuiFrame().getContainer().remove(component);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class GuiElement<T extends Component> extends QueueComponent {
         Vector2<Double> position = getPosition();
         Manager.getService(GuiElementService.class).addGuiElementToLocationShiftedToCenter(guiElement,
                 position.x.intValue(), position.y.intValue(),
-                getGameObject().getComponent(Position.class).location);
+                getGameObject().getLocation());
         destroy();
     }
 }

@@ -18,7 +18,7 @@ public class Position extends QueueComponent {
     public boolean absolute = true; //Позиция относительно угла карты? (Иначе относительно угла экрана)
 
     public Location location;//Комната в которой находится объект
-    public int id;//Уникальный номер объекта в комнате
+    public int id;//Уникальный номер объекта в комнате TODO del, find by link
 
     public Position(double x, double y, int depth) {
         this(x, y, depth, 90);
@@ -41,7 +41,7 @@ public class Position extends QueueComponent {
 
     @Override
     public void destroy() {
-        location.getMap().objDel(id);
+        getGameObject().getLocation().getMap().objDel(id);
     }
 
     public double getDirectionDraw() {

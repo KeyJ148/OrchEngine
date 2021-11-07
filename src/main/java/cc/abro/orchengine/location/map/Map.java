@@ -55,7 +55,7 @@ public class Map {
 
     //Добавление объекта в комнату
     public void objAdd(GameObject gameObject) {
-        gameObject.getComponent(Position.class).location = location;
+        gameObject.setLocation(location);
         gameObject.getComponent(Position.class).id = objects.size();
         objects.add(gameObject);
         mapControl.add(gameObject);

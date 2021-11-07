@@ -1,9 +1,8 @@
 package cc.abro.orchengine.gameobject.components.gui;
 
-import cc.abro.orchengine.gameobject.components.Position;
 import org.liquidengine.legui.component.Component;
 
-import java.util.*;
+import java.util.Set;
 
 public abstract class EventableGuiElement<T extends Component> extends GuiElement<T> {
 
@@ -29,7 +28,7 @@ public abstract class EventableGuiElement<T extends Component> extends GuiElemen
     }
 
     public final void callEvent(GuiElementEvent event) {
-        if (getGameObject().getComponent(Position.class).location.isActive()){
+        if (getGameObject().getLocation().isActive()){
             for (GuiElementController controller : controllers){
                 if (controller.isProcessedEvent(event)) {
                     controller.processEvent(event);
