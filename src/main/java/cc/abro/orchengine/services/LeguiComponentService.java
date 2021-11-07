@@ -2,7 +2,7 @@ package cc.abro.orchengine.services;
 
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.gui.GuiElement;
-import cc.abro.orchengine.map.Location;
+import cc.abro.orchengine.location.Location;
 import org.liquidengine.legui.component.Component;
 
 public class LeguiComponentService {

@@ -2,7 +2,7 @@ package cc.abro.orchengine.cycle;
 
 import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.implementation.GameInterface;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
 import org.liquidengine.legui.DefaultInitializer;

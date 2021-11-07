@@ -2,8 +2,8 @@ package cc.abro.orchengine.audio;
 
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.components.Position;
-import cc.abro.orchengine.map.Camera;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.map.Camera;
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.audios.Audio;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.openal.AL;

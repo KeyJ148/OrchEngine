@@ -3,7 +3,7 @@ package cc.abro.orchengine.cycle;
 import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.implementation.GameInterface;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPRead;
 import cc.abro.orchengine.services.GuiService;
@@ -42,7 +42,7 @@ public class Update {
 
 	//Обновляем игру в соответствие с временем прошедшим с последнего обновления
 	private void loop(long delta) {
-		locationManager.getActiveLocation().pollEvents(); //Получение событий и Callbacks
+		locationManager.getActiveLocation().getGuiLocationFrame().pollEvents(); //Получение событий и Callbacks
 
 		game.update(delta); //Обновить главный игровой класс при необходимости
 
@@ -57,8 +57,8 @@ public class Update {
 		}
 		locationManager.getUpdatedLocations().forEach(location -> location.update(delta));
 
-		locationManager.getActiveLocation().getMouse().update(); //Очистка истории событий мыши
-		locationManager.getActiveLocation().getKeyboard().update(); //Очистка истории событий клавиатуры
+		locationManager.getActiveLocation().getGuiLocationFrame().getMouse().update(); //Очистка истории событий мыши
+		locationManager.getActiveLocation().getGuiLocationFrame().getKeyboard().update(); //Очистка истории событий клавиатуры
 
 		analyzer.update(); //Обновление состояния анализатора
 	}
