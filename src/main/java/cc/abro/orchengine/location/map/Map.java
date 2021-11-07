@@ -32,7 +32,7 @@ public class Map {
         mapControl.render(x, y, width, height);
     }
 
-    public int objCount() {
+    public int getCountObjects() {
         int count = 0;
         for (GameObject gameObject : objects)
             if (gameObject != null)
@@ -54,15 +54,20 @@ public class Map {
     }
 
     //Добавление объекта в комнату
-    public void objAdd(GameObject gameObject) {
-        gameObject.setLocation(location);
+    public void add(GameObject gameObject) {
+        if (gameObject.getLocation() != null){
+            gameObject.getLocation().getMap().remove(gameObject);
+        }
+
+        gameObject.getLocationHolder().setLocation(location);
         gameObject.getComponent(Position.class).id = objects.size();
         objects.add(gameObject);
         mapControl.add(gameObject);
     }
 
-    //Удаление объекта из комнаты по id
-    public void objDel(int id) {
+    //Добавление объекта из комнаты
+    public void remove(GameObject gameObject) {
+        int id = gameObject.getComponent(Position.class).id;
         mapControl.del(id);//Используется objects, так что должно быть раньше
         objects.set(id, null);
     }
@@ -71,6 +76,22 @@ public class Map {
     public void destroy() {
         for (int i = 0; i < objects.size(); i++) {
             if (objects.get(i) != null) objects.get(i).destroy();
+        }
+    }
+
+    /**
+     * Используется, чтобы только из данного класса можно было вызывать setLocation у игровых объектов
+     */
+    public static final class LocationObjectHolder {
+
+        private Location location;
+
+        public Location getLocation() {
+            return location;
+        }
+
+        private void setLocation(Location location) {
+            this.location = location;
         }
     }
 }

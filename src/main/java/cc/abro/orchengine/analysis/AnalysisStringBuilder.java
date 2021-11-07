@@ -64,7 +64,7 @@ public class AnalysisStringBuilder {
         sb.append("          ");
 
         sb.append("Objects: ");
-        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().objCount());
+        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().getCountObjects());
         sb.append("          ");
 
         sb.append("Chunks: ");
