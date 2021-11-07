@@ -37,7 +37,7 @@ public class GuiElement<T extends Component> extends cc.abro.orchengine.gameobje
     @Override
     public void notifyAboutAddToGameObject(GameObject gameObject) {
         super.notifyAboutAddToGameObject(gameObject);
-        getGameObject().getLocation().getGuiLocationFrame().getGuiFrame().getContainer().add(component);
+        getGameObject().getLocation().getGuiLocationFrame().getGuiFrame().getContainer().add(component); //TODO fix
     }
 
     //TODO на removeFromGameObject с возможность переносить компоненты между объектами?
