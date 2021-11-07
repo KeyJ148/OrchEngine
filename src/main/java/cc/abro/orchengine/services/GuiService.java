@@ -2,7 +2,7 @@ package cc.abro.orchengine.services;
 
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.Render;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.LocationManager;
 import lombok.extern.log4j.Log4j2;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
@@ -52,7 +52,7 @@ public class GuiService {
         render.getLeguiInitializer().getGuiEventProcessor().processEvents();
 
         //Перерасположить компоненты
-        LayoutManager.getInstance().layout(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame());
+        LayoutManager.getInstance().layout(Manager.getService(LocationManager.class).getActiveLocation().getGuiLocationFrame().getGuiFrame());
 
         //Запуск анимаций
         AnimatorProvider.getAnimator().runAnimations();

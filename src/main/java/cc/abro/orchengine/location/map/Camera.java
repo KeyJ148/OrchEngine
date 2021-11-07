@@ -1,5 +1,6 @@
-package cc.abro.orchengine.map;
+package cc.abro.orchengine.location.map;
 
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;

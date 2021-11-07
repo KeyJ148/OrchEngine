@@ -2,7 +2,7 @@ package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.QueueComponent;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.LocationManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ public class Movement extends QueueComponent {
 
         getGameObject().getComponent(Position.class).x = getGameObject().getComponent(Position.class).x + speed * Math.cos(Math.toRadians(direction)) * ((double) delta / 1000000000);
         getGameObject().getComponent(Position.class).y = getGameObject().getComponent(Position.class).y - speed * Math.sin(Math.toRadians(direction)) * ((double) delta / 1000000000);
-        Manager.getService(LocationManager.class).getActiveLocation().mapControl.update(getGameObject());
+        Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.update(getGameObject());
 
         if (directionDrawEquals) getGameObject().getComponent(Position.class).setDirectionDraw(direction);
     }

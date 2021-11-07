@@ -2,8 +2,8 @@ package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.QueueComponent;
-import cc.abro.orchengine.map.Location;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.Location;
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.util.Vector2;
 
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class Position extends QueueComponent {
 
     @Override
     public void destroy() {
-        location.objDel(id);
+        location.getMap().objDel(id);
     }
 
     public double getDirectionDraw() {

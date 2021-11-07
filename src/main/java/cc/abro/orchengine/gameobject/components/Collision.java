@@ -5,7 +5,7 @@ import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
 import cc.abro.orchengine.image.Color;
-import cc.abro.orchengine.map.LocationManager;
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.masks.Mask;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.util.Vector2;
@@ -65,8 +65,8 @@ public class Collision extends QueueComponent {
     public void checkCollisionFromRoom() {
         if (collisionObjects.size() == 0) return;
 
-        for (int i = 0; i < Manager.getService(LocationManager.class).getActiveLocation().getObjectsVectorSize(); i++) {//Цикл перебора всех объектов в комнате
-            GameObject objectFromRoom = Manager.getService(LocationManager.class).getActiveLocation().getObject(i);
+        for (int i = 0; i < Manager.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize(); i++) {//Цикл перебора всех объектов в комнате
+            GameObject objectFromRoom = Manager.getService(LocationManager.class).getActiveLocation().getMap().getObject(i);
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) { //Цикл перебора объектов, с которыми надо проверять столкновение
                     if ((objectFromRoom.getClass().equals(collisionObject)) //Если с эти объектом надо проверять столкновени

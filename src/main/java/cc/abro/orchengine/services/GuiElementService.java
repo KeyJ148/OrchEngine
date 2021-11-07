@@ -4,7 +4,7 @@ import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.GameObjectFactory;
 import cc.abro.orchengine.gameobject.components.gui.GuiElement;
-import cc.abro.orchengine.map.Location;
+import cc.abro.orchengine.location.Location;
 import org.liquidengine.legui.component.Component;
 
 public class GuiElementService {
@@ -21,7 +21,7 @@ public class GuiElementService {
      */
     public GameObject addGuiElementToLocationShiftedToCenter(GuiElement<?> guiElement, Location location) {
         GameObject gameObject = GameObjectFactory.create();
-        location.objAdd(gameObject);
+        location.getMap().objAdd(gameObject);
         gameObject.setComponent(guiElement);
         return gameObject;
     }
@@ -33,7 +33,7 @@ public class GuiElementService {
     public GameObject addGuiElementToLocation(GuiElement<?> guiElement, int x, int y, Location location) {
         guiElement.getComponent().setPosition(x, y);
         GameObject gameObject = GameObjectFactory.create();
-        location.objAdd(gameObject);
+        location.getMap().objAdd(gameObject);
         gameObject.setComponent(guiElement);
         return gameObject;
     }
@@ -46,7 +46,7 @@ public class GuiElementService {
         Component component = guiElement.getComponent();
         component.setPosition(x - component.getSize().x / 2, y - component.getSize().y / 2);
         GameObject gameObject = GameObjectFactory.create();
-        location.objAdd(gameObject);
+        location.getMap().objAdd(gameObject);
         gameObject.setComponent(guiElement);
         return gameObject;
     }

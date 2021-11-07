@@ -1,4 +1,4 @@
-package cc.abro.orchengine.map;
+package cc.abro.orchengine.location;
 
 
 import cc.abro.orchengine.gui.input.keyboard.KeyboardHandler;
@@ -29,17 +29,20 @@ public class LocationManager {
 
     //Сделать комнату активной (update и render), одновременно может быть максимум одна активная комната
     public void setActiveLocation(Location location, boolean saveInput) {
-
         //Перенести нажатые клавиши и настройки мыши/курсора или нет
         if (saveInput) {
-            location.keyboard = new KeyboardHandler(location.getGuiFrame(), activeLocation.getKeyboard());
-            location.mouse = new MouseHandler(location.getGuiFrame(), activeLocation.getMouse());
+            location.getGuiLocationFrame().keyboard = new KeyboardHandler(
+                    location.getGuiLocationFrame().getGuiFrame(),
+                    activeLocation.getGuiLocationFrame().getKeyboard());
+            location.getGuiLocationFrame().mouse = new MouseHandler(
+                    location.getGuiLocationFrame().getGuiFrame(),
+                    activeLocation.getGuiLocationFrame().getMouse());
         } else {
-            location.keyboard = new KeyboardHandler(location.getGuiFrame());
-            location.mouse = new MouseHandler(location.getGuiFrame());
+            location.getGuiLocationFrame().keyboard = new KeyboardHandler(location.getGuiLocationFrame().getGuiFrame());
+            location.getGuiLocationFrame().mouse = new MouseHandler(location.getGuiLocationFrame().getGuiFrame());
         }
         activeLocation = location;
-        guiService.setFrameFocused(location.getGuiFrame());
+        guiService.setFrameFocused(location.getGuiLocationFrame().getGuiFrame());
     }
 
     public Set<Location> getUpdatedLocations() {

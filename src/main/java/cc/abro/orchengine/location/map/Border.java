@@ -1,5 +1,6 @@
-package cc.abro.orchengine.map;
+package cc.abro.orchengine.location.map;
 
+import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Collision;
 import cc.abro.orchengine.gameobject.components.Position;
@@ -57,10 +58,10 @@ public class Border extends GameObject {
 	}
 
 	public static void createAll(Location location) {
-		location.objAdd(new Border(location.width, location.height, Border.NORTH));
-		location.objAdd(new Border(location.width, location.height, Border.EAST));
-		location.objAdd(new Border(location.width, location.height, Border.SOUTH));
-		location.objAdd(new Border(location.width, location.height, Border.WEST));
+		location.getMap().objAdd(new Border(location.width, location.height, Border.NORTH));
+		location.getMap().objAdd(new Border(location.width, location.height, Border.EAST));
+		location.getMap().objAdd(new Border(location.width, location.height, Border.SOUTH));
+		location.getMap().objAdd(new Border(location.width, location.height, Border.WEST));
 	}
 
 }
