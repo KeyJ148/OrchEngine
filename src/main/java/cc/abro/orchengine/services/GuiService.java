@@ -1,9 +1,9 @@
-package cc.abro.orchengine.cycle;
+package cc.abro.orchengine.services;
 
 import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.map.LocationManager;
 import lombok.extern.log4j.Log4j2;
-import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.system.layout.LayoutManager;
@@ -13,30 +13,29 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.*;
 
 @Log4j2
-public class GUI {
+public class GuiService {
 
-    private DefaultInitializer initializer; //Инициализатор LeGUI
+    private Render render;
 
-    public void initLeGUI() {
-        Frame frame = createFrame();
-
-        initializer = new DefaultInitializer(Manager.getService(Render.class).getWindowID(), frame);
-        initializer.getRenderer().initialize();
-    }
+    /*public GuiService(Render render) {
+        this.render = render;
+    } TODO */
 
     public Frame createFrame() {
+        render = Manager.getService(Render.class);
+        //TODO циклическая зависимость, избавиться
         Frame frame = new Frame(Manager.getService(Render.class).getWidth(), Manager.getService(Render.class).getHeight());
         frame.getContainer().setFocusable(true);
 
         return frame;
     }
 
-    public void render() {
+    public void render(Frame frame) {
         //Обновление интерфейса в соответствие с параметрами окна
-        initializer.getContext().updateGlfwWindow();
+        render.getLeguiInitializer().getContext().updateGlfwWindow();
 
         //Отрисовка интерфейса
-        initializer.getRenderer().render(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame(), initializer.getContext());
+        render.getLeguiInitializer().getRenderer().render(frame, render.getLeguiInitializer().getContext());
 
         //Нормализация параметров OpenGL после отрисовки интерфейса
         glDisable(GL_DEPTH_TEST);
@@ -44,13 +43,13 @@ public class GUI {
         glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    public void pollEvents() {
+    public void pollEvents(Frame frame) {
         //Получение событий ввода и других callbacks от OpenGL
         glfwPollEvents();
 
         //Обработка событий (Системных и GUI)
-        initializer.getSystemEventProcessor().processEvents(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame(), initializer.getContext());
-        initializer.getGuiEventProcessor().processEvents();
+        render.getLeguiInitializer().getSystemEventProcessor().processEvents(frame, render.getLeguiInitializer().getContext());
+        render.getLeguiInitializer().getGuiEventProcessor().processEvents();
 
         //Перерасположить компоненты
         LayoutManager.getInstance().layout(Manager.getService(LocationManager.class).getActiveLocation().getGuiFrame());
@@ -60,6 +59,6 @@ public class GUI {
     }
 
     public void setFrameFocused(Frame frame) {
-        initializer.getContext().setFocusedGui(frame.getContainer());
+        render.getLeguiInitializer().getContext().setFocusedGui(frame.getContainer());
     }
 }

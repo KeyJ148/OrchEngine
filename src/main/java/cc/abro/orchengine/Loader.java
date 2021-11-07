@@ -3,7 +3,7 @@ package cc.abro.orchengine;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.cycle.GUI;
+import cc.abro.orchengine.services.GuiService;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.cycle.Update;
 import cc.abro.orchengine.gui.GuiPanelStorage;
@@ -64,7 +64,7 @@ public class Loader {
 		Manager.addService(Engine.class);
 		Manager.addService(Update.class);
 		Manager.addService(Render.class);
-		Manager.addService(GUI.class);
+		Manager.addService(GuiService.class);
 		Manager.addService(Analyzer.class);
 		Manager.addService(TCPControl.class);
 		Manager.addService(TCPRead.class);
@@ -95,7 +95,7 @@ public class Loader {
 
 	private void initGame() {
 		log.info("Initialize game...");
-		new Location(640, 480).activate(false);
+		Manager.getService(LocationManager.class).setActiveLocation(new Location(640, 480), false);
 		Manager.getService(GameInterface.class).init();
 		log.info("Initialize game complete");
 	}

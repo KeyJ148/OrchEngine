@@ -58,18 +58,6 @@ public class GameObject {
         }
     }
 
-    public void freeze() {
-        for (QueueComponent component : components.values()) {
-            component.freeze();
-        }
-    }
-
-    public void unfreeze() {
-        for (QueueComponent component : components.values()) {
-            component.unfreeze();
-        }
-    }
-
     public void destroy() {
         destroy = true;
     }
