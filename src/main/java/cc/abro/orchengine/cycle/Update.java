@@ -6,6 +6,7 @@ import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPRead;
+import com.codedisaster.steamworks.SteamAPI;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -44,6 +45,10 @@ public class Update {
 
 		tcpRead.update();//Обработать все полученные сообщения по TCP
 		udpRead.update();//Обработать все полученные сообщения по UDP
+
+		if (SteamAPI.isSteamRunning()) {
+			SteamAPI.runCallbacks();
+		}
 
 		if (Global.location != null) {
 			Global.location.update(delta);//Обновить все объекты в комнате

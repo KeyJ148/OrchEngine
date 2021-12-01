@@ -34,6 +34,9 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+
+    implementation "com.code-disaster.steamworks4j:steamworks4j:1.8.0"
+    implementation "com.code-disaster.steamworks4j:steamworks4j-server:1.8.0"
 }
 
 test {

@@ -25,6 +25,7 @@ import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
 import cc.abro.orchengine.services.GuiElementService;
 import cc.abro.orchengine.services.LeguiComponentService;
+import com.codedisaster.steamworks.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 
@@ -36,6 +37,52 @@ public class Loader {
 			Thread.currentThread().setName("Engine");
 			registryShutdownCallback(); //Регистрация скриптов для корректного освобождения ресурсов при завершение программы
 			SettingsStorageHandler.init(); //Загрузка настроек, в том числе для логгера
+
+			SteamAPI.loadLibraries();
+			System.out.println("Steam: " + SteamAPI.init());
+			System.out.println("Account ID: " + new SteamApps().getAppOwner().getAccountID());
+			new SteamFriends(new SteamFriendsCallback(){
+				@Override
+				public void onSetPersonaNameResponse(boolean success, boolean localSuccess, SteamResult result) {
+					System.out.println("Steam: onSetPersonaNameResponse");
+				}
+
+				@Override
+				public void onPersonaStateChange(SteamID steamID, SteamFriends.PersonaChange change) {
+					System.out.println("Steam: onPersonaStateChange");
+				}
+
+				@Override
+				public void onGameOverlayActivated(boolean active) {
+					System.out.println("Steam: onGameOverlayActivated");
+				}
+
+				@Override
+				public void onGameLobbyJoinRequested(SteamID steamIDLobby, SteamID steamIDFriend) {
+					System.out.println("Steam: onGameLobbyJoinRequested");
+				}
+
+				@Override
+				public void onAvatarImageLoaded(SteamID steamID, int image, int width, int height) {
+					System.out.println("Steam: onAvatarImageLoaded");
+				}
+
+				@Override
+				public void onFriendRichPresenceUpdate(SteamID steamIDFriend, int appID) {
+					System.out.println("Steam: onFriendRichPresenceUpdate");
+				}
+
+				@Override
+				public void onGameRichPresenceJoinRequested(SteamID steamIDFriend, String connect) {
+					System.out.println("Steam: onGameRichPresenceJoinRequested");
+				}
+
+				@Override
+				public void onGameServerChangeRequested(String server, String password) {
+					System.out.println("Steam: onGameServerChangeRequested");
+				}
+			}).getPersonaName();
+
 			initServicesList(); //Инициализация списка сервисов перед запуском
 			initBeansList(); //Инициализация списка бинов перед запуском
 			initServices(); //Запуск всех сервисов
