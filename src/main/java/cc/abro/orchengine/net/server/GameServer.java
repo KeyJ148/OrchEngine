@@ -8,6 +8,7 @@ import cc.abro.orchengine.implementation.ServerInterface;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
+import com.codedisaster.steamworks.SteamGameServerAPI;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.BufferedReader;
@@ -84,6 +85,14 @@ public class GameServer {
 
     public static void waitConnect() {
         try {
+            SteamGameServerAPI.loadLibraries();
+            System.out.println("Steam: " + SteamGameServerAPI.init(0x7f000001, (short) 33333, (short) 33334, (short) 33335,
+                    SteamGameServerAPI.ServerMode.NoAuthentication, "0.0.1"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             connects = new Connect[peopleMax]; //Выделение места под массив подключений всех игроков
             try {
                 SettingsStorageHandler.init();
@@ -134,6 +143,7 @@ public class GameServer {
         long lastUpdate = System.nanoTime();//Для update
         long startUpdate;
         while (disconnect != Math.max(peopleMax - 1, 1) ) {
+            SteamGameServerAPI.runCallbacks();
             startUpdate = System.nanoTime();
             server.update(System.nanoTime() - lastUpdate);
             lastUpdate = startUpdate; //Начало предыдущего update, чтобы длительность update тоже учитывалась
