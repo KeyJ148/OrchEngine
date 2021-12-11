@@ -1,37 +1,43 @@
 package cc.abro.orchengine.gui;
 
+import cc.abro.orchengine.gameobject.components.gui.EventableGuiElement;
 import cc.abro.orchengine.gameobject.components.gui.GuiElementController;
+import cc.abro.orchengine.gameobject.components.gui.GuiElementEvent;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * Класс кеширующий контроллеры закешированных панелей меню. Используется при переключении между
- * закешированными панелями меню.
+ * Класс кеширующий контроллеры панелей меню. Позволяет по ивенту получить контроллер для обработки этого ивента.
  */
 @Log4j2
 public class PanelControllersStorage {
 
-    private final Map<Class<? extends EventableGuiPanel>, Supplier<Set<GuiElementController>>> controllersByPanel = new HashMap<>();
+    private final Map<Class<? extends GuiElementEvent>, Supplier<GuiElementController>> controllerByEvent = new HashMap<>();
 
-    public void registry(Class<? extends EventableGuiPanel> panelClass,
-                         Supplier<Set<GuiElementController>> controllersSupplier) {
-        if (controllersByPanel.containsKey(panelClass)) {
-            log.error("Panel class \"" + panelClass + "\" already exists");
-            throw new IllegalStateException("Panel class \"" + panelClass + "\" already exists");
+    public void registry(Supplier<GuiElementController> controllerSupplier) {
+        Class<? extends GuiElementEvent> eventClass = controllerSupplier.get().getProcessedEventClass();
+        if (controllerByEvent.containsKey(eventClass)) {
+            log.error("Event class \"" + eventClass + "\" already exists");
+            throw new IllegalStateException("Event class \"" + eventClass + "\" already exists");
         }
-        controllersByPanel.put(panelClass, controllersSupplier);
+        controllerByEvent.put(eventClass, controllerSupplier);
     }
 
-    public Set<GuiElementController> getControllers(Class<? extends EventableGuiPanel> panelClass) {
-        if (!controllersByPanel.containsKey(panelClass)) {
-            log.error("Panel class \"" + panelClass + "\" not found");
-            throw new IllegalStateException("Controllers for panel \"" + panelClass + "\" not found");
+    public void processEvent(GuiElementEvent event, EventableGuiElement eventableGuiElement) {
+        GuiElementController controller = getController(event.getClass());
+        controller.init(eventableGuiElement);
+        controller.processEvent(event);
+    }
+
+    private GuiElementController getController(Class<? extends GuiElementEvent> eventClass) {
+        if (!controllerByEvent.containsKey(eventClass)) {
+            log.error("Event class \"" + eventClass + "\" not found");
+            throw new IllegalStateException("Controllers for event \"" + eventClass + "\" not found");
         }
 
-        return controllersByPanel.get(panelClass).get();
+        return controllerByEvent.get(eventClass).get();
     }
 }

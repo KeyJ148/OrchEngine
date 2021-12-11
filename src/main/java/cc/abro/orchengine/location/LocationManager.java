@@ -1,8 +1,8 @@
 package cc.abro.orchengine.location;
 
 
-import cc.abro.orchengine.gui.input.keyboard.KeyboardHandler;
-import cc.abro.orchengine.gui.input.mouse.MouseHandler;
+import cc.abro.orchengine.input.keyboard.KeyboardHandler;
+import cc.abro.orchengine.input.mouse.MouseHandler;
 import cc.abro.orchengine.services.GuiService;
 
 import java.util.HashSet;
