@@ -1,6 +1,6 @@
 package cc.abro.orchengine.gui;
 
-import cc.abro.orchengine.gameobject.components.gui.EventableGuiElement;
+import cc.abro.orchengine.gameobject.components.gui.GuiElement;
 import cc.abro.orchengine.gameobject.components.gui.GuiElementController;
 import cc.abro.orchengine.gameobject.components.gui.GuiElementEvent;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +26,7 @@ public class PanelControllersStorage {
         controllerByEvent.put(eventClass, controllerSupplier);
     }
 
-    public void processEvent(GuiElementEvent event, EventableGuiElement eventableGuiElement) {
+    public void processEvent(GuiElementEvent event, GuiElement eventableGuiElement) {
         GuiElementController controller = getController(event.getClass());
         controller.init(eventableGuiElement);
         controller.processEvent(event);
