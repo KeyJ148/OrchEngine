@@ -16,11 +16,7 @@ public abstract class GuiElementController<T extends GuiElementEvent> {
         return guiElement;
     }
 
-    public boolean isProcessedEvent(T event) {
-        return getProcessedEventClass().equals(event.getClass());
-    }
+    public abstract Class<T> getProcessedEventClass();
 
-    protected abstract Class<T> getProcessedEventClass();
-
-    protected abstract void processEvent(T event);
+    public abstract void processEvent(T event);
 }

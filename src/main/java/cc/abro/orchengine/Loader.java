@@ -10,7 +10,7 @@ import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.cycle.Update;
 import cc.abro.orchengine.gui.GuiPanelStorage;
 import cc.abro.orchengine.gui.PanelControllersStorage;
-import cc.abro.orchengine.gui.input.mouse.MouseCursor;
+import cc.abro.orchengine.input.mouse.MouseCursor;
 import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.net.client.Connector;
 import cc.abro.orchengine.net.client.PingChecker;

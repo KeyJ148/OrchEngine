@@ -20,6 +20,7 @@ public class GuiService {
     /*public GuiService(Render render) {
         this.render = render;
     } TODO */
+    //TODO пользователи не должны использовать этот сервис. Убрать куда-нибудь?
 
     public Frame createFrame() {
         render = Manager.getService(Render.class);

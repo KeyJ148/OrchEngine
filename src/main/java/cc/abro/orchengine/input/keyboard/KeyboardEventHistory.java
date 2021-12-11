@@ -1,4 +1,4 @@
-package cc.abro.orchengine.gui.input.keyboard;
+package cc.abro.orchengine.input.keyboard;
 
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.event.KeyEvent;

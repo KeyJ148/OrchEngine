@@ -6,25 +6,26 @@ import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class EventableGuiPanel extends GuiPanel{
 
-    private final List<EventableGuiElement<?>> listeners = new LinkedList<>();
+    private EventableGuiElement<?> listener;
 
+    //TODO может в конструктор?
     public void addListener(EventableGuiElement<?> listener){
-        listeners.add(listener);
+        this.listener = listener;
     }
 
-    public void removeListener(EventableGuiElement<?> listener){
-        listeners.remove(listener);
+    //TODO remove нужен?
+    public void removeListener(){
+        this.listener = null;
     }
 
     protected void notifyAboutEvent(GuiElementEvent event){
-        listeners.forEach(l -> l.callEvent(event));
+        listener.callEvent(event);
     }
 
     protected MouseClickEventListener getMouseReleaseListenerToNotify(GuiElementEvent event){
@@ -46,7 +47,7 @@ public abstract class EventableGuiPanel extends GuiPanel{
     @SuppressWarnings("unchecked")
     protected MouseClickEventListener getMouseReleaseListener(Consumer<MouseClickEvent<Component>> mouseReleaseAction) {
         return event -> {
-            event.getTargetComponent().setFocused(false);
+            event.getTargetComponent().setFocused(false); //TODO КАКОГО ХУЯ ЭТО В ДВИЖКЕ ??? Хотя бы в сервис
             if (event.getAction() == MouseClickEvent.MouseClickAction.RELEASE) {
                 mouseReleaseAction.accept(event);
             }

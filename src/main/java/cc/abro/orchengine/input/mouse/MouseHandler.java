@@ -1,4 +1,4 @@
-package cc.abro.orchengine.gui.input.mouse;
+package cc.abro.orchengine.input.mouse;
 
 import cc.abro.orchengine.Manager;
 import org.liquidengine.legui.component.Frame;
