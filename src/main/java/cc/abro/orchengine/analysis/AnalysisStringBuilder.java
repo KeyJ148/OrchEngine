@@ -5,7 +5,9 @@ import cc.abro.orchengine.location.LocationManager;
 
 public class AnalysisStringBuilder {
 
-    public Analyzer analyzer;
+    public static final int STRING_COUNT = 2;
+
+    private final Analyzer analyzer;
 
     public AnalysisStringBuilder(Analyzer analyzer) {
         this.analyzer = analyzer;

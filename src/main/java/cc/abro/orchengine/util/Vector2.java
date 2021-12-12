@@ -1,5 +1,10 @@
 package cc.abro.orchengine.util;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@ToString
+@EqualsAndHashCode
 public class Vector2<T> {
 
     public T x, y;
@@ -19,10 +24,5 @@ public class Vector2<T> {
 
     public Vector2<T> copy() {
         return new Vector2<>(x, y);
-    }
-
-    @Override
-    public String toString() {
-        return "{" + x + ", " + y + "}";
     }
 }

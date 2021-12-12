@@ -2,6 +2,7 @@ package cc.abro.orchengine.analysis;
 
 import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.location.LocationManager;
+import cc.abro.orchengine.location.map.MapControl;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.udp.UDPControl;
@@ -14,8 +15,6 @@ import java.util.List;
 
 @Log4j2
 public class Analyzer implements Startable {
-
-	public static final int STRING_COUNT = 2;
 
 	//Для подсчёта fps, ups
 	protected int loopsRender = 0;
@@ -128,7 +127,9 @@ public class Analyzer implements Startable {
 		totalMem = Runtime.getRuntime().totalMemory();
 		maxMem = Runtime.getRuntime().maxMemory();
 
-		chunkInDepthVector = (Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.getCountDepthVectors() == 0) ? 0 : Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.chunkRender / Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.getCountDepthVectors();
+		MapControl activeMapControl = Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl;
+		chunkInDepthVector = (activeMapControl.getCountDepthVectors() != 0) ?
+				activeMapControl.chunkRender / activeMapControl.getCountDepthVectors() : 0;
 
 		//Для строк отладки, иначе деление на 0
 		if (loopsRender == 0) loopsRender = 1;

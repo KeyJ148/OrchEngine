@@ -8,16 +8,14 @@ import java.util.List;
 
 public class KeyboardEventHistory {
 
-    private List<KeyEvent> eventHistory = new LinkedList<>();
+    private final List<KeyEvent<?>> eventHistory = new LinkedList<>();
 
     public KeyboardEventHistory(Frame frame) {
         //Создание обратного вызова для фиксирования всех событий клавиатуры (кроме GUI)
-        frame.getContainer().getListenerMap().addListener(KeyEvent.class, event -> {
-            eventHistory.add(event);
-        });
+        frame.getContainer().getListenerMap().addListener(KeyEvent.class, eventHistory::add);
     }
 
-    public List<KeyEvent> getList() {
+    public List<KeyEvent<?>> getList() {
         return List.copyOf(eventHistory);
     }
 

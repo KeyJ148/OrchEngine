@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 public class KeyboardHandler {
 
 	private Set<Integer> keyPressed = new HashSet<>();
-	private KeyboardEventHistory eventHistory;
+	private final KeyboardEventHistory eventHistory;
 
 	public KeyboardHandler(Frame frame) {
 		//Создание объекта фиксирующего все события клавиатуры
@@ -31,8 +31,8 @@ public class KeyboardHandler {
 	}
 
 	public void update() {
-		List<KeyEvent> eventHistoryList = getEventHistory().getList();
-		for (KeyEvent event : eventHistoryList) {
+		List<KeyEvent<?>> eventHistoryList = getEventHistory().getList();
+		for (KeyEvent<?> event : eventHistoryList) {
 			if (event.getAction() == GLFW_PRESS) keyPressed.add(event.getKey());
 			if (event.getAction() == GLFW_RELEASE) keyPressed.remove(event.getKey());
 		}

@@ -13,7 +13,7 @@ public class MouseHandler {
 	private MouseCursor cursor;
 
 	private Set<Integer> buttonPressed = new HashSet<>();
-	private MouseEventHistory eventHistory;
+	private final MouseEventHistory eventHistory;
 
 	public MouseHandler(Frame frame) {
 		//Создание объекта для обработки курсора
@@ -39,8 +39,8 @@ public class MouseHandler {
 	}
 
 	public void update() {
-		List<MouseClickEvent> eventHistoryList = getEventHistory().getList();
-		for (MouseClickEvent event : eventHistoryList) {
+		List<MouseClickEvent<?>> eventHistoryList = getEventHistory().getList();
+		for (MouseClickEvent<?> event : eventHistoryList) {
 			if (event.getAction() == MouseClickEvent.MouseClickAction.PRESS)
 				buttonPressed.add(event.getButton().getCode());
 			if (event.getAction() == MouseClickEvent.MouseClickAction.RELEASE)
