@@ -63,7 +63,7 @@ public abstract class Component {
 
     public GameObject getGameObject() {
         if (gameObject == null){
-            gameObject = parentContainer.getGameObject();
+            gameObject = getParentContainer().getGameObject();
         }
         return gameObject;
     }

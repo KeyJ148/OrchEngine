@@ -43,7 +43,7 @@ public class GameObjectFactory {
         return gameObject;
     }
 
-    public static GameObject create(QueueComponent component) {
+    public static GameObject create(Component component) {
         GameObject gameObject = create(0, 0);
         gameObject.setComponent(component);
         return gameObject;
