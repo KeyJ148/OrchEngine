@@ -42,4 +42,10 @@ public class GameObjectFactory {
 
         return gameObject;
     }
+
+    public static GameObject create(QueueComponent component) {
+        GameObject gameObject = create(0, 0);
+        gameObject.setComponent(component);
+        return gameObject;
+    }
 }

@@ -3,15 +3,13 @@ package cc.abro.orchengine;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.audio.AudioPlayer;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.location.Location;
-import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.services.GuiService;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.cycle.Update;
 import cc.abro.orchengine.gui.GuiPanelStorage;
-import cc.abro.orchengine.gui.PanelControllersStorage;
-import cc.abro.orchengine.input.mouse.MouseCursor;
 import cc.abro.orchengine.implementation.GameInterface;
+import cc.abro.orchengine.input.mouse.MouseCursor;
+import cc.abro.orchengine.location.Location;
+import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.net.client.Connector;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
@@ -24,8 +22,8 @@ import cc.abro.orchengine.resources.animations.AnimationStorage;
 import cc.abro.orchengine.resources.audios.AudioStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.resources.sprites.SpriteStorage;
-import cc.abro.orchengine.services.GuiElementService;
-import cc.abro.orchengine.services.LeguiComponentService;
+import cc.abro.orchengine.services.BlockingGuiService;
+import cc.abro.orchengine.cycle.LeguiRender;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 
@@ -39,6 +37,7 @@ public class Loader {
 			SettingsStorageHandler.init(); //Загрузка настроек, в том числе для логгера
 			initServicesList(); //Инициализация списка сервисов перед запуском
 			initBeansList(); //Инициализация списка бинов перед запуском
+			initGameServicesList(); //Инициализация сервисов игры перед запуском
 			initServices(); //Запуск всех сервисов
 			initGame();//Вызов инициализации у класса игры
 			Manager.getService(Engine.class).run();//Запуск главного цикла движка
@@ -64,7 +63,7 @@ public class Loader {
 		Manager.addService(Engine.class);
 		Manager.addService(Update.class);
 		Manager.addService(Render.class);
-		Manager.addService(GuiService.class);
+		Manager.addService(LeguiRender.class);
 		Manager.addService(Analyzer.class);
 		Manager.addService(TCPControl.class);
 		Manager.addService(TCPRead.class);
@@ -76,15 +75,19 @@ public class Loader {
 		Manager.addService(SpriteStorage.class);
 		Manager.addService(AnimationStorage.class);
 		Manager.addService(GuiPanelStorage.class);
-		Manager.addService(PanelControllersStorage.class);
-		Manager.addService(GuiElementService.class);
-		Manager.addService(LeguiComponentService.class);
+		Manager.addService(BlockingGuiService.class);
 		Manager.addService(LocationManager.class);
 	}
 
 	private void initBeansList() {
 		Manager.addBean(Connector.class);
 		Manager.addBean(MouseCursor.class);
+	}
+
+	private void initGameServicesList() {
+		System.out.println(Manager.getService(GameInterface.class).getInitializingServices());
+		Manager.getService(GameInterface.class).getInitializingServices()
+				.forEach(Manager::addService);
 	}
 
 	private void initServices() {

@@ -4,7 +4,7 @@ import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.input.keyboard.KeyboardHandler;
 import cc.abro.orchengine.input.mouse.MouseHandler;
-import cc.abro.orchengine.services.GuiService;
+import cc.abro.orchengine.cycle.LeguiRender;
 import org.liquidengine.legui.component.Frame;
 
 public class GuiLocationFrame {
@@ -14,17 +14,17 @@ public class GuiLocationFrame {
     protected MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
 
     public GuiLocationFrame() {
-        guiFrame = Manager.getService(GuiService.class).createFrame();
+        guiFrame = Manager.getService(LeguiRender.class).createFrame();
     }
 
     public void pollEvents() {
-        Manager.getService(GuiService.class).pollEvents(getGuiFrame());
+        Manager.getService(LeguiRender.class).pollEvents(getGuiFrame());
     }
 
     public void update() {}
 
     public void render() {
-        Manager.getService(GuiService.class).render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
+        Manager.getService(LeguiRender.class).render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
         getMouse().draw(); //Отрисовка курсора мыши
     }
 

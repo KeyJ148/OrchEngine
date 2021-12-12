@@ -6,7 +6,6 @@ import cc.abro.orchengine.implementation.GameInterface;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPRead;
-import cc.abro.orchengine.services.GuiService;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -15,18 +14,18 @@ public class Update {
 	private final GameInterface game;
 	private final TCPRead tcpRead;
 	private final UDPRead udpRead;
-	private final GuiService guiService;
+	private final LeguiRender leguiRender;
 	private final Analyzer analyzer;
 	private final LocationManager locationManager;
 
 	private long lastUpdateTime;
 
-	public Update(GameInterface game, TCPRead tcpRead, UDPRead udpRead, GuiService guiService, Analyzer analyzer,
+	public Update(GameInterface game, TCPRead tcpRead, UDPRead udpRead, LeguiRender leguiRender, Analyzer analyzer,
 				  LocationManager locationManager) {
 		this.game = game;
 		this.tcpRead = tcpRead;
 		this.udpRead = udpRead;
-		this.guiService = guiService;
+		this.leguiRender = leguiRender;
 		this.analyzer = analyzer;
 		this.locationManager = locationManager;
 	}

@@ -3,20 +3,20 @@ package cc.abro.orchengine.location;
 
 import cc.abro.orchengine.input.keyboard.KeyboardHandler;
 import cc.abro.orchengine.input.mouse.MouseHandler;
-import cc.abro.orchengine.services.GuiService;
+import cc.abro.orchengine.cycle.LeguiRender;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class LocationManager {
 
-    private final GuiService guiService;
+    private final LeguiRender leguiRender;
 
     private Location activeLocation;
     private Set<Location> updatedLocations = new HashSet<>();
 
-    public LocationManager(GuiService guiService) {
-        this.guiService = guiService;
+    public LocationManager(LeguiRender leguiRender) {
+        this.leguiRender = leguiRender;
     }
 
     public Location getActiveLocation() {
@@ -40,7 +40,7 @@ public class LocationManager {
             newFrame.mouse = new MouseHandler(newFrame.getGuiFrame());
         }
         activeLocation = location;
-        guiService.setFrameFocused(newFrame.getGuiFrame());
+        leguiRender.setFrameFocused(newFrame.getGuiFrame());
     }
 
     public Set<Location> getUpdatedLocations() {
