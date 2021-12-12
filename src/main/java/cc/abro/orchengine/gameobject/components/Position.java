@@ -32,12 +32,11 @@ public class Position extends Component {
     }
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
     }
 
     @Override
-    protected void drawComponent() {
-    }
+    public void draw() {}
 
     public double getDirectionDraw() {
         if (directionDraw % 360 >= 0) {

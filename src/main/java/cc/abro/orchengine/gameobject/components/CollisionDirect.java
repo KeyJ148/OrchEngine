@@ -56,7 +56,7 @@ public class CollisionDirect extends Collision {
 
     //Отрисовка маски
     @Override
-    public void drawComponent() {
+    public void draw() {
         if (!SettingsStorage.LOGGER.MASK_DRAW || positionCollision == null) return;
 
         GL11.glLoadIdentity();

@@ -23,7 +23,7 @@ public class Follower extends Component {
     }
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
         if (followUpGameObject.hasComponent(Follower.class) && !followUpGameObject.getComponent(Follower.class).isUpdated())
             followUpGameObject.getComponent(Follower.class).update(delta);
 
@@ -35,7 +35,7 @@ public class Follower extends Component {
     }
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
     }
 
     //Квадратичная ассимптотика вместо линейной из-за отсутствия кеширования updated у родителей

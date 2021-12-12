@@ -27,7 +27,7 @@ public class Movement extends Component {
     }
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
         xPrevious = getGameObject().getComponent(Position.class).x;
         yPrevious = getGameObject().getComponent(Position.class).y;
         directionPrevious = direction;
@@ -40,7 +40,7 @@ public class Movement extends Component {
     }
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
     }
 
     public double getDirection() {

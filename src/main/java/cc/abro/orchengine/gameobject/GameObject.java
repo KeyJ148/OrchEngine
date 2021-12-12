@@ -68,6 +68,7 @@ public class GameObject {
      */
     public void setComponent(Component component) {
         components.setComponent(component);
+        component.notifyAboutAddToGameObject(this);
     }
 
     public <T extends Component> T getComponent(Class<T> classComponent) {
