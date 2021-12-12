@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 public class ParticlesTexture extends Particles {
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
         GL11.glLoadIdentity();
 
         for (Part part : parts) {

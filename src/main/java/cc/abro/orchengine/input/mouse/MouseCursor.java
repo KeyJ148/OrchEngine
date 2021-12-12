@@ -15,7 +15,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseCursor {
 
-    private GameObject cursor;
+    private final GameObject cursor;
     private boolean captureCursor = false;
 
     private final Render render;

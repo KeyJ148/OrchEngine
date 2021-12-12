@@ -14,11 +14,11 @@ public class SpriteRender extends Rendering {
     }
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
     }
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
         Vector2<Integer> relativePosition = getGameObject().getComponent(Position.class).getRelativePosition();
         double xView = relativePosition.x;
         double yView = relativePosition.y;

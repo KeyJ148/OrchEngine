@@ -4,76 +4,82 @@ import cc.abro.orchengine.location.Location;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
+import static cc.abro.orchengine.location.map.Map.LocationObjectHolder;
 
 public class GameObject {
 
-    private Map<Class<? extends QueueComponent>, QueueComponent> components = new HashMap<>();
-    private boolean destroy = false;
-    private Location location;
+    private final LocationObjectHolder locationHolder = new LocationObjectHolder();
+    private final ComponentsContainer components;
+    private boolean destroying = false;
+    private boolean destroyed = false;
 
     public GameObject() {
         this(new ArrayList<>());
     }
 
-    public GameObject(Collection<QueueComponent> initComponents) {
-        for (QueueComponent component : initComponents) {
-            setComponent(component);
-        }
+    public GameObject(Collection<Component> initComponents) {
+        this(new ComponentsContainer(initComponents));
     }
 
-
-    public void setComponent(QueueComponent component) {
-        component.addToGameObject(this);
-        components.put(component.getComponentClass(), component);
-    }
-
-    public <T extends QueueComponent> T getComponent(Class<T> classComponent) {
-        return (T) components.get(classComponent);
-    }
-
-    public boolean hasComponent(Class<? extends QueueComponent> classComponent) {
-        return getComponent(classComponent) != null;
-    }
-
-    public void removeComponent(Class<? extends QueueComponent> classComponent) {
-        components.remove(classComponent);
+    public GameObject(ComponentsContainer components) {
+        this.components = components;
+        components.notifyAboutAddToGameObject(this);
     }
 
     public void update(long delta) {
-        for (QueueComponent component : components.values()) {
-            component.startNewStep();
-        }
+        components.update(delta);
 
-        for (QueueComponent component : components.values()) {
-            if (!isDestroy()) {
-                component.update(delta);
-            } else {
-                component.destroy();
-            }
+        if (destroying) {
+            components.destroy();
+            getLocation().getMap().remove(this);
+            destroying = false;
+            destroyed = true;
         }
     }
 
     public void draw() {
-        for (QueueComponent component : components.values()) {
-            component.draw();
+        components.draw();
+    }
+
+    /**
+     * The object will be destroyed only at the end of his update cycle
+     */
+    public void destroy() {
+        if (!destroyed) {
+            destroying = true;
         }
     }
 
-    public void destroy() {
-        destroy = true;
-    }
-
     public boolean isDestroy() {
-        return destroy;
+        return destroying || destroyed;
     }
 
     public Location getLocation() {
-        return location;
+        return locationHolder.getLocation();
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public LocationObjectHolder getLocationHolder() {
+        return locationHolder;
+    }
+
+    /*
+     * Просто прокси методы
+     */
+    public void setComponent(Component component) {
+        components.setComponent(component);
+        component.notifyAboutAddToGameObject(this);
+    }
+
+    public <T extends Component> T getComponent(Class<T> classComponent) {
+        return components.getComponent(classComponent);
+    }
+
+    public boolean hasComponent(Class<? extends Component> classComponent) {
+        return components.hasComponent(classComponent);
+    }
+
+    public void removeComponent(Class<? extends Component> classComponent) {
+        components.removeComponent(classComponent);
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface GameInterface {
 
-    void init(); //Engine: Инициализация игры перед запуском главного цикла
+    default void init() {} //Engine: Инициализация игры перед запуском главного цикла
 
     //Engine: Выполняется каждый степ перед обновлением всех игровых объектов
     default List<Class<?>> getInitializingServices() {

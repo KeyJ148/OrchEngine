@@ -1,18 +1,18 @@
 package cc.abro.orchengine.gameobject.components.particles;
 
-import cc.abro.orchengine.gameobject.QueueComponent;
+import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
 
 import java.util.*;
 
-public abstract class Particles extends QueueComponent {
+public abstract class Particles extends Component {
 
     public Set<Part> parts = new HashSet<>();
     public boolean rotate = false;
     public boolean destroyObject = false;//Удалить объект использующий эту систему частиц после окончания системы частиц
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
         Iterator<Part> iterator = parts.iterator();
         while (iterator.hasNext()) {
             Part part = iterator.next();
@@ -36,12 +36,12 @@ public abstract class Particles extends QueueComponent {
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryUpdateComponents() {
+    public List<Class<? extends Component>> getPreliminaryUpdateComponents() {
         return Arrays.asList();
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryDrawComponents() {
+    public List<Class<? extends Component>> getPreliminaryDrawComponents() {
         return Arrays.asList(Rendering.class);
     }
 }

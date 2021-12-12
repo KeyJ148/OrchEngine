@@ -23,7 +23,7 @@ public class AnimationRender extends Rendering {
     }
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
         update += delta;
         if ((frameSpeed != 0) && (update > 1000000000 / frameSpeed)) {
             update = 0;
@@ -36,7 +36,7 @@ public class AnimationRender extends Rendering {
     }
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
         Vector2<Integer> relativePosition = getGameObject().getComponent(Position.class).getRelativePosition();
         double xView = relativePosition.x;
         double yView = relativePosition.y;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MouseEventHistory {
 
-    private List<MouseClickEvent> eventHistory = new LinkedList<>();
+    private List<MouseClickEvent<?>> eventHistory = new LinkedList<>();
 
     public MouseEventHistory(Frame frame) {
         //Создание обратного вызова для фиксирования всех событий мыши (кроме GUI)
@@ -17,7 +17,7 @@ public class MouseEventHistory {
         });
     }
 
-    public List<MouseClickEvent> getList() {
+    public List<MouseClickEvent<?>> getList() {
         return List.copyOf(eventHistory);
     }
 

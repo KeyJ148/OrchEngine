@@ -1,10 +1,9 @@
 package cc.abro.orchengine.location;
 
 import cc.abro.orchengine.Manager;
-import cc.abro.orchengine.gameobject.GameObject;
+import cc.abro.orchengine.cycle.LeguiRender;
 import cc.abro.orchengine.input.keyboard.KeyboardHandler;
 import cc.abro.orchengine.input.mouse.MouseHandler;
-import cc.abro.orchengine.cycle.LeguiRender;
 import org.liquidengine.legui.component.Frame;
 
 public class GuiLocationFrame {
@@ -29,12 +28,6 @@ public class GuiLocationFrame {
     }
 
     public void destroy() {}
-
-    //Добавление объекта в комнату
-    public void objAdd(GameObject gameObject) {}
-
-    //Удаление объекта из комнаты по id
-    public void objDel(int id) {}
 
     public Frame getGuiFrame() {
         return guiFrame;

@@ -12,7 +12,7 @@ public class RepeatableSpriteRender extends SpriteRender {
     }
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
         Vector2<Integer> relativePosition = getGameObject().getComponent(Position.class).getRelativePosition();
         double xView = relativePosition.x;
         double yView = relativePosition.y;

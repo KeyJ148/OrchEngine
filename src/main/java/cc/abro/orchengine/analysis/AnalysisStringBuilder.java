@@ -5,7 +5,9 @@ import cc.abro.orchengine.location.LocationManager;
 
 public class AnalysisStringBuilder {
 
-    public Analyzer analyzer;
+    public static final int STRING_COUNT = 2;
+
+    private final Analyzer analyzer;
 
     public AnalysisStringBuilder(Analyzer analyzer) {
         this.analyzer = analyzer;
@@ -64,7 +66,7 @@ public class AnalysisStringBuilder {
         sb.append("          ");
 
         sb.append("Objects: ");
-        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().objCount());
+        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().getCountObjects());
         sb.append("          ");
 
         sb.append("Chunks: ");

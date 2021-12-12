@@ -1,8 +1,8 @@
 package cc.abro.orchengine.gameobject.components;
 
 import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.gameobject.GameObject;
-import cc.abro.orchengine.gameobject.QueueComponent;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
 import cc.abro.orchengine.image.Color;
 import cc.abro.orchengine.location.LocationManager;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Collision extends QueueComponent {
+public class Collision extends Component {
 
     private Mask mask;//Маска для текстуры этого объекта
     private Vector2<Integer>[] maskAbsolute; //Абсолютные координаты маски от левого верхнего угла карты
@@ -30,21 +30,21 @@ public class Collision extends QueueComponent {
     }
 
     @Override
-    public void addToGameObject(GameObject gameObject) {
-        super.addToGameObject(gameObject);
+    public void notifyAboutAddToGameObject(GameObject gameObject) {
+        super.notifyAboutAddToGameObject(gameObject);
 
         calc();
     }
 
     @Override
-    public void updateComponent(long delta) {
+    public void update(long delta) {
         calcInThisStep = false;
         if (getGameObject().hasComponent(Movement.class)) calc();
         checkCollisionFromRoom();
     }
 
     @Override
-    protected void drawComponent() {
+    public void draw() {
         if (!SettingsStorage.LOGGER.MASK_DRAW) return;
 
         Vector2<Integer>[] maskDrawView = new Vector2[maskAbsolute.length];
@@ -81,14 +81,16 @@ public class Collision extends QueueComponent {
     //Проверка столкновения с объектом obj2
     public boolean checkCollision(GameObject gameObject2) {
         GameObject gameObject1 = getGameObject();
-
-        if (gameObject1.getComponent(Position.class) == null || !gameObject1.hasComponent(Collision.class) ||
-                gameObject2.getComponent(Position.class) == null || !gameObject2.hasComponent(Collision.class))
-            return false;
         Position pos1 = gameObject1.getComponent(Position.class);
         Position pos2 = gameObject2.getComponent(Position.class);
         Collision coll1 = gameObject1.getComponent(Collision.class);
         Collision coll2 = gameObject2.getComponent(Collision.class);
+
+        if (pos1 == null || pos2 == null ||
+                coll1 == null || coll2 == null ||
+                coll1.maskAbsolute == null || coll2.maskAbsolute == null) {
+            return false;
+        }
 
         //Проверка расстояния до объекта столкновения
         double gip1 = Math.sqrt(sqr(coll1.mask.getWidth()) + sqr(coll1.mask.getHeight())); //Гипотенуза объекта
@@ -208,12 +210,12 @@ public class Collision extends QueueComponent {
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryUpdateComponents() {
+    public List<Class<? extends Component>> getPreliminaryUpdateComponents() {
         return Arrays.asList(Movement.class, Follower.class);
     }
 
     @Override
-    public List<Class<? extends QueueComponent>> getPreliminaryDrawComponents() {
+    public List<Class<? extends Component>> getPreliminaryDrawComponents() {
         return Arrays.asList(Rendering.class);
     }
 
