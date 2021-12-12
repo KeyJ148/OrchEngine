@@ -1,6 +1,7 @@
 package cc.abro.orchengine.gui;
 
 import lombok.extern.log4j.Log4j2;
+import org.liquidengine.legui.component.Panel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +12,13 @@ import java.util.Map;
 @Log4j2
 public class GuiPanelStorage {
 
-    private final Map<String, GuiPanel> guiPanelByName = new HashMap<>();
+    private final Map<String, Panel> guiPanelByName = new HashMap<>();
 
-    public void registry(GuiPanel guiPanel) {
+    public void registry(Panel guiPanel) {
         registry(guiPanel.getClass().getCanonicalName(), guiPanel);
     }
 
-    public void registry(String name, GuiPanel guiPanel) {
+    public void registry(String name, Panel guiPanel) {
         if (guiPanelByName.containsKey(name)) {
             log.error("GuiPanel \"" + name + "\" already exists");
             throw new IllegalStateException("GuiPanel \"" + name + "\" already exists");
