@@ -1,6 +1,7 @@
 package cc.abro.orchengine.net.client.udp;
 
-import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.client.ConnectException;
 import cc.abro.orchengine.net.client.NetControl;
@@ -13,6 +14,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 @Log4j2
+@EngineService
 public class UDPControl extends NetControl {
 
     private DatagramSocket socket;

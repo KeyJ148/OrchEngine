@@ -1,4 +1,4 @@
-package cc.abro.orchengine;
+package cc.abro.orchengine.exceptions;
 
 public class EngineException extends RuntimeException{
 

@@ -1,6 +1,6 @@
 package cc.abro.orchengine.analysis;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.location.LocationManager;
 
 public class AnalysisStringBuilder {
@@ -66,15 +66,15 @@ public class AnalysisStringBuilder {
         sb.append("          ");
 
         sb.append("Objects: ");
-        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().getCountObjects());
+        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().getCountObjects());
         sb.append("          ");
 
         sb.append("Chunks: ");
-        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.chunkRender);
+        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().mapControl.chunkRender);
         sb.append(" (");
         sb.append(analyzer.chunkInDepthVector);
         sb.append("*");
-        sb.append(Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.getCountDepthVectors());
+        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().mapControl.getCountDepthVectors());
         sb.append(")");
         sb.append("          ");
 

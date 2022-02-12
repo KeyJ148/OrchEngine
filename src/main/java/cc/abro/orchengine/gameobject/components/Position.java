@@ -1,6 +1,6 @@
 package cc.abro.orchengine.gameobject.components;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.location.LocationManager;
@@ -57,7 +57,7 @@ public class Position extends Component {
             relativePosition.y = (int) y;
             return relativePosition;
         } else {
-            return Manager.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2<>(x, y));
+            return Context.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2<>(x, y));
         }
     }
 

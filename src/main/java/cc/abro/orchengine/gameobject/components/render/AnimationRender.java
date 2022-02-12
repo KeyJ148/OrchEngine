@@ -64,7 +64,7 @@ public class AnimationRender extends Rendering {
         GL11.glTexCoord2f(0, 1);
         GL11.glVertex2f(-width / 2, height / 2);
         GL11.glEnd();
-        Texture.unbind();
+        textures.get(frameNow).unbind();
     }
 
     public void setFrameSpeed(int frameSpeed) {

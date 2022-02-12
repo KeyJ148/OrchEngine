@@ -1,7 +1,9 @@
 package cc.abro.orchengine.net.client;
 
+import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 
+@EngineService
 public class PingChecker {
 
 	private long pingTime;

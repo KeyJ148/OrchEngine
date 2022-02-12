@@ -33,6 +33,7 @@ public class SettingsStorage {
         public double SOUND_VOLUME;
     }
 
+    //TODO удалить не нужные настройки
     public static class Logger {
         public boolean ERROR_CONSOLE;//выводить в консоль сообщения об ошибках?
         public boolean ERROR_CONSOLE_SERVER;//выводить в консоль ошибки сервера?

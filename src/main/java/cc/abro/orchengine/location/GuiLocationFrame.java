@@ -1,6 +1,6 @@
 package cc.abro.orchengine.location;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.cycle.LeguiRender;
 import cc.abro.orchengine.input.keyboard.KeyboardHandler;
 import cc.abro.orchengine.input.mouse.MouseHandler;
@@ -13,17 +13,17 @@ public class GuiLocationFrame {
     protected MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
 
     public GuiLocationFrame() {
-        guiFrame = Manager.getService(LeguiRender.class).createFrame();
+        guiFrame = Context.getService(LeguiRender.class).createFrame();
     }
 
     public void pollEvents() {
-        Manager.getService(LeguiRender.class).pollEvents(getGuiFrame());
+        Context.getService(LeguiRender.class).pollEvents(getGuiFrame());
     }
 
     public void update() {}
 
     public void render() {
-        Manager.getService(LeguiRender.class).render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
+        Context.getService(LeguiRender.class).render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
         getMouse().draw(); //Отрисовка курсора мыши
     }
 

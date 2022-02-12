@@ -1,10 +1,12 @@
 package cc.abro.orchengine.net.client;
 
+import cc.abro.orchengine.context.EngineBean;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPControl;
 import cc.abro.orchengine.net.client.udp.UDPRead;
 
+@EngineBean
 public class Connector extends Thread {
 
     public boolean connectSuccess = false;

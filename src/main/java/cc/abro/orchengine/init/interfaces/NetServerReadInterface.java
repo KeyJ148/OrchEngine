@@ -1,4 +1,4 @@
-package cc.abro.orchengine.implementation;
+package cc.abro.orchengine.init.interfaces;
 
 import cc.abro.orchengine.net.server.MessagePack;
 

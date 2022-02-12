@@ -1,6 +1,7 @@
 package cc.abro.orchengine.net.client.tcp;
 
-import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.net.client.ConnectException;
 import cc.abro.orchengine.net.client.NetControl;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
@@ -11,6 +12,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 @Log4j2
+@EngineService
 public class TCPControl extends NetControl {
 
 	private DataInputStream in;

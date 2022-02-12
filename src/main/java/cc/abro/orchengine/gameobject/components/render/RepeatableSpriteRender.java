@@ -43,6 +43,6 @@ public class RepeatableSpriteRender extends SpriteRender {
         GL11.glVertex2f(-width / 2, height / 2);
         GL11.glEnd();
 
-        Texture.unbind();
+        texture.unbind();
     }
 }

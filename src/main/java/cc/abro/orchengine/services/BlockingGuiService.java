@@ -1,14 +1,16 @@
 package cc.abro.orchengine.services;
 
+import cc.abro.orchengine.context.EngineService;
 import org.liquidengine.legui.component.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@EngineService
 public class BlockingGuiService {
 
-    public GuiBlock createGuiBlock(Component component) {
-        return new GuiBlock(component);
+    public GuiBlock createGuiBlock(Component component){
+        return new BlockingGuiService.GuiBlock(component);
     }
 
     public final static class GuiBlock {

@@ -1,6 +1,7 @@
 package cc.abro.orchengine.resources.audios;
 
-import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.resources.JsonContainerLoader;
 import lombok.extern.log4j.Log4j2;
 
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Log4j2
+@EngineService
 public class AudioStorage {
 
     private static final String CONFIG_PATH = "configs/audio.json";

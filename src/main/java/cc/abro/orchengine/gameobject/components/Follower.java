@@ -1,6 +1,6 @@
 package cc.abro.orchengine.gameobject.components;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.location.LocationManager;
@@ -31,7 +31,7 @@ public class Follower extends Component {
         getGameObject().getComponent(Position.class).y = followUpGameObject.getComponent(Position.class).y;
         if (followDirectionDraw)
             getGameObject().getComponent(Position.class).setDirectionDraw(followUpGameObject.getComponent(Position.class).getDirectionDraw());
-        Manager.getService(LocationManager.class).getActiveLocation().getMap().mapControl.update(getGameObject());
+        Context.getService(LocationManager.class).getActiveLocation().getMap().mapControl.update(getGameObject());
     }
 
     @Override

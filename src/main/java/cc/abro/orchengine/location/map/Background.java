@@ -1,7 +1,7 @@
 package cc.abro.orchengine.location.map;
 
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.Manager;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.image.Color;
 import cc.abro.orchengine.resources.textures.Texture;
@@ -63,7 +63,7 @@ public class Background {
             GL11.glVertex2f(0, allTexturesHeight);
             GL11.glEnd();
 
-            Texture.unbind();
+            backgroundTexture.unbind();
         } else {
             GL11.glLoadIdentity();
             backgroundColor.bind();
@@ -85,10 +85,10 @@ public class Background {
         GL11.glLoadIdentity();
         outsideMapColor.bind();
 
-        int fillW = (width - Manager.getService(LocationManager.class).getActiveLocation().width) / 2;
-        int fillH = (height - Manager.getService(LocationManager.class).getActiveLocation().height) / 2;
+        int fillW = (width - Context.getService(LocationManager.class).getActiveLocation().width) / 2;
+        int fillH = (height - Context.getService(LocationManager.class).getActiveLocation().height) / 2;
 
-        if (Manager.getService(Render.class).getWidth() > Manager.getService(LocationManager.class).getActiveLocation().width) {
+        if (Context.getService(Render.class).getWidth() > Context.getService(LocationManager.class).getActiveLocation().width) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);
@@ -110,7 +110,7 @@ public class Background {
             GL11.glVertex2f(width - fillW, height);
             GL11.glEnd();
         }
-        if (Manager.getService(Render.class).getHeight() > Manager.getService(LocationManager.class).getActiveLocation().height) {
+        if (Context.getService(Render.class).getHeight() > Context.getService(LocationManager.class).getActiveLocation().height) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);

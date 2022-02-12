@@ -1,7 +1,8 @@
 package cc.abro.orchengine.cycle;
 
-import cc.abro.orchengine.EngineException;
-import cc.abro.orchengine.implementation.GameInterface;
+import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.exceptions.EngineException;
+import cc.abro.orchengine.init.interfaces.GameInterface;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Log4j2
+@EngineService
 public class Render implements Startable {
 
 	private final GameInterface game;

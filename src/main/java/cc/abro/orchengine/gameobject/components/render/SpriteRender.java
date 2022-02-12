@@ -47,7 +47,7 @@ public class SpriteRender extends Rendering {
         GL11.glVertex2f(-width / 2, height / 2);
         GL11.glEnd();
 
-        Texture.unbind();
+        texture.unbind();
     }
 
     @Override

@@ -1,10 +1,10 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.EngineException;
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.exceptions.EngineException;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.cycle.Engine;
-import cc.abro.orchengine.implementation.NetServerReadInterface;
-import cc.abro.orchengine.implementation.ServerInterface;
+import cc.abro.orchengine.init.interfaces.NetServerReadInterface;
+import cc.abro.orchengine.init.interfaces.ServerInterface;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
@@ -158,7 +158,7 @@ public class GameServer {
         }
 
         log.info("All user disconnect!");
-        Manager.getService(Engine.class).stop();
+        Context.getService(Engine.class).stop();
     }
 
 }

@@ -1,6 +1,6 @@
 package cc.abro.orchengine.gameobject.components;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.gameobject.Component;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
@@ -49,7 +49,7 @@ public class Collision extends Component {
 
         Vector2<Integer>[] maskDrawView = new Vector2[maskAbsolute.length];
         for (int i = 0; i < maskDrawView.length; i++)
-            maskDrawView[i] = Manager.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(maskAbsolute[i].copy());
+            maskDrawView[i] = Context.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(maskAbsolute[i].copy());
 
         GL11.glLoadIdentity();
         Color.BLUE.bind();
@@ -65,8 +65,8 @@ public class Collision extends Component {
     public void checkCollisionFromRoom() {
         if (collisionObjects.size() == 0) return;
 
-        for (int i = 0; i < Manager.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize(); i++) {//Цикл перебора всех объектов в комнате
-            GameObject objectFromRoom = Manager.getService(LocationManager.class).getActiveLocation().getMap().getObject(i);
+        for (int i = 0; i < Context.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize(); i++) {//Цикл перебора всех объектов в комнате
+            GameObject objectFromRoom = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(i);
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) { //Цикл перебора объектов, с которыми надо проверять столкновение
                     if ((objectFromRoom.getClass().equals(collisionObject)) //Если с эти объектом надо проверять столкновени
