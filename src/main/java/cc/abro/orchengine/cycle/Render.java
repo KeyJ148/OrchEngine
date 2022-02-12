@@ -1,18 +1,24 @@
 package cc.abro.orchengine.cycle;
 
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.init.interfaces.GameInterface;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
+import cc.abro.orchengine.resources.textures.Texture;
+import cc.abro.orchengine.resources.textures.TextureService;
 import lombok.extern.log4j.Log4j2;
 import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.component.Frame;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.picocontainer.Startable;
+
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -135,6 +141,17 @@ public class Render implements Startable {
 		glfwTerminate();
 		GLFWErrorCallback errorCallback = glfwSetErrorCallback(null);
 		if (errorCallback != null) errorCallback.free();
+	}
+
+	//Настройка иконки окна
+	public void setIcon(Texture texture) {
+		ByteBuffer textureByteBuffer = Context.getService(TextureService.class)
+				.getByteBufferFromBufferedImage(texture.getImage());
+		GLFWImage icon = GLFWImage.malloc();
+		icon.set(texture.getWidth(), texture.getHeight(), textureByteBuffer);
+		GLFWImage.Buffer iconBuffer = GLFWImage.malloc(1);
+		iconBuffer.put(0, icon);
+		glfwSetWindowIcon(windowID, iconBuffer);
 	}
 
 	public void vsync() {
