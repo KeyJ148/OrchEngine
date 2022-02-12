@@ -83,7 +83,7 @@ public class Context {
     }
 
     public static void stop(){
-        if (getThreadContext().getServices().getLifecycleState().isStopped() &&
+        if (getThreadContext().getServices().getLifecycleState().isStarted() &&
                 !getThreadContext().getServices().getLifecycleState().isStopped()) {
             getThreadContext().getServices().stop();
         }
