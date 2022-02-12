@@ -1,14 +1,16 @@
 package cc.abro.orchengine.cycle;
 
-import cc.abro.orchengine.EngineException;
 import cc.abro.orchengine.analysis.Analyzer;
-import cc.abro.orchengine.implementation.GameInterface;
+import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.exceptions.EngineException;
+import cc.abro.orchengine.init.interfaces.GameInterface;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.net.client.tcp.TCPRead;
 import cc.abro.orchengine.net.client.udp.UDPRead;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@EngineService
 public class Update {
 
 	private final GameInterface game;

@@ -1,6 +1,6 @@
 package cc.abro.orchengine.net.client;
 
-import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.exceptions.EngineException;
 
 public class ConnectException extends EngineException {
     public ConnectException() {

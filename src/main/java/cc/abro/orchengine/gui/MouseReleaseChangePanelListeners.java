@@ -1,6 +1,6 @@
 package cc.abro.orchengine.gui;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.services.GuiService;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
@@ -13,7 +13,7 @@ public interface MouseReleaseChangePanelListeners extends MouseReleaseListeners{
     Component getRemovableComponentToChangePanel();
 
     default MouseClickEventListener getChangeToPanelReleaseListener(Supplier<Panel> newPanelSupplier) {
-        GuiService guiService = Manager.getService(GuiService.class);
+        GuiService guiService = Context.getService(GuiService.class);
         return getMouseReleaseListener(() -> {
             Panel newPanel = newPanelSupplier.get();
             guiService.moveComponentToWindowCenter(newPanel);
@@ -22,7 +22,7 @@ public interface MouseReleaseChangePanelListeners extends MouseReleaseListeners{
     }
 
     default MouseClickEventListener getChangeToCachedPanelReleaseListener(Class<? extends Panel> newPanelClass) {
-        return getChangeToPanelReleaseListener(() -> Manager.getService(GuiPanelStorage.class).getPanel(newPanelClass));
+        return getChangeToPanelReleaseListener(() -> Context.getService(GuiPanelStorage.class).getPanel(newPanelClass));
     }
 
     default MouseClickEventListener getChangeToPanelReleaseListener(Panel newPanel) {

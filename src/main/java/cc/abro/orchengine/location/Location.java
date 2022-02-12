@@ -1,6 +1,6 @@
 package cc.abro.orchengine.location;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.location.map.Camera;
 import cc.abro.orchengine.location.map.Map;
 
@@ -44,7 +44,7 @@ public class Location {
 	}
 
 	public boolean isActive(){
-		return Manager.getService(LocationManager.class).getActiveLocation() == this;
+		return Context.getService(LocationManager.class).getActiveLocation() == this;
 	}
 
 	public Map getMap() {

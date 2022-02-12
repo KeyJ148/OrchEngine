@@ -1,5 +1,6 @@
 package cc.abro.orchengine.gui;
 
+import cc.abro.orchengine.context.EngineService;
 import lombok.extern.log4j.Log4j2;
 import org.liquidengine.legui.component.Panel;
 
@@ -10,6 +11,7 @@ import java.util.Map;
  * Класс кеширующий готовые панели меню, чтобы сохранять все вносимые изменения в интерфейс
  */
 @Log4j2
+@EngineService
 public class GuiPanelStorage {
 
     private final Map<String, Panel> guiPanelByName = new HashMap<>();

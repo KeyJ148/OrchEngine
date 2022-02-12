@@ -1,6 +1,7 @@
 package cc.abro.orchengine.cycle;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
+import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.location.LocationManager;
 import lombok.extern.log4j.Log4j2;
 import org.liquidengine.legui.animation.AnimatorProvider;
@@ -12,6 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.*;
 
 @Log4j2
+@EngineService
 public class LeguiRender {
 
     private Render render;
@@ -21,9 +23,9 @@ public class LeguiRender {
     } TODO */
 
     public Frame createFrame() {
-        render = Manager.getService(Render.class);
+        render = Context.getService(Render.class);
         //TODO циклическая зависимость, избавиться
-        Frame frame = new Frame(Manager.getService(Render.class).getWidth(), Manager.getService(Render.class).getHeight());
+        Frame frame = new Frame(Context.getService(Render.class).getWidth(), Context.getService(Render.class).getHeight());
         frame.getContainer().setFocusable(true);
 
         return frame;
@@ -51,7 +53,7 @@ public class LeguiRender {
         render.getLeguiInitializer().getGuiEventProcessor().processEvents();
 
         //Перерасположить компоненты
-        LayoutManager.getInstance().layout(Manager.getService(LocationManager.class).getActiveLocation().getGuiLocationFrame().getGuiFrame());
+        LayoutManager.getInstance().layout(Context.getService(LocationManager.class).getActiveLocation().getGuiLocationFrame().getGuiFrame());
 
         //Запуск анимаций
         AnimatorProvider.getAnimator().runAnimations();

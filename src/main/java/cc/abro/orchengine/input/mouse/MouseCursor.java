@@ -1,5 +1,6 @@
 package cc.abro.orchengine.input.mouse;
 
+import cc.abro.orchengine.context.EngineBean;
 import cc.abro.orchengine.cycle.Render;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
@@ -13,6 +14,7 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+@EngineBean
 public class MouseCursor {
 
     private final GameObject cursor;

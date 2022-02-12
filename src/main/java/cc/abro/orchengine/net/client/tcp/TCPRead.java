@@ -1,10 +1,12 @@
 package cc.abro.orchengine.net.client.tcp;
 
-import cc.abro.orchengine.implementation.NetGameReadInterface;
+import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.init.interfaces.NetGameReadInterface;
 import cc.abro.orchengine.net.client.Message;
 
 import java.util.ArrayList;
 
+@EngineService
 public class TCPRead extends Thread {
 
 	private volatile ArrayList<Message> messages = new ArrayList<>();

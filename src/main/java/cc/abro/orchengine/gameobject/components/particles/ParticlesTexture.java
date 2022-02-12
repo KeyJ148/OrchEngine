@@ -1,8 +1,7 @@
 package cc.abro.orchengine.gameobject.components.particles;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.resources.textures.Texture;
 import cc.abro.orchengine.util.Vector2;
 import org.lwjgl.opengl.GL11;
 
@@ -15,7 +14,7 @@ public class ParticlesTexture extends Particles {
         for (Part part : parts) {
             part.color.bind();
             part.texture.bind();
-            Vector2<Integer> relativePosition = Manager.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2((int) part.x, (int) part.y));
+            Vector2<Integer> relativePosition = Context.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2((int) part.x, (int) part.y));
 
             double defaultX, defaultY;
             if (rotate) {
@@ -39,7 +38,7 @@ public class ParticlesTexture extends Particles {
             GL11.glTexCoord2f(0, 1);
             GL11.glVertex2f((float) (defaultX - part.width / 2), (float) (defaultY + part.height / 2));
             GL11.glEnd();
-            Texture.unbind();
+            part.texture.unbind();
         }
     }
 

@@ -1,9 +1,10 @@
 package cc.abro.orchengine.audio;
 
-import cc.abro.orchengine.Manager;
+import cc.abro.orchengine.context.Context;
+import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.gameobject.components.Position;
-import cc.abro.orchengine.location.map.Camera;
 import cc.abro.orchengine.location.LocationManager;
+import cc.abro.orchengine.location.map.Camera;
 import cc.abro.orchengine.resources.audios.Audio;
 import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.openal.AL;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static org.lwjgl.openal.ALC10.*;
 
+@EngineService
 public class AudioPlayer implements Startable{
 
     private final List<AudioSource> audioSources = new LinkedList<>();
@@ -45,7 +47,7 @@ public class AudioPlayer implements Startable{
         звука находится на таком же расстояние от объекта танка (игрока) как и раньше
         Условие (Camera.getFollowObject() != null) исправляет этот баг
         */
-        Camera camera = Manager.getService(LocationManager.class).getActiveLocation().camera;
+        Camera camera = Context.getService(LocationManager.class).getActiveLocation().camera;
         double listenerX = camera.getX();
         double listenerY = camera.getY();
 

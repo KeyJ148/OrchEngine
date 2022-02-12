@@ -1,6 +1,6 @@
 package cc.abro.orchengine.net.server.readers;
 
-import cc.abro.orchengine.EngineException;
+import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
