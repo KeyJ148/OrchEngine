@@ -24,6 +24,7 @@ public class Engine {
 	}
 
 	public void run() {
+		render.showWindow();
 		while (isRun) {
 			//Цикл Update
 			analyzer.startUpdate();
