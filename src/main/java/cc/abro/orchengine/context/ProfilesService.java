@@ -1,5 +1,6 @@
 package cc.abro.orchengine.context;
 
+import cc.abro.orchengine.OrchEngine;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Несмотря на аннотацию {@link EngineService} данный сервис нельзя переопределить другим сервисом.
  * Т.к. этот сервис инициализируется до сканирования пакетов на сервисы.
- * При этом сервис всё ещё находится в {@link Context.ThreadContext} конкретной {@link ThreadGroup}.
+ * При этом сервис всё ещё находится в {@link Context} в ThreadContext конкретной {@link ThreadGroup}.
  * При параллельном запуске нескольких экземпляров {@link OrchEngine} у каждого из них будет свой {@link ProfilesService}
  */
 @Log4j2

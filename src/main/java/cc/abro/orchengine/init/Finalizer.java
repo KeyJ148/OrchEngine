@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 /**
  * Несмотря на аннотацию {@link EngineService} данный сервис нельзя переопределить другим сервисом.
  * Т.к. этот сервис инициализируется до сканирования пакетов на сервисы.
- * При этом сервис всё ещё находится в {@link Context.ThreadContext} конкретной {@link ThreadGroup}.
+ * При этом сервис всё ещё находится в {@link Context} в ThreadContext конкретной {@link ThreadGroup}.
  * При параллельном запуске нескольких экземпляров {@link OrchEngine} у каждого из них будет свой {@link Finalizer}
  */
 @Log4j2
