@@ -73,11 +73,9 @@ publishing {
 }
 
 
-//LWJGL-3.2.3, Minimal OpenGL, All OS
-
+//LWJGL-3.3.1, Minimal OpenGL, All x64 OS (include arm)
 import org.gradle.internal.os.OperatingSystem
-
-project.ext.lwjglVersion = "3.2.3"
+project.ext.lwjglVersion = "3.3.1"
 
 def buildLwjglNatives = System.getenv('BUILD_LWJGL_NATIVES')
 if (buildLwjglNatives != null) {
@@ -91,10 +89,13 @@ if (buildLwjglNatives != null) {
                     : "natives-linux"
             break
         case OperatingSystem.MAC_OS:
-            project.ext.lwjglNatives = "natives-macos"
+            project.ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
             break
         case OperatingSystem.WINDOWS:
-            project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
+            def osArch = System.getProperty("os.arch")
+            project.ext.lwjglNatives = osArch.contains("64")
+                    ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+                    : "natives-windows-x86"
             break
     }
 }
