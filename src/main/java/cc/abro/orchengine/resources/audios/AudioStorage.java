@@ -15,9 +15,9 @@ public class AudioStorage {
 
     private static final String CONFIG_PATH = "configs/audio.json";
 
-    private Map<String, Audio> audioByName = new HashMap<>();
+    private final Map<String, Audio> audioByName = new HashMap<>();
 
-    public AudioStorage() {
+    public AudioStorage(AudioLoader audioLoader) {
         try {
             Map<String, String> audioNameToPath = JsonContainerLoader.loadInternalFile(Map.class, CONFIG_PATH);
 
@@ -29,7 +29,7 @@ public class AudioStorage {
                     throw new IllegalStateException("Audio \"" + name + "\" already exists");
                 }
 
-                audioByName.put(name, AudioLoader.getAudio(path));
+                audioByName.put(name, audioLoader.getAudio(path));
             }
         } catch (IOException e) {
             log.error("Error loading audios", e);
