@@ -52,7 +52,7 @@ public class MouseCursor {
 
     public void setTexture(Texture texture) {
         //Отключение стнадартного курсора
-        glfwSetInputMode(render.getWindowID(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(render.getWindowID(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         //Присвоение текстуры объекту курсора
         cursor.setComponent(new SpriteRender(texture));
     }
@@ -76,11 +76,12 @@ public class MouseCursor {
         glfwGetCursorPos(render.getWindowID(), bufX, bufY);
         Vector2<Integer> mousePos = new Vector2<>((int) bufX.get(), (int) bufY.get());
 
-        if (captureCursor) captureInWindow(mousePos);
-        glfwSetCursorPos(render.getWindowID(), mousePos.x, mousePos.y);
+        if (captureCursor) {
+            captureInWindow(mousePos);
+            glfwSetCursorPos(render.getWindowID(), mousePos.x, mousePos.y);
+        }
         return mousePos;
     }
-
     //Если позиция мыши выходит за пределы окна, то функция нормализует значения в mousePos
     private void captureInWindow(Vector2<Integer> mousePos) {
         int width = render.getWidth();
