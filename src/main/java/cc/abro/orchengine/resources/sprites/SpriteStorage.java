@@ -33,9 +33,5 @@ public class SpriteStorage {
         return spriteByName.get(name);
     }
 
-    public static class SpriteContainer {
-        public String name;
-        public String texturePath;
-        public String maskPath;
-    }
+    public static record SpriteContainer (String name, String texturePath, String maskPath) {}
 }

@@ -44,9 +44,6 @@ public class AnimationStorage {
         return animationByName.get(name);
     }
 
-    private static class AnimationContainer {
-        String name;
-        String[] texturePaths;
-        String maskPath;
-    }
+    private static record AnimationContainer(String name, String[] texturePaths, String maskPath) {}
+
 }

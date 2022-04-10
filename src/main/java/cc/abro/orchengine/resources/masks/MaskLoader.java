@@ -46,7 +46,5 @@ public class MaskLoader {
         return new Mask(maskPointsList, width, height);
     }
 
-    private static class MaskPoint {
-        int x, y;
-    }
+    private static record MaskPoint (int x, int y) { }
 }

@@ -29,7 +29,7 @@ public class SettingsLoader {
         return JsonContainerLoader.loadInternalFile(settingsContainerClass, path);
     }
 
-    private static String getSettingsFileName(Class settingsClass) {
+    private static String getSettingsFileName(Class<?> settingsClass) {
         return settingsClass.getSimpleName().toLowerCase() + ".json";
     }
 }
