@@ -112,9 +112,6 @@ public class CollisionDirect extends Collision {
             nearCollision = true;//В дальнейшем обрабатываем как обычный объект
         } else if (disMeToOther < range + gipOther / 2 + gipMe / 2 + 30) {
             double k, b, x0, y0, r;
-            if ((directionDraw == 90.0) || (directionDraw == 270.0) || (directionDraw == 0.0) || (directionDraw == 180.0)) {//КОСТЫЛЬ, ЛЮТЫЙ КОСТЫЛЬ
-                directionDraw += Math.pow(0.1, 10);
-            }
             k = Math.tan(Math.toRadians(directionDraw));
             b = -(startY + k * startX);
             x0 = gameObject.getComponent(Position.class).x;
