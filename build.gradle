@@ -115,5 +115,5 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:23.0.0'
 }
