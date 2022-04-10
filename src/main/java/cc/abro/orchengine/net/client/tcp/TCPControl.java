@@ -4,7 +4,6 @@ import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.net.client.ConnectException;
 import cc.abro.orchengine.net.client.NetControl;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
@@ -21,14 +20,20 @@ public class TCPControl extends NetControl {
 	public void connect(String ip, int port) {
 		try {
 			Socket socket = new Socket(InetAddress.getByName(ip), port);
-			socket.setTcpNoDelay(SettingsStorage.NETWORK.TCP_NODELAY);
+			/*socket.setTcpNoDelay(SettingsStorage.NETWORK.TCP_NODELAY);
 			socket.setKeepAlive(SettingsStorage.NETWORK.KEEP_ALIVE);
 			socket.setSendBufferSize(SettingsStorage.NETWORK.SEND_BUF_SIZE);
 			socket.setReceiveBufferSize(SettingsStorage.NETWORK.RECEIVE_BUF_SIZE);
 			socket.setPerformancePreferences(SettingsStorage.NETWORK.PREFERENCE_CON_TIME,
 					SettingsStorage.NETWORK.PREFERENCE_LATENCY,
 					SettingsStorage.NETWORK.PREFERENCE_BANDWIDTH);
-			socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
+			socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);*/
+			socket.setTcpNoDelay(true);
+			socket.setKeepAlive(true);
+			socket.setSendBufferSize(4096);
+			socket.setReceiveBufferSize(4096);
+			socket.setPerformancePreferences(0, 2, 1);
+			socket.setTrafficClass(24);
 
 			InputStream inS = socket.getInputStream();
 			OutputStream outS = socket.getOutputStream();

@@ -5,7 +5,6 @@ import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.image.Color;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.masks.Mask;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.util.Vector2;
 import org.lwjgl.opengl.GL11;
 
@@ -57,7 +56,7 @@ public class CollisionDirect extends Collision {
     //Отрисовка маски
     @Override
     public void draw() {
-        if (!SettingsStorage.LOGGER.MASK_DRAW || positionCollision == null) return;
+        if (!Collision.MASK_DRAW || positionCollision == null) return;
 
         GL11.glLoadIdentity();
         Color.BLUE.bind();

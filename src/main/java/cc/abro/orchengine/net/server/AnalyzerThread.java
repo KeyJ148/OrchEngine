@@ -24,7 +24,7 @@ public class AnalyzerThread extends Thread {
                     if (i != GameServer.peopleMax - 1) sb.append(" | ");
                     GameServer.connects[i].numberSend = 0;
                 }
-                log.debug(sb.toString());
+                log.trace(sb.toString());
             }
 
             try {

@@ -5,7 +5,6 @@ import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.init.interfaces.GameInterface;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.textures.Texture;
 import cc.abro.orchengine.resources.textures.TextureService;
 import lombok.extern.log4j.Log4j2;
@@ -32,6 +31,9 @@ public class Render implements Startable {
 	private final GameInterface game;
 	private final LocationManager locationManager;
 
+	private final Settings settings;
+	private final FPSLimiter fpsLimiter;
+
 	private long windowID; //ID окна игры для LWJGL
 	private long monitorID; //ID монитора (0 для не полноэкранного режима)
 	private DefaultInitializer leguiInitializer; //Инициализатор LeGUI
@@ -41,6 +43,9 @@ public class Render implements Startable {
 	public Render(GameInterface game, LocationManager locationManager) {
 		this.game = game;
 		this.locationManager = locationManager;
+
+		settings = game.getRenderSettings();
+		fpsLimiter = new FPSLimiter(settings.fpsLimit);
 	}
 
 	@Override
@@ -81,24 +86,24 @@ public class Render implements Startable {
 		int monitorHeight = vidMode.height();
 
 		//Выбор экрана и размеров окна
-		if (SettingsStorage.DISPLAY.FULL_SCREEN) {
+		if (settings.fullScreen) {
 			monitorID = glfwGetPrimaryMonitor();
 			width = monitorWidth;
 			height = monitorHeight;
 		} else {
 			monitorID = 0;
-			width = SettingsStorage.DISPLAY.WIDTH_SCREEN;
-			height = SettingsStorage.DISPLAY.HEIGHT_SCREEN;
+			width = settings.widthScreen;
+			height = settings.heightScreen;
 		}
 
 		//Создание окна
-		windowID = glfwCreateWindow(width, height, SettingsStorage.DISPLAY.WINDOW_NAME, monitorID, NULL);
+		windowID = glfwCreateWindow(width, height, settings.windowName, monitorID, NULL);
 		//Перемещение окна на центр монитора
 		glfwSetWindowPos(windowID, (monitorWidth - width) / 2, (monitorHeight - height) / 2);
 		//Создание контекста GLFW
 		glfwMakeContextCurrent(windowID);
 		//Включение VSync: будет происходить синхронизация через каждые N кадров
-		glfwSwapInterval(SettingsStorage.DISPLAY.VSYNC_DIVIDER);
+		glfwSwapInterval(settings.vsyncDivider);
 		//Создание контекста OpenGL
 		GL.createCapabilities();
 
@@ -157,8 +162,12 @@ public class Render implements Startable {
 		glfwShowWindow(windowID);
 	}
 
-	public void vsync() {
+	public void vSync() {
 		glfwSwapBuffers(windowID);
+	}
+
+	public void fpsSync() {
+		fpsLimiter.sync();
 	}
 
 	public int getWidth() {
@@ -180,4 +189,7 @@ public class Render implements Startable {
 	public DefaultInitializer getLeguiInitializer() {
 		return leguiInitializer;
 	}
+
+	public record Settings(int widthScreen, int heightScreen, boolean fullScreen,
+						   int fpsLimit, int vsyncDivider, String windowName) {}
 }

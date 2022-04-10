@@ -1,11 +1,11 @@
 package cc.abro.orchengine.cycle;
 
-public class FPSLimit {
+public class FPSLimiter {
 
     private int fpsLimit;
     private long variableYieldTime, lastTime;
 
-    public FPSLimit(int fpsLimit) {
+    public FPSLimiter(int fpsLimit) {
         this.fpsLimit = fpsLimit;
     }
 
@@ -23,8 +23,7 @@ public class FPSLimit {
             if (t < sleepTime - yieldTime) {
                 try {
                     Thread.sleep(1);
-                } catch (InterruptedException e) {
-                }
+                } catch (InterruptedException e) {}
             } else if (t <= sleepTime) {
                 Thread.yield();
             } else {

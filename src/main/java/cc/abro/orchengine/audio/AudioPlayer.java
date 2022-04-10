@@ -6,7 +6,6 @@ import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.location.map.Camera;
 import cc.abro.orchengine.resources.audios.Audio;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.picocontainer.Startable;
@@ -22,6 +21,7 @@ public class AudioPlayer implements Startable{
 
     private final List<AudioSource> audioSources = new LinkedList<>();
     private long context, device;
+    private double volume = 100;
 
     @Override
     public void start() {
@@ -44,7 +44,7 @@ public class AudioPlayer implements Startable{
         Т.к. при приближении к границе экрана абсолютная позиция камеры фиксируется,
         вне зависимости от положения объекта за которым следует камера, то получается,
         что при приближении к границе экрана звук становится слышен тише, хотя источник
-        звука находится на таком же расстояние от объекта танка (игрока) как и раньше
+        звука находится на таком же расстояние от объекта игрока как и раньше
         Условие (Camera.getFollowObject() != null) исправляет этот баг
         */
         Camera camera = Context.getService(LocationManager.class).getActiveLocation().camera;
@@ -59,7 +59,7 @@ public class AudioPlayer implements Startable{
         double dis = Math.sqrt(Math.pow(x - listenerX, 2) + Math.pow(y - listenerY, 2));
 
         if (dis < range) {
-            float soundVolume = (float) (SettingsStorage.MUSIC.SOUND_VOLUME * (1 - (dis / range)));
+            float soundVolume = (float) (volume * (1 - (dis / range)));
             playSoundEffect(audio, soundVolume);
         }
     }
@@ -86,5 +86,13 @@ public class AudioPlayer implements Startable{
                 it.remove();
             }
         }
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 }

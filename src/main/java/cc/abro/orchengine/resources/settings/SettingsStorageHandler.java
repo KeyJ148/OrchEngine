@@ -15,9 +15,9 @@ public class SettingsStorageHandler {
     }
 
     private static void initExternalSettings() throws IOException {
-        SettingsStorage.DISPLAY = initExternalSettingsOrDefaultFromInternal(SettingsStorage.Display.class);
+        /*SettingsStorage.DISPLAY = initExternalSettingsOrDefaultFromInternal(SettingsStorage.Display.class);
         SettingsStorage.LOGGER = initExternalSettingsOrDefaultFromInternal(SettingsStorage.Logger.class);
-        SettingsStorage.MUSIC = initExternalSettingsOrDefaultFromInternal(SettingsStorage.Music.class);
+        SettingsStorage.MUSIC = initExternalSettingsOrDefaultFromInternal(SettingsStorage.Music.class);*/
     }
 
     public static <T> T initExternalSettingsOrDefaultFromInternal(Class<T> settingsContainerClass) throws IOException {
@@ -30,13 +30,13 @@ public class SettingsStorageHandler {
     }
 
     private static void initInternalSettings() throws IOException {
-        SettingsStorage.NETWORK = SettingsLoader.loadInternalSettings(SettingsStorage.Network.class);
+        //SettingsStorage.NETWORK = SettingsLoader.loadInternalSettings(SettingsStorage.Network.class);
     }
 
     private static void saveDefaultSettingsToExternalSettings() throws IOException {
-        saveDefaultSettingsToExternalSettings(SettingsStorage.Display.class);
+        /*saveDefaultSettingsToExternalSettings(SettingsStorage.Display.class);
         saveDefaultSettingsToExternalSettings(SettingsStorage.Music.class);
-        saveDefaultSettingsToExternalSettings(SettingsStorage.Logger.class);
+        saveDefaultSettingsToExternalSettings(SettingsStorage.Logger.class);*/
     }
 
     private static <T> void saveDefaultSettingsToExternalSettings(Class<T> settingsContainerClass) throws IOException {

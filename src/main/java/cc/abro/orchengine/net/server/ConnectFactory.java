@@ -1,7 +1,5 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.resources.settings.SettingsStorage;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,16 +10,22 @@ public class ConnectFactory {
 
     public static Connect createConnect(ServerSocket serverSocket, DatagramSocket socketUDP, int id) throws IOException {
         Socket socketTCP = serverSocket.accept();
-        socketTCP.setTcpNoDelay(SettingsStorage.NETWORK.TCP_NODELAY);
+        /*socketTCP.setTcpNoDelay(SettingsStorage.NETWORK.TCP_NODELAY);
         socketTCP.setKeepAlive(SettingsStorage.NETWORK.KEEP_ALIVE);
         socketTCP.setSendBufferSize(SettingsStorage.NETWORK.SEND_BUF_SIZE);
         socketTCP.setReceiveBufferSize(SettingsStorage.NETWORK.RECEIVE_BUF_SIZE);
         socketTCP.setPerformancePreferences(SettingsStorage.NETWORK.PREFERENCE_CON_TIME,
                 SettingsStorage.NETWORK.PREFERENCE_LATENCY,
                 SettingsStorage.NETWORK.PREFERENCE_BANDWIDTH);
-        socketTCP.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
+        socketTCP.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);*/
+        socketTCP.setTcpNoDelay(true);
+        socketTCP.setKeepAlive(true);
+        socketTCP.setSendBufferSize(4096);
+        socketTCP.setReceiveBufferSize(4096);
+        socketTCP.setPerformancePreferences(0, 2, 1);
+        socketTCP.setTrafficClass(24);
 
-        int size = SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
+        int size = 2048;//SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
         while (true) {
             DatagramPacket connectionPacket = new DatagramPacket(new byte[size], size);
             socketUDP.receive(connectionPacket);

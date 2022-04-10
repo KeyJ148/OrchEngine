@@ -7,7 +7,6 @@ import cc.abro.orchengine.gameobject.components.render.Rendering;
 import cc.abro.orchengine.image.Color;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.resources.masks.Mask;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.util.Vector2;
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Collision extends Component {
+    public static final boolean MASK_DRAW = false; //TODO вынести в настройки через какой-нибудь сервис
 
     private Mask mask;//Маска для текстуры этого объекта
     private Vector2<Integer>[] maskAbsolute; //Абсолютные координаты маски от левого верхнего угла карты
@@ -45,7 +45,7 @@ public class Collision extends Component {
 
     @Override
     public void draw() {
-        if (!SettingsStorage.LOGGER.MASK_DRAW) return;
+        if (!MASK_DRAW) return;
 
         Vector2<Integer>[] maskDrawView = new Vector2[maskAbsolute.length];
         for (int i = 0; i < maskDrawView.length; i++)

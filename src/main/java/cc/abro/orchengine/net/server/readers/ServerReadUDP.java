@@ -5,7 +5,6 @@ import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.server.Connect;
 import cc.abro.orchengine.net.server.GameServer;
 import cc.abro.orchengine.net.server.MessagePack;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class ServerReadUDP extends Thread {
         String str, ipSender;
         int portSender;
         try {
-            int size = SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
+            int size = 2048;//SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
 
             while (true) {
                 //Ждем сообщение

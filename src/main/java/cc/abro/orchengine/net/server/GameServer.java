@@ -1,12 +1,11 @@
 package cc.abro.orchengine.net.server;
 
-import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.cycle.Engine;
+import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.init.interfaces.NetServerReadInterface;
 import cc.abro.orchengine.init.interfaces.ServerInterface;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import lombok.extern.log4j.Log4j2;
 
@@ -94,9 +93,12 @@ public class GameServer {
 
             ServerSocket serverSocketTCP = new ServerSocket(port);
             socketUDP = new DatagramSocket(port);
-            socketUDP.setSendBufferSize(SettingsStorage.NETWORK.SEND_BUF_SIZE);
+            /*socketUDP.setSendBufferSize(SettingsStorage.NETWORK.SEND_BUF_SIZE);
             socketUDP.setReceiveBufferSize(SettingsStorage.NETWORK.RECEIVE_BUF_SIZE);
-            socketUDP.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
+            socketUDP.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);*/
+            socketUDP.setSendBufferSize(4096);
+            socketUDP.setReceiveBufferSize(4096);
+            socketUDP.setTrafficClass(24);
 
             server.init();
 

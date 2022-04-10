@@ -3,7 +3,6 @@ package cc.abro.orchengine.cycle;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.init.Finalizer;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.glfw.GLFW;
 
 @EngineService
@@ -13,14 +12,12 @@ public class Engine {
 	private final Render render;
 	private final Analyzer analyzer;
 
-	private final FPSLimit fpsLimit;
 	private boolean isRun = true;
 
 	public Engine(Update update, Render render, Analyzer analyzer){
 		this.update = update;
 		this.render = render;
 		this.analyzer = analyzer;
-		this.fpsLimit = new FPSLimit(SettingsStorage.DISPLAY.FPS_LIMIT);
 	}
 
 	public void run() {
@@ -38,8 +35,8 @@ public class Engine {
 
 			//Пауза для синхронизации кадров
 			analyzer.startSync();
-			render.vsync(); //Вертикальная синхронизация
-			fpsLimit.sync(); //Ограничитель FPS (если вертикальная синхронизация отключена или не сработала)
+			render.vSync(); //Вертикальная синхронизация
+			render.fpsSync(); //Ограничитель FPS (если вертикальная синхронизация отключена или не сработала)
 			analyzer.endSync();
 
 			//Если пользователь закрыл окно, то запускаем процесс остановки движка

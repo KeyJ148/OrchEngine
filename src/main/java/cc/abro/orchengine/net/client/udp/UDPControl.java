@@ -5,7 +5,6 @@ import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.net.NetTools;
 import cc.abro.orchengine.net.client.ConnectException;
 import cc.abro.orchengine.net.client.NetControl;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -26,9 +25,12 @@ public class UDPControl extends NetControl {
         this.port = port;
         try {
             socket = new DatagramSocket();
-            socket.setSendBufferSize(SettingsStorage.NETWORK.SEND_BUF_SIZE);
+            /*socket.setSendBufferSize(SettingsStorage.NETWORK.SEND_BUF_SIZE);
             socket.setReceiveBufferSize(SettingsStorage.NETWORK.RECEIVE_BUF_SIZE);
-            socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);
+            socket.setTrafficClass(SettingsStorage.NETWORK.TRAFFIC_CLASS);*/
+            socket.setSendBufferSize(4096);
+            socket.setReceiveBufferSize(4096);
+            socket.setTrafficClass(24);
         } catch (IOException e) {
             log.warn("Connection failed (UDP)");
             throw new ConnectException(e);
@@ -55,7 +57,7 @@ public class UDPControl extends NetControl {
 
     @Override
     public String read() {
-        int size = SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
+        int size = 2048;//SettingsStorage.NETWORK.UDP_READ_BYTE_ARRAY_LEN;
 
         try {
             DatagramPacket packet = new DatagramPacket(new byte[size], size);
