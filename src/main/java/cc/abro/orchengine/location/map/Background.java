@@ -40,6 +40,7 @@ public class Background {
             startAbsolutePosition.y = ((y - height / 2) - (y - height / 2) % backgroundTexture.getHeight());
             Vector2<Integer> startRelativePosition = camera.toRelativePosition(startAbsolutePosition);
 
+            //TODO в танках появилась поддержка растягиваемых текстур. Возможно переиспользовать код, или вынести в OpenGl Utils
             int countTexturesInWidth = width / backgroundTexture.getWidth() + 2;
             int countTexturesInHeight = height / backgroundTexture.getHeight() + 2;
 

@@ -15,14 +15,14 @@ import java.util.Set;
 
 public class DepthVector {
 
-	private int depth;
-	private MapControl mc;
+	private final int depth;
+	private final MapControl mc;
 	//Двумерный динамический массив хранит все Чанки
 	//Внешний массив хранит сортировку массивов по координате y
 	//Внутренний массив имеет чанки с одинаковой y, но разными x
-	private ArrayList<ArrayList<Chunk>> chunks = new ArrayList<>();
+	private final ArrayList<ArrayList<Chunk>> chunks = new ArrayList<>();
 	//Объекты чьи текстура или маска больше размера чанка, и поэтому их необходимо обрабатывать всегда
-	private Set<Integer> unsuitableObjects = new HashSet<>();
+	private final Set<Integer> unsuitableObjects = new HashSet<>();
 
 	public DepthVector(MapControl mc, int depth, GameObject gameObject) {
 		this.mc = mc;
@@ -183,7 +183,7 @@ public class DepthVector {
 		int delta = mc.borderSize / mc.getChunkSize() - 1;//delta=0 (1-1)
 		int posWidth = (int) Math.ceil((double) x / mc.getChunkSize() + delta);//-1 т.к. нумерация в массиве с 0
 		int posHeight = (int) Math.ceil((double) y / mc.getChunkSize() + delta);//+1 т.к. добавлена обводка карты толщиной в 1 чанк для обработки выхода за карту
-		return new Vector2<Integer>(posWidth, posHeight);
+		return new Vector2<>(posWidth, posHeight);
 	}
 }
 

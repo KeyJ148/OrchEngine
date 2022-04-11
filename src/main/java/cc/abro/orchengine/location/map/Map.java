@@ -20,6 +20,11 @@ public class Map {
     }
 
     public void update(long delta) {
+        //TODO не заменяю на foreach, т.к. с ним ошибка:
+        /*java.util.ConcurrentModificationException: null
+            at java.util.Vector$Itr.checkForComodification(Vector.java:1298) ~[?:?]
+            at java.util.Vector$Itr.next(Vector.java:1254) ~[?:?]
+            at cc.abro.orchengine.location.map.Map.update(Map.java:23) ~[OrchEngine-0.1.0.jar:?]*/
         for (int i = 0; i < objects.size(); i++) {
             GameObject gameObject = objects.get(i);
             if (gameObject != null) gameObject.update(delta);

@@ -48,12 +48,14 @@ public class AudioPlayer implements Startable{
         Условие (camera.isSoundOnFollowingObject()) исправляет этот баг
         */
         Camera camera = Context.getService(LocationManager.class).getActiveLocation().getCamera();
-        double listenerX = camera.getX();
-        double listenerY = camera.getY();
-        if (camera.isSoundOnFollowingObject() && camera.hasFollowObject()) {
-            listenerX = camera.getFollowObject().getComponent(Position.class).x;
-            listenerY = camera.getFollowObject().getComponent(Position.class).y;
-        }
+        double listenerX = camera.getFollowObject()
+                .filter(u -> camera.isSoundOnFollowingObject())
+                .map(follow -> follow.getComponent(Position.class).x)
+                .orElse(camera.getX());
+        double listenerY = camera.getFollowObject()
+                .filter(u -> camera.isSoundOnFollowingObject())
+                .map(follow -> follow.getComponent(Position.class).y)
+                .orElse(camera.getY());
 
         double dis = Math.sqrt(Math.pow(x - listenerX, 2) + Math.pow(y - listenerY, 2));
         if (dis < range) {

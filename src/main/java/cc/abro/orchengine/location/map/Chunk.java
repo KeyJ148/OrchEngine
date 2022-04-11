@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class Chunk {
 
-	private ArrayList<Integer> number = new ArrayList<Integer>();//Id объектов которые надо отрисовать
-	private int posWidth;//Порядковый номер чанка
-	private int posHeight;
+	private final ArrayList<Integer> number = new ArrayList<>();//Id объектов которые надо отрисовать
+	private final int posWidth;//Порядковый номер чанка
+	private final int posHeight;
 
 	public Chunk(int posWidth, int posHeight) {
 		this.posWidth = posWidth;

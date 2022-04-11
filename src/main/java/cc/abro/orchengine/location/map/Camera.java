@@ -7,6 +7,8 @@ import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.util.Vector2;
 
+import java.util.Optional;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -74,8 +76,8 @@ public class Camera {
         this.y = y;
     }
 
-    public GameObject getFollowObject() {
-        return followObject;
+    public Optional<GameObject> getFollowObject() {
+        return Optional.ofNullable(followObject);
     }
 
     public void setFollowObject(GameObject gameObject) {

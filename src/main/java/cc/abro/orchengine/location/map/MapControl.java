@@ -1,17 +1,18 @@
 package cc.abro.orchengine.location.map;
 
 import cc.abro.orchengine.context.Context;
-import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
+import cc.abro.orchengine.location.LocationManager;
 
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeMap;
 
 public class MapControl {
 
 	public final int borderSize = 100;
 	private final int chunkSize = 100;
-	private final ArrayList<DepthVector> depthVectors = new ArrayList<>(); //Массив с DepthVector хранящий чанки
+	private final java.util.Map<Integer, DepthVector> depthVectorByDepth = new TreeMap<>(Comparator.reverseOrder()); //Массив с DepthVector хранящий чанки
 
 	public int numberWidth;//Кол-во чанков
 	public int numberHeight;
@@ -25,69 +26,36 @@ public class MapControl {
 
 	public void add(GameObject gameObject) {
 		int depth = gameObject.getComponent(Position.class).depth;
-
-		boolean find = false;
-		for (int i = 0; i < depthVectors.size(); i++) {
-			DepthVector dv = depthVectors.get(i);
-			if (dv.getDepth() == depth) {
-				dv.add(gameObject);
-				find = true;
-				break;
-			}
-		}
-
-		if (!find) {//Массив отсортирован в порядке убывания глубины
-			boolean create = false;
-			for (int i = 0; i < depthVectors.size(); i++) {
-				if (depthVectors.get(i).getDepth() < depth) {
-					depthVectors.add(i, new DepthVector(this, depth, gameObject));
-					create = true;
-					break;
-				}
-			}
-
-			if (!create) {
-				depthVectors.add(new DepthVector(this, depth, gameObject));
-			}
-		}
+		depthVectorByDepth.computeIfAbsent(depth, u -> new DepthVector(this, depth, gameObject)).add(gameObject);
 	}
 
 	public void del(int id) {
 		GameObject gameObject = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id);
 		int depth = gameObject.getComponent(Position.class).depth;
 
-		DepthVector dv;
-		for (int i = 0; i < depthVectors.size(); i++) {
-			dv = depthVectors.get(i);
-			if (dv.getDepth() == depth) {
-				dv.del(gameObject);
-			}
-		}
+		depthVectorByDepth.get(depth).del(gameObject);
 	}
 
 	public void clear() {
-		depthVectors.clear();
-		depthVectors.trimToSize();
+		depthVectorByDepth.clear();
 	}
 
 	public void update(GameObject gameObject) {
-		for (int i = 0; i < depthVectors.size(); i++) {
-			if (depthVectors.get(i).getDepth() == gameObject.getComponent(Position.class).depth) {
-				depthVectors.get(i).update(gameObject);
-				break;
-			}
+		int depth = gameObject.getComponent(Position.class).depth;
+		if (!depthVectorByDepth.containsKey(depth)){
+			return;
 		}
+
+		depthVectorByDepth.get(depth).update(gameObject);
 	}
 
 	public void render(int x, int y, int width, int height) {
 		chunkRender = 0;
-		for (int i = 0; i < depthVectors.size(); i++) {
-			depthVectors.get(i).render(x, y, width, height);
-		}
+		depthVectorByDepth.values().forEach(dv -> dv.render(x, y, width, height));
 	}
 
 	public int getCountDepthVectors() {
-		return depthVectors.size();
+		return depthVectorByDepth.size();
 	}
 
 	public int getChunkSize() {
