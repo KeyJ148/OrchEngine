@@ -9,8 +9,8 @@ import org.liquidengine.legui.component.Frame;
 public class GuiLocationFrame {
 
     private final Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
-    protected KeyboardHandler keyboard; //Объект хранящий события клавитуры
-    protected MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
+    private KeyboardHandler keyboard; //Объект хранящий события клавиатуры
+    private MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
 
     public GuiLocationFrame() {
         guiFrame = Context.getService(LeguiRender.class).createFrame();
@@ -39,5 +39,13 @@ public class GuiLocationFrame {
 
     public MouseHandler getMouse() {
         return mouse;
+    }
+
+    protected void setKeyboard(KeyboardHandler keyboard) {
+        this.keyboard = keyboard;
+    }
+
+    protected void setMouse(MouseHandler mouse) {
+        this.mouse = mouse;
     }
 }

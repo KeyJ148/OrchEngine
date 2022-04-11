@@ -35,11 +35,11 @@ public class LocationManager {
         GuiLocationFrame newFrame = location.getGuiLocationFrame();
         if (activeLocation != null && saveInput) {
             GuiLocationFrame oldFrame = activeLocation.getGuiLocationFrame();
-            newFrame.keyboard = new KeyboardHandler(newFrame.getGuiFrame(), oldFrame.getKeyboard());
-            newFrame.mouse = new MouseHandler(newFrame.getGuiFrame(), oldFrame.getMouse());
+            newFrame.setKeyboard(new KeyboardHandler(newFrame.getGuiFrame(), oldFrame.getKeyboard()));
+            newFrame.setMouse(new MouseHandler(newFrame.getGuiFrame(), oldFrame.getMouse()));
         } else {
-            newFrame.keyboard = new KeyboardHandler(newFrame.getGuiFrame());
-            newFrame.mouse = new MouseHandler(newFrame.getGuiFrame());
+            newFrame.setKeyboard(new KeyboardHandler(newFrame.getGuiFrame()));
+            newFrame.setMouse(new MouseHandler(newFrame.getGuiFrame()));
         }
         activeLocation = location;
         leguiRender.setFrameFocused(newFrame.getGuiFrame());

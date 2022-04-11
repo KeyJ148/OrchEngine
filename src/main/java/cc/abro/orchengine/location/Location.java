@@ -6,8 +6,8 @@ import cc.abro.orchengine.location.map.Map;
 
 public class Location {
 
-	public final int width, height;
-	public Camera camera = new Camera(); //Положение камеры в этой локации
+	private final int width, height;
+	private final Camera camera = new Camera(); //Положение камеры в этой локации
 
 	private final Map map;
 	private final GuiLocationFrame guiLocationFrame;
@@ -21,7 +21,7 @@ public class Location {
 	}
 
 	public void update(long delta) {
-		camera.update();//Расчёт положения камеры
+		camera.update(); //Расчёт положения камеры
 		map.update(delta);
 		guiLocationFrame.update();
 	}
@@ -53,5 +53,17 @@ public class Location {
 
 	public GuiLocationFrame getGuiLocationFrame() {
 		return guiLocationFrame;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public Camera getCamera() {
+		return camera;
 	}
 }

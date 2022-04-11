@@ -58,10 +58,10 @@ public class Border extends GameObject {
 	}
 
 	public static void createAll(Location location) {
-		location.getMap().add(new Border(location.width, location.height, Border.NORTH));
-		location.getMap().add(new Border(location.width, location.height, Border.EAST));
-		location.getMap().add(new Border(location.width, location.height, Border.SOUTH));
-		location.getMap().add(new Border(location.width, location.height, Border.WEST));
+		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Border.NORTH));
+		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Border.EAST));
+		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Border.SOUTH));
+		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Border.WEST));
 	}
 
 }

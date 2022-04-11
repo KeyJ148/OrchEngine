@@ -9,11 +9,12 @@ import java.util.ArrayList;
 
 public class MapControl {
 
-	private ArrayList<DepthVector> depthVectors = new ArrayList<DepthVector>(); //Массив с DepthVector хранящий чанки
+	public final int borderSize = 100;
+	private final int chunkSize = 100;
+	private final ArrayList<DepthVector> depthVectors = new ArrayList<>(); //Массив с DepthVector хранящий чанки
+
 	public int numberWidth;//Кол-во чанков
 	public int numberHeight;
-	private final int chunkSize = 100;
-	public final int borderSize = 100;
 	public int chunkRender = 0;//Кол-во отрисованных чанков
 
 	public MapControl(int width, int height) {

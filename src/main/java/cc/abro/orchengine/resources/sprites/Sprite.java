@@ -5,8 +5,8 @@ import cc.abro.orchengine.resources.textures.Texture;
 
 public class Sprite {
 
-    private Texture texture;
-    private Mask mask;
+    private final Texture texture;
+    private final Mask mask;
 
     public Sprite(Texture texture, Mask mask) {
         this.texture = texture;

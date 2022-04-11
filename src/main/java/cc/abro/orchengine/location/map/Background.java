@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11;
 
 public class Background {
 
-    private Texture backgroundTexture;
-    private Color backgroundColor;
-    private Color outsideMapColor;
+    private final Texture backgroundTexture;
+    private final Color backgroundColor;
+    private final Color outsideMapColor;
 
     public Background() {
         this(Color.WHITE, Color.GRAY);
@@ -85,10 +85,10 @@ public class Background {
         GL11.glLoadIdentity();
         outsideMapColor.bind();
 
-        int fillW = (width - Context.getService(LocationManager.class).getActiveLocation().width) / 2;
-        int fillH = (height - Context.getService(LocationManager.class).getActiveLocation().height) / 2;
+        int fillW = (width - Context.getService(LocationManager.class).getActiveLocation().getWidth()) / 2;
+        int fillH = (height - Context.getService(LocationManager.class).getActiveLocation().getHeight()) / 2;
 
-        if (Context.getService(Render.class).getWidth() > Context.getService(LocationManager.class).getActiveLocation().width) {
+        if (Context.getService(Render.class).getWidth() > Context.getService(LocationManager.class).getActiveLocation().getWidth()) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);
@@ -110,7 +110,7 @@ public class Background {
             GL11.glVertex2f(width - fillW, height);
             GL11.glEnd();
         }
-        if (Context.getService(Render.class).getHeight() > Context.getService(LocationManager.class).getActiveLocation().height) {
+        if (Context.getService(Render.class).getHeight() > Context.getService(LocationManager.class).getActiveLocation().getHeight()) {
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glTexCoord2f(0, 0);
             GL11.glVertex2f(0, 0);

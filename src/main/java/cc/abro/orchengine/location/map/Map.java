@@ -9,8 +9,8 @@ import java.util.Vector;
 public class Map {
 
     public Background background = new Background(); //Фон карты (цвет и текстура)
-    private Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
     public MapControl mapControl; //Массив со всеми чанками и объектами
+    private final Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
 
     private final Location location;//TODO del from this class
 

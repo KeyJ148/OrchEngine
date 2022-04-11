@@ -44,20 +44,18 @@ public class AudioPlayer implements Startable{
         Т.к. при приближении к границе экрана абсолютная позиция камеры фиксируется,
         вне зависимости от положения объекта за которым следует камера, то получается,
         что при приближении к границе экрана звук становится слышен тише, хотя источник
-        звука находится на таком же расстояние от объекта игрока как и раньше
-        Условие (Camera.getFollowObject() != null) исправляет этот баг
+        звука находится на таком же расстояние от объекта игрока, как и раньше
+        Условие (camera.isSoundOnFollowingObject()) исправляет этот баг
         */
-        Camera camera = Context.getService(LocationManager.class).getActiveLocation().camera;
+        Camera camera = Context.getService(LocationManager.class).getActiveLocation().getCamera();
         double listenerX = camera.getX();
         double listenerY = camera.getY();
-
-        if (camera.getFollowObject() != null) {
+        if (camera.isSoundOnFollowingObject() && camera.hasFollowObject()) {
             listenerX = camera.getFollowObject().getComponent(Position.class).x;
             listenerY = camera.getFollowObject().getComponent(Position.class).y;
         }
 
         double dis = Math.sqrt(Math.pow(x - listenerX, 2) + Math.pow(y - listenerY, 2));
-
         if (dis < range) {
             float soundVolume = (float) (volume * (1 - (dis / range)));
             playSoundEffect(audio, soundVolume);

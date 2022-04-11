@@ -49,7 +49,7 @@ public class Collision extends Component {
 
         Vector2<Integer>[] maskDrawView = new Vector2[maskAbsolute.length];
         for (int i = 0; i < maskDrawView.length; i++)
-            maskDrawView[i] = Context.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(maskAbsolute[i].copy());
+            maskDrawView[i] = Context.getService(LocationManager.class).getActiveLocation().getCamera().toRelativePosition(maskAbsolute[i].copy());
 
         GL11.glLoadIdentity();
         Color.BLUE.bind();

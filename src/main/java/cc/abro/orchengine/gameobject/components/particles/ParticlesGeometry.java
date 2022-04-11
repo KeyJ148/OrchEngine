@@ -13,7 +13,10 @@ public class ParticlesGeometry extends Particles {
 
         for (Part part : parts) {
             part.color.bind();
-            Vector2<Integer> relativePosition = Context.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2((int) part.x, (int) part.y));
+            Vector2<Integer> relativePosition = Context.getService(LocationManager.class)
+                    .getActiveLocation()
+                    .getCamera()
+                    .toRelativePosition(new Vector2<>((int) part.x, (int) part.y));
 
             double defaultX, defaultY;
             if (rotate) {

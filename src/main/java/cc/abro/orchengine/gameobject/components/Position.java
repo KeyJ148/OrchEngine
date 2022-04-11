@@ -57,7 +57,7 @@ public class Position extends Component {
             relativePosition.y = (int) y;
             return relativePosition;
         } else {
-            return Context.getService(LocationManager.class).getActiveLocation().camera.toRelativePosition(new Vector2<>(x, y));
+            return Context.getService(LocationManager.class).getActiveLocation().getCamera().toRelativePosition(new Vector2<>((int) x, (int) y));
         }
     }
 
