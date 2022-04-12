@@ -16,7 +16,7 @@ public class JsonContainerLoader {
         try  {
             return new ObjectMapper().readValue(new File(path), containerClass);
         } catch (IOException e) {
-            log.error("Unable to load external JSON file \"" + path + "\" to class " + containerClass.getName());
+            log.warn("Unable to load external JSON file \"" + path + "\" to class " + containerClass.getName());
             throw e;
         }
     }
@@ -25,7 +25,7 @@ public class JsonContainerLoader {
         try {
             new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(new File(path), containerObject);
         } catch (IOException e) {
-            log.error("Unable to save external JSON file \"" + path + "\" from class " + containerObject.getClass().getName());
+            log.warn("Unable to save external JSON file \"" + path + "\" from class " + containerObject.getClass().getName());
             throw e;
         }
     }
@@ -35,7 +35,7 @@ public class JsonContainerLoader {
             String json = reader.lines().collect(Collectors.joining("\n"));
             return new ObjectMapper().readValue(json, containerClass);
         } catch (IOException e) {
-            log.error("Unable to load internal JSON file \"" + path + "\" to class " + containerClass.getName());
+            log.warn("Unable to load internal JSON file \"" + path + "\" to class " + containerClass.getName());
             throw e;
         }
     }

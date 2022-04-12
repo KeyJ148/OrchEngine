@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class CollisionDirect extends Collision {
 
     private int range; //Максимальная дальность движения объекта
-    private ArrayList<Integer> dynamicId = new ArrayList();//Ид динамических объектов, с которыми надо проверять столкновения
+    private ArrayList<GameObject> dynamicObjects = new ArrayList<>();//Ид динамических объектов, с которыми надо проверять столкновения
     private Vector2<Integer> positionCollision; //Позиция столкновения
     private int start = 0;//В комнате была проверена коллизия со всеми статическими объектами у которых id<start
     private boolean nearCollision = false;//Находимся близко к позиции столкновения
@@ -36,8 +36,7 @@ public class CollisionDirect extends Collision {
         calcInThisStep = false;
 
         separationCollisions();
-        for (Integer id : dynamicId) { //Проверяем столкновения со всеми перемещающимися объектами
-            GameObject objectFromRoom = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id);
+        for (GameObject objectFromRoom : dynamicObjects) { //Проверяем столкновения со всеми перемещающимися объектами
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class) && checkCollision(objectFromRoom)) {
                 informListeners(objectFromRoom); //Информируем об этом всех слушателей
             }
@@ -84,20 +83,20 @@ public class CollisionDirect extends Collision {
     //Поиск в общем массиве id, которые динамичны и сталкиваются с этим объектом
     //Также поиск статичных объектов для проверки столкновения при помощи траектории
     private void separationCollisions() {
-        for (int i = start; i < Context.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize(); i++) {//Цикл перебора объектов в комнате
-            GameObject gameObjectFromRoom = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(i);
+        for (GameObject gameObjectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getMap().getObjects()) {//Цикл перебора объектов в комнате
             if (gameObjectFromRoom != null && gameObjectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) {//Цикл перебора объектов с которыми надо проверять столкновения
                     if (gameObjectFromRoom.getClass().equals(collisionObject)) {//Если с объектом из комнаты надо проверять столкновения
                         if (gameObjectFromRoom.hasComponent(Movement.class))
-                            dynamicId.add(i);//Если объект из комнаты динамичен
+                            dynamicObjects.add(gameObjectFromRoom);//Если объект из комнаты динамичен
                         else checkCollisionDirect(gameObjectFromRoom);//Если объект из комнаты статичен
                     }
                 }
             }
         }
 
-        this.start = Context.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize();
+        //TODO должен проверять столкновения с новодобовляемыми объектами, мб сделать через листенер
+        //this.start = Context.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize();
     }
 
     //Расчёт столкновения прямолинейно перемещающегося объекта с статичным объектом obj

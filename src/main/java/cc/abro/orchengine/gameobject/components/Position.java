@@ -9,6 +9,8 @@ import cc.abro.orchengine.util.Vector2;
 import java.util.Arrays;
 import java.util.List;
 
+//TODO удалить класс. Location вынести в GameObject, а [x, y, z] и т.п. в каждый компонент контейнер.
+//TODO directionDraw -- часть спрайта и анимации или это просто direction (не movement же)?
 public class Position extends Component {
 
     public double x;
@@ -18,7 +20,6 @@ public class Position extends Component {
     public boolean absolute = true; //Позиция относительно угла карты? (Иначе относительно угла экрана)
 
     public Location location;//Комната в которой находится объект
-    public int id;//Уникальный номер объекта в комнате TODO del, find by link
 
     public Position(double x, double y, int depth) {
         this(x, y, depth, 90);
