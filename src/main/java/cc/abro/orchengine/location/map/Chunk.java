@@ -1,15 +1,13 @@
 package cc.abro.orchengine.location.map;
 
-import cc.abro.orchengine.context.Context;
-import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.gameobject.GameObject;
 
 import java.util.ArrayList;
 
 public class Chunk {
 
-	private final ArrayList<Integer> number = new ArrayList<>();//Id объектов которые надо отрисовать
-	private final int posWidth;//Порядковый номер чанка
+	private final ArrayList<GameObject> objects = new ArrayList<>(); //Объекты которые надо отрисовать //TODO set?
+	private final int posWidth; //Порядковый номер чанка
 	private final int posHeight;
 
 	public Chunk(int posWidth, int posHeight) {
@@ -17,33 +15,26 @@ public class Chunk {
 		this.posHeight = posHeight;
 	}
 
-	public void add(int id) {
-		number.add(id);
+	public void add(GameObject gameObject) {
+		objects.add(gameObject);
 	}
 
-	public int get(int index) {
-		return number.get(index);
-	}
-
-	public void del(int id) {
-		for (int j = 0; j < number.size(); j++) {
-			if (number.get(j) == id) {
-				number.remove(j);
+	public void del(GameObject gameObject) {
+		for (int j = 0; j < objects.size(); j++) {
+			if (objects.get(j) == gameObject) {
+				objects.remove(j);
 				break;
 			}
 		}
 	}
 
 	public int size() {
-		return number.size();
+		return objects.size();
 	}
 
 	public void render() {
-		for (int id : number) {
-			if (Context.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize() > id && Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id) != null) {
-				GameObject gameObject = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id);
-				gameObject.draw();
-			}
+		for (GameObject gameObject : objects) {
+			gameObject.draw();
 		}
 	}
 

@@ -29,10 +29,8 @@ public class MapControl {
 		depthVectorByDepth.computeIfAbsent(depth, u -> new DepthVector(this, depth, gameObject)).add(gameObject);
 	}
 
-	public void del(int id) {
-		GameObject gameObject = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id);
+	public void del(GameObject gameObject) {
 		int depth = gameObject.getComponent(Position.class).depth;
-
 		depthVectorByDepth.get(depth).del(gameObject);
 	}
 

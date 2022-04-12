@@ -4,13 +4,18 @@ import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.location.Location;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Map {
 
     public Background background = new Background(); //Фон карты (цвет и текстура)
     public MapControl mapControl; //Массив со всеми чанками и объектами
-    private final Vector<GameObject> objects = new Vector<>(); //Массив со всеми объектами
+    private final Set<GameObject> objects = Collections.newSetFromMap(new ConcurrentHashMap<>()); //Массив со всеми объектами
+    //TODO а не будет дедлока при попытке удалить объект из сета в процессе обхода сета при помощи итератора?
 
     private final Location location;//TODO del from this class
 
@@ -25,9 +30,9 @@ public class Map {
             at java.util.Vector$Itr.checkForComodification(Vector.java:1298) ~[?:?]
             at java.util.Vector$Itr.next(Vector.java:1254) ~[?:?]
             at cc.abro.orchengine.location.map.Map.update(Map.java:23) ~[OrchEngine-0.1.0.jar:?]*/
-        for (int i = 0; i < objects.size(); i++) {
-            GameObject gameObject = objects.get(i);
-            if (gameObject != null) gameObject.update(delta);
+
+        for (GameObject gameObject : objects) {
+            gameObject.update(delta);
         }
     }
 
@@ -46,16 +51,8 @@ public class Map {
         return count;
     }
 
-    public GameObject getObject(int id) {
-        return objects.get(id);
-    }
-
-    public int getObjectsVectorSize() {
-        return objects.size();
-    }
-
-    public Vector<GameObject> getObjects() {
-        return new Vector<>(objects);
+    public Set<GameObject> getObjects() {
+        return objects;
     }
 
     //Добавление объекта в комнату
@@ -65,22 +62,20 @@ public class Map {
         }
 
         gameObject.getLocationHolder().setLocation(location);
-        gameObject.getComponent(Position.class).id = objects.size();
         objects.add(gameObject);
         mapControl.add(gameObject);
     }
 
-    //Добавление объекта из комнаты
+    //Удаление объекта из комнаты
     public void remove(GameObject gameObject) {
-        int id = gameObject.getComponent(Position.class).id;
-        mapControl.del(id);//Используется objects, так что должно быть раньше
-        objects.set(id, null);
+        mapControl.del(gameObject); //Используется objects, так что должно быть раньше
+        objects.remove(gameObject);
     }
 
-    //Удаление всех объектов в комнате
+    //Уничтожение всех объектов в комнате //TODO add "remove without destroy() all objects" method
     public void destroy() {
-        for (int i = 0; i < objects.size(); i++) {
-            if (objects.get(i) != null) objects.get(i).destroy();
+        for (GameObject gameObject : objects) {
+            gameObject.destroy();
         }
     }
 

@@ -22,7 +22,7 @@ public class DepthVector {
 	//Внутренний массив имеет чанки с одинаковой y, но разными x
 	private final ArrayList<ArrayList<Chunk>> chunks = new ArrayList<>();
 	//Объекты чьи текстура или маска больше размера чанка, и поэтому их необходимо обрабатывать всегда
-	private final Set<Integer> unsuitableObjects = new HashSet<>();
+	private final Set<GameObject> unsuitableObjects = new HashSet<>();
 
 	public DepthVector(MapControl mc, int depth, GameObject gameObject) {
 		this.mc = mc;
@@ -34,18 +34,18 @@ public class DepthVector {
 	public void add(GameObject gameObject) {
 		if (isObjectSmallerThenChunk(gameObject)) {
 			getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
-					.add(gameObject.getComponent(Position.class).id);
+					.add(gameObject);
 		} else {
-			unsuitableObjects.add(gameObject.getComponent(Position.class).id);
+			unsuitableObjects.add(gameObject);
 		}
 	}
 
 	public void del(GameObject gameObject) {
-		if (!unsuitableObjects.contains(gameObject.getComponent(Position.class).id)) {
+		if (!unsuitableObjects.contains(gameObject)) {
 			getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
-					.del(gameObject.getComponent(Position.class).id);
+					.del(gameObject);
 		} else {
-			unsuitableObjects.remove(gameObject.getComponent(Position.class).id);
+			unsuitableObjects.remove(gameObject);
 		}
 	}
 
@@ -61,8 +61,8 @@ public class DepthVector {
 		Chunk chunkLast = getChunk((int) gameObject.getComponent(Movement.class).getXPrevious(), (int) gameObject.getComponent(Movement.class).getYPrevious());
 
 		if (!chunkLast.equals(chunkNow)) {
-			chunkLast.del(gameObject.getComponent(Position.class).id);
-			chunkNow.add(gameObject.getComponent(Position.class).id);
+			chunkLast.del(gameObject);
+			chunkNow.add(gameObject);
 		}
 	}
 
@@ -84,17 +84,14 @@ public class DepthVector {
 		}
 
 		//Рендер объектов не помещающихся в чанке
-		for (int id : unsuitableObjects) {
-			if (Context.getService(LocationManager.class).getActiveLocation().getMap().getObjectsVectorSize() > id && Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id) != null) {
-				GameObject gameObject = Context.getService(LocationManager.class).getActiveLocation().getMap().getObject(id);
-				gameObject.draw();
-			}
+		for (GameObject unsuitableGameObject : unsuitableObjects) {
+			unsuitableGameObject.draw();
 		}
 	}
 
 	private boolean isObjectSmallerThenChunk(GameObject gameObject){
 		boolean isSmaller = true;
-		if (gameObject.hasComponent(Rendering.class)){
+		if (gameObject.hasComponent(Rendering.class)) {
 			isSmaller &= gameObject.getComponent(Rendering.class).getWidth() < mc.getChunkSize() &&
 					gameObject.getComponent(Rendering.class).getHeight() < mc.getChunkSize();
 		}
