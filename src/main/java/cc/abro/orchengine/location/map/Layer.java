@@ -13,7 +13,7 @@ import java.util.Map;
 public class Layer {
 
 	private final int z;
-	private final MapControl mc;
+	private final ObjectsContainer mc;
 	//Двумерный динамический массив хранит все Чанки TODO поправить все комменты в пакете map
 	//Внешний массив хранит сортировку массивов по координате y
 	//Внутренний массив имеет чанки с одинаковой y, но разными x
@@ -21,7 +21,7 @@ public class Layer {
 	//Объекты чьи текстура или маска больше размера чанка, и поэтому их необходимо обрабатывать всегда
 	private final Set<GameObject> unsuitableObjects = new HashSet<>();
 
-	public Layer(MapControl mc, int z) {
+	public Layer(ObjectsContainer mc, int z) {
 		this.mc = mc;
 		this.z = z;
 	}

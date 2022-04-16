@@ -70,11 +70,11 @@ public class AnalysisStringBuilder {
         sb.append("          ");
 
         sb.append("Chunks: ");
-        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().mapControl.chunkRender);
+        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().layersContainer.chunkRender);
         sb.append(" (");
         sb.append(analyzer.chunkInLayer);
         sb.append("*");
-        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().mapControl.getCountLayers());
+        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().layersContainer.getCountLayers());
         sb.append(")");
         sb.append("          ");
 
