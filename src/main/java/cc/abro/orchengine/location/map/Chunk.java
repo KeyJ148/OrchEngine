@@ -2,11 +2,12 @@ package cc.abro.orchengine.location.map;
 
 import cc.abro.orchengine.gameobject.GameObject;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Chunk {
 
-	private final ArrayList<GameObject> objects = new ArrayList<>(); //Объекты которые надо отрисовать //TODO set?
+	private final Set<GameObject> objects = new HashSet<>(); //Объекты которые надо отрисовать //TODO set?
 	private final int posWidth; //Порядковый номер чанка
 	private final int posHeight;
 
@@ -20,12 +21,7 @@ public class Chunk {
 	}
 
 	public void del(GameObject gameObject) {
-		for (int j = 0; j < objects.size(); j++) {
-			if (objects.get(j) == gameObject) {
-				objects.remove(j);
-				break;
-			}
-		}
+		objects.remove(gameObject);
 	}
 
 	public int size() {

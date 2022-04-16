@@ -2,6 +2,7 @@ package cc.abro.orchengine.audio;
 
 import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.location.LocationManager;
 import cc.abro.orchengine.location.map.Camera;
@@ -13,6 +14,7 @@ import org.picocontainer.Startable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.lwjgl.openal.ALC10.*;
 
@@ -48,12 +50,12 @@ public class AudioPlayer implements Startable{
         Условие (camera.isSoundOnFollowingObject()) исправляет этот баг
         */
         Camera camera = Context.getService(LocationManager.class).getActiveLocation().getCamera();
-        double listenerX = camera.getFollowObject()
-                .filter(u -> camera.isSoundOnFollowingObject())
+        Optional<GameObject> cameraFollowObject = camera.isSoundOnFollowingObject() ?
+                camera.getFollowObject() : Optional.empty();
+        double listenerX = cameraFollowObject
                 .map(follow -> follow.getComponent(Position.class).x)
                 .orElse(camera.getX());
-        double listenerY = camera.getFollowObject()
-                .filter(u -> camera.isSoundOnFollowingObject())
+        double listenerY = cameraFollowObject
                 .map(follow -> follow.getComponent(Position.class).y)
                 .orElse(camera.getY());
 

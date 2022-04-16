@@ -1,9 +1,7 @@
 package cc.abro.orchengine.location.map;
 
-import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
-import cc.abro.orchengine.location.LocationManager;
 
 import java.util.Comparator;
 import java.util.TreeMap;
@@ -26,7 +24,7 @@ public class MapControl {
 
 	public void add(GameObject gameObject) {
 		int depth = gameObject.getComponent(Position.class).depth;
-		depthVectorByDepth.computeIfAbsent(depth, u -> new DepthVector(this, depth, gameObject)).add(gameObject);
+		depthVectorByDepth.computeIfAbsent(depth, u -> new DepthVector(this, depth)).add(gameObject);
 	}
 
 	public void del(GameObject gameObject) {

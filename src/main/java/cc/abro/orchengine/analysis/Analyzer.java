@@ -131,7 +131,7 @@ public class Analyzer implements Startable {
 
 		MapControl activeMapControl = Context.getService(LocationManager.class).getActiveLocation().getMap().mapControl;
 		chunkInDepthVector = (activeMapControl.getCountDepthVectors() != 0) ?
-				activeMapControl.chunkRender / activeMapControl.getCountDepthVectors() : 0;
+				activeMapControl.chunkRender / activeMapControl.getCountDepthVectors() : 0; //TODO не актуально, кол-во чанков не равно между DepthVector-ами
 
 		//Для строк отладки, иначе деление на 0
 		if (loopsRender == 0) loopsRender = 1;
