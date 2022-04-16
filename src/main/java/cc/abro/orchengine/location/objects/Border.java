@@ -1,4 +1,4 @@
-package cc.abro.orchengine.location.map;
+package cc.abro.orchengine.location.objects;
 
 import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.gameobject.GameObject;
@@ -17,10 +17,10 @@ public class Border extends GameObject {
 	}
 
 	public static void createAndAddAll(Location location, int size) {
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.NORTH, size));
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.EAST, size));
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.SOUTH, size));
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.WEST, size));
+		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.NORTH, size));
+		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.EAST, size));
+		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.SOUTH, size));
+		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.WEST, size));
 	}
 
 	public static record BorderData(int x, int y, int w, int h) {}

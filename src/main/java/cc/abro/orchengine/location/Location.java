@@ -1,26 +1,37 @@
 package cc.abro.orchengine.location;
 
-import cc.abro.orchengine.context.Context;
-import cc.abro.orchengine.location.map.Background;
-import cc.abro.orchengine.location.map.Camera;
-import cc.abro.orchengine.location.map.ObjectsContainer;
-
-import java.util.Map;
+import cc.abro.orchengine.location.objects.Background;
+import cc.abro.orchengine.location.objects.Camera;
+import cc.abro.orchengine.location.objects.Chunk;
+import cc.abro.orchengine.location.objects.ObjectsContainer;
 
 public class Location {
 
 	private final int width, height;
 	private final Camera camera = new Camera(); //Положение камеры в этой локации
-
-	private final Background background = new Background(); //Фон карты (цвет и текстура)
 	private final ObjectsContainer objectsContainer; //Массив со всеми чанками и объектами
 	private final GuiLocationFrame guiLocationFrame;
 
+	private Background background; //Фон карты (цвет и текстура)
+
+	public Location() {
+		this(Integer.MAX_VALUE, Integer.MAX_VALUE, Chunk.DEFAULT_SIZE);
+	}
+
+	public Location(int chunkSize) {
+		this(Integer.MAX_VALUE, Integer.MAX_VALUE, chunkSize);
+	}
+
 	public Location(int width, int height) {
+		this(width, height, Chunk.DEFAULT_SIZE);
+	}
+
+	public Location(int width, int height, int chunkSize) {
 		this.width = width;
 		this.height = height;
 
-		objectsContainer = new ObjectsContainer(width, height);
+		background = new Background();
+		objectsContainer = new ObjectsContainer(width, height, chunkSize, this);
 		guiLocationFrame = new GuiLocationFrame();
 	}
 
@@ -30,17 +41,15 @@ public class Location {
 		guiLocationFrame.update();
 	}
 
-	//Отрисовка комнаты с размерами width и height вокруг камеры
+	//Отрисовка комнаты с размерами width и height вокруг камеры TODO слово комната поменять на локация везде
 	public void render(int width, int height) {
-		background.render(x, y, width, height, camera);
-		layersContainer.render(x, y, width, height);
-
 		render((int) camera.getX(), (int) camera.getY(), width, height);
 	}
 
 	//Отрисовка комнаты с размерами width и height вокруг координат (x;y)
 	public void render(int x, int y, int width, int height) {
-		objectsContainer.render(x, y, width, height, camera);
+		background.render(x, y, width, height, camera);
+		objectsContainer.render(x, y, width, height);
 		guiLocationFrame.render();
 	}
 
@@ -50,11 +59,15 @@ public class Location {
 		guiLocationFrame.destroy();
 	}
 
-	public boolean isActive(){
-		return Context.getService(LocationManager.class).getActiveLocation() == this;
+	public Background getBackground() {
+		return background;
 	}
 
-	public Map getMap() {
+	public void setBackground(Background background) {
+		this.background = background;
+	}
+
+	public ObjectsContainer getObjectsContainer() {
 		return objectsContainer;
 	}
 

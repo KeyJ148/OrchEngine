@@ -83,7 +83,7 @@ public class CollisionDirect extends Collision {
     //Поиск в общем массиве id, которые динамичны и сталкиваются с этим объектом
     //Также поиск статичных объектов для проверки столкновения при помощи траектории
     private void separationCollisions() {
-        for (GameObject gameObjectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getMap().getObjects()) {//Цикл перебора объектов в комнате
+        for (GameObject gameObjectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().getObjects()) {//Цикл перебора объектов в комнате
             if (gameObjectFromRoom != null && gameObjectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) {//Цикл перебора объектов с которыми надо проверять столкновения
                     if (gameObjectFromRoom.getClass().equals(collisionObject)) {//Если с объектом из комнаты надо проверять столкновения

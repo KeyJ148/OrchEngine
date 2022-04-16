@@ -66,15 +66,15 @@ public class AnalysisStringBuilder {
         sb.append("          ");
 
         sb.append("Objects: ");
-        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().getCountObjects());
+        //TODO sb.append(Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().getCountObjects());
         sb.append("          ");
 
         sb.append("Chunks: ");
-        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().layersContainer.chunkRender);
+        //TODO sb.append(Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().layersContainer.chunkRender);
         sb.append(" (");
         sb.append(analyzer.chunkInLayer);
         sb.append("*");
-        sb.append(Context.getService(LocationManager.class).getActiveLocation().getMap().layersContainer.getCountLayers());
+        //TODO sb.append(Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().layersContainer.getCountLayers());
         sb.append(")");
         sb.append("          ");
 

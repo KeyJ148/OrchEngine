@@ -65,7 +65,7 @@ public class Collision extends Component {
     public void checkCollisionFromRoom() {
         if (collisionObjects.size() == 0) return;
 
-        for (GameObject objectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getMap().getObjects()) {//Цикл перебора всех объектов в комнате
+        for (GameObject objectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().getObjects()) {//Цикл перебора всех объектов в комнате
             if (objectFromRoom != null && objectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) { //Цикл перебора объектов, с которыми надо проверять столкновение
                     if ((objectFromRoom.getClass().equals(collisionObject)) //Если с эти объектом надо проверять столкновени

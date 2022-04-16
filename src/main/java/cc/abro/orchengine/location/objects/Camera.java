@@ -1,4 +1,4 @@
-package cc.abro.orchengine.location.map;
+package cc.abro.orchengine.location.objects;
 
 import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.cycle.Render;
