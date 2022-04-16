@@ -3,7 +3,7 @@ package cc.abro.orchengine.analysis;
 import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.location.map.ObjectsContainer;
+import cc.abro.orchengine.location.objects.ObjectsContainer;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.udp.UDPControl;
@@ -129,7 +129,7 @@ public class Analyzer implements Startable {
 		totalMem = Runtime.getRuntime().totalMemory();
 		maxMem = Runtime.getRuntime().maxMemory();
 
-		ObjectsContainer activeObjectsContainer = Context.getService(LocationManager.class).getActiveLocation().getMap().layersContainer;
+		ObjectsContainer activeObjectsContainer = Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer();
 		chunkInLayer = (activeObjectsContainer.getCountLayers() != 0) ?
 				activeObjectsContainer.chunkRender / activeObjectsContainer.getCountLayers() : 0; //TODO не актуально, кол-во чанков не равно между DepthVector-ами
 		//TODO учитывать ещё и cc.abro.orchengine.location.map.MapControl.unsuitableObjectsRender
@@ -147,6 +147,7 @@ public class Analyzer implements Startable {
 		loopsRender = 0;
 		durationUpdate = 0;
 		durationRender = 0;
+		durationSync = 0;
 	}
 
 	//Сохранение результатов
