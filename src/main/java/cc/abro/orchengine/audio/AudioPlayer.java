@@ -5,7 +5,7 @@ import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.location.map.Camera;
+import cc.abro.orchengine.location.objects.Camera;
 import cc.abro.orchengine.resources.audios.Audio;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;

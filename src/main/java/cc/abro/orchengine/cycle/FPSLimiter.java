@@ -2,7 +2,7 @@ package cc.abro.orchengine.cycle;
 
 public class FPSLimiter {
 
-    private int fpsLimit;
+    private final int fpsLimit;
     private long variableYieldTime, lastTime;
 
     public FPSLimiter(int fpsLimit) {
