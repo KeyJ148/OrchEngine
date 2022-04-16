@@ -3,18 +3,18 @@ package cc.abro.orchengine.location.map;
 import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Position;
 
-import java.util.Comparator;
 import java.util.TreeMap;
 
 public class MapControl {
 
 	public final int borderSize = 100;
 	private final int chunkSize = 100;
-	private final java.util.Map<Integer, DepthVector> depthVectorByDepth = new TreeMap<>(Comparator.reverseOrder()); //Массив с DepthVector хранящий чанки
+	private final java.util.Map<Integer, Layer> layerByZ = new TreeMap<>(); //Массив с DepthVector хранящий чанки TODO поправить комменты
 
 	public int numberWidth;//Кол-во чанков
 	public int numberHeight;
 	public int chunkRender = 0;//Кол-во отрисованных чанков
+	public int unsuitableObjectsRender = 0;//Кол-во отрисованных объектов, которые не поместились в чанки
 
 	public MapControl(int width, int height) {
 		int addCell = (int) Math.ceil((double) borderSize / chunkSize) * 2;//С двух сторон для каждой оси
@@ -23,35 +23,36 @@ public class MapControl {
 	}
 
 	public void add(GameObject gameObject) {
-		int depth = gameObject.getComponent(Position.class).depth;
-		depthVectorByDepth.computeIfAbsent(depth, u -> new DepthVector(this, depth)).add(gameObject);
+		int z = gameObject.getComponent(Position.class).z;
+		layerByZ.computeIfAbsent(z, u -> new Layer(this, z)).add(gameObject);
 	}
 
 	public void del(GameObject gameObject) {
-		int depth = gameObject.getComponent(Position.class).depth;
-		depthVectorByDepth.get(depth).del(gameObject);
+		int z = gameObject.getComponent(Position.class).z;
+		layerByZ.get(z).del(gameObject);
 	}
 
 	public void clear() {
-		depthVectorByDepth.clear();
+		layerByZ.clear();
 	}
 
 	public void update(GameObject gameObject) {
-		int depth = gameObject.getComponent(Position.class).depth;
-		if (!depthVectorByDepth.containsKey(depth)){
+		int z = gameObject.getComponent(Position.class).z;
+		if (!layerByZ.containsKey(z)){
 			return;
 		}
 
-		depthVectorByDepth.get(depth).update(gameObject);
+		layerByZ.get(z).update(gameObject);
 	}
 
 	public void render(int x, int y, int width, int height) {
 		chunkRender = 0;
-		depthVectorByDepth.values().forEach(dv -> dv.render(x, y, width, height));
+		unsuitableObjectsRender = 0;
+		layerByZ.values().forEach(l -> l.render(x, y, width, height));
 	}
 
-	public int getCountDepthVectors() {
-		return depthVectorByDepth.size();
+	public int getCountLayers() {
+		return layerByZ.size();
 	}
 
 	public int getChunkSize() {

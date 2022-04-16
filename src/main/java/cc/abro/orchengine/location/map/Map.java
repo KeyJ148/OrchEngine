@@ -1,15 +1,13 @@
 package cc.abro.orchengine.location.map;
 
 import cc.abro.orchengine.gameobject.GameObject;
-import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.location.Location;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+//TODO переименовать класс
 public class Map {
 
     public Background background = new Background(); //Фон карты (цвет и текстура)

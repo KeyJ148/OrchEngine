@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Chunk {
 
-	private final Set<GameObject> objects = new HashSet<>(); //Объекты которые надо отрисовать //TODO set?
+	private final Set<GameObject> objects = new HashSet<>(); //Объекты которые надо отрисовать
 	private final int posWidth; //Порядковый номер чанка
 	private final int posHeight;
 

@@ -7,25 +7,23 @@ import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.gameobject.components.render.Rendering;
 import cc.abro.orchengine.util.Vector2;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.Map;
-import java.util.Set;
 
-public class DepthVector {
+public class Layer {
 
-	private final int depth;
+	private final int z;
 	private final MapControl mc;
-	//Двумерный динамический массив хранит все Чанки
+	//Двумерный динамический массив хранит все Чанки TODO поправить все комменты в пакете map
 	//Внешний массив хранит сортировку массивов по координате y
 	//Внутренний массив имеет чанки с одинаковой y, но разными x
 	private final Map<Vector2<Integer>, Chunk> chunks = new HashMap<>();
 	//Объекты чьи текстура или маска больше размера чанка, и поэтому их необходимо обрабатывать всегда
 	private final Set<GameObject> unsuitableObjects = new HashSet<>();
 
-	public DepthVector(MapControl mc, int depth) {
+	public Layer(MapControl mc, int z) {
 		this.mc = mc;
-		this.depth = depth;
+		this.z = z;
 	}
 
 	public void add(GameObject gameObject) {
@@ -46,13 +44,13 @@ public class DepthVector {
 		}
 	}
 
-	public int getDepth() {
-		return depth;
+	public int getZ() {
+		return z;
 	}
 
-	//Обновление объекта при перемещение из чанка в чанк
+	//Обновление объекта при перемещении из чанка в чанк
 	public void update(GameObject gameObject) {
-		if (!gameObject.hasComponent(Movement.class)) return;
+		if (!gameObject.hasComponent(Movement.class) || !isObjectSmallerThenChunk(gameObject)) return;
 
 		Chunk chunkNow = getOrCreateChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y);
 		Chunk chunkLast = getChunk((int) gameObject.getComponent(Movement.class).getXPrevious(), (int) gameObject.getComponent(Movement.class).getYPrevious());
@@ -83,6 +81,7 @@ public class DepthVector {
 
 		//Рендер объектов не помещающихся в чанке
 		for (GameObject unsuitableGameObject : unsuitableObjects) {
+			mc.unsuitableObjectsRender++;
 			unsuitableGameObject.draw();
 		}
 	}
