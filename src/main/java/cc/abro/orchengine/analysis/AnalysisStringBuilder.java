@@ -1,8 +1,10 @@
 package cc.abro.orchengine.analysis;
 
+import java.util.List;
+
 public class AnalysisStringBuilder {
 
-    public static final int STRING_COUNT = 2;
+    public static final int STRING_COUNT = 3;
 
     private final Analyzer analyzer;
 
@@ -62,25 +64,6 @@ public class AnalysisStringBuilder {
         sb.append(" mks");
         sb.append("          ");
 
-        sb.append("Objects (upd/rend/unsuit): ");
-        sb.append(analyzer.objectsUpdatedSum);
-        sb.append("/");
-        sb.append(analyzer.objectsRenderedSum);
-        sb.append("/");
-        sb.append(analyzer.unsuitableObjectsRenderedSum);
-        sb.append("          ");
-
-        sb.append("Chunks (upd/rend): ");
-        sb.append(analyzer.chunksUpdatedSum);
-        sb.append("/");
-        sb.append(analyzer.chunksRenderedSum);
-        sb.append("          ");
-        sb.append("Layers (upd/rend): ");
-        sb.append(analyzer.layersCountUpdated);
-        sb.append("/");
-        sb.append(analyzer.layersCountRenderer);
-        sb.append("          ");
-
         sb.append("Memory: ");
         sb.append((analyzer.totalMem - analyzer.freeMem) / 1024 / 1024 );
         sb.append("/");
@@ -90,5 +73,35 @@ public class AnalysisStringBuilder {
         sb.append(" MB          ");
 
         return sb.toString();
+    }
+
+    public String getAnalysisString3() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Objects update/render/unsuitable: ");
+        sb.append(analyzer.objectsUpdatedSum);
+        sb.append("/");
+        sb.append(analyzer.objectsRenderedSum);
+        sb.append("/");
+        sb.append(analyzer.unsuitableObjectsRenderedSum);
+        sb.append("          ");
+
+        sb.append("Chunks U/R: ");
+        sb.append(analyzer.chunksUpdatedSum);
+        sb.append("/");
+        sb.append(analyzer.chunksRenderedSum);
+        sb.append("          ");
+
+        sb.append("Layers U/R: ");
+        sb.append(analyzer.layersCountUpdated);
+        sb.append("/");
+        sb.append(analyzer.layersCountRenderer);
+        sb.append("          ");
+
+        return sb.toString();
+    }
+
+    //Получение всех строк с результатами
+    public List<String> getAllStrings() {
+        return List.of(getAnalysisString1(), getAnalysisString2(), getAnalysisString3());
     }
 }

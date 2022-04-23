@@ -15,7 +15,7 @@ import java.util.Set;
 @Log4j2
 public class Loader {
 
-	public void start(Set<String> activeProfiles, Set<String> packagesForScan) { //TODO package-private было лучше
+	public void start(Set<String> activeProfiles, Set<String> packagesForScan) {
 		try {
 			Thread.currentThread().setName("Engine");
 			setupFinalizerService(); //Создание сервиса для корректного освобождения ресурсов при завершении программы

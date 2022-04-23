@@ -100,8 +100,8 @@ public class Analyzer implements Startable {
 		if (System.currentTimeMillis() < lastAnalysis + 1000) return;
 
 		analysisData();
-		generateResult();
-		logToConsole();
+		analysisResultStrings = analysisStringBuilder.getAllStrings();
+		analysisResultStrings.forEach(log::trace);
 		clearData();
 	}
 
@@ -155,16 +155,5 @@ public class Analyzer implements Startable {
 		durationUpdate = 0;
 		durationRender = 0;
 		durationSync = 0;
-	}
-
-	//Сохранение результатов
-	private void generateResult() {
-		//Получение строк с результатами
-		analysisResultStrings = List.of(analysisStringBuilder.getAnalysisString1(),
-				analysisStringBuilder.getAnalysisString2());
-	}
-
-	private void logToConsole() {
-		analysisResultStrings.forEach(log::trace);
 	}
 }

@@ -79,7 +79,9 @@ public class Context {
     }
 
     public static void start(){
-        getThreadContext().getServices().start(); //TODO package-private было лучше (и у stop тоже)
+        if (!getThreadContext().getServices().getLifecycleState().isStarted()) {
+            getThreadContext().getServices().start();
+        }
     }
 
     public static void stop(){

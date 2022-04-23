@@ -18,14 +18,9 @@ public class LeguiRender {
 
     private Render render;
 
-    /*public GuiService(Render render) {
-        this.render = render;
-    } TODO */
-
     public Frame createFrame() {
-        render = Context.getService(Render.class);
-        //TODO циклическая зависимость, избавиться
-        Frame frame = new Frame(Context.getService(Render.class).getWidth(), Context.getService(Render.class).getHeight());
+        render = Context.getService(Render.class); //TODO циклическая зависимость, избавиться
+        Frame frame = new Frame(render.getWidth(), render.getHeight());
         frame.getContainer().setFocusable(true);
 
         return frame;
