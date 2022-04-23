@@ -19,7 +19,7 @@ public class Position extends Component {
     private double directionDraw; //0, 360 - в право, против часовой - отрисовка
     public boolean absolute = true; //Позиция относительно угла карты? (Иначе относительно угла экрана)
 
-    public Location location;//Комната в которой находится объект
+    public Location location;//Локация, в которой находится объект
 
     public Position(double x, double y, int z) {
         this(x, y, z, 90);

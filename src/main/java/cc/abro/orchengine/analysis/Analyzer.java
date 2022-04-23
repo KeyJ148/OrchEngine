@@ -2,8 +2,8 @@ package cc.abro.orchengine.analysis;
 
 import cc.abro.orchengine.context.Context;
 import cc.abro.orchengine.context.EngineService;
+import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.location.objects.ObjectsContainer;
 import cc.abro.orchengine.net.client.PingChecker;
 import cc.abro.orchengine.net.client.tcp.TCPControl;
 import cc.abro.orchengine.net.client.udp.UDPControl;
@@ -40,7 +40,10 @@ public class Analyzer implements Startable {
 	protected long freeMem = 0, totalMem = 0, maxMem = 0;
 
 	//Использование чанков
-	protected int chunkInLayer;
+	protected Location.Statistic statistic;
+	protected int chunksUpdatedSum = 0, objectsUpdatedSum = 0;
+	protected int chunksRenderedSum = 0, objectsRenderedSum = 0, unsuitableObjectsRenderedSum = 0;
+	protected int layersCountUpdated = 0, layersCountRenderer = 0;
 
 	//Результаты анализа построчно
 	private List<String> analysisResultStrings = Collections.emptyList();
@@ -129,10 +132,14 @@ public class Analyzer implements Startable {
 		totalMem = Runtime.getRuntime().totalMemory();
 		maxMem = Runtime.getRuntime().maxMemory();
 
-		ObjectsContainer activeObjectsContainer = Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer();
-		chunkInLayer = (activeObjectsContainer.getCountLayers() != 0) ?
-				activeObjectsContainer.chunkRender / activeObjectsContainer.getCountLayers() : 0; //TODO не актуально, кол-во чанков не равно между DepthVector-ами
-		//TODO учитывать ещё и cc.abro.orchengine.location.map.MapControl.unsuitableObjectsRender
+		statistic = Context.getService(LocationManager.class).getActiveLocation().getStatistic();
+		chunksUpdatedSum = statistic.chunksUpdatedByLayerZ().values().stream().reduce(0, Integer::sum);
+		objectsUpdatedSum = statistic.objectsUpdatedByLayerZ().values().stream().reduce(0, Integer::sum);
+		chunksRenderedSum = statistic.chunksRenderedByLayerZ().values().stream().reduce(0, Integer::sum);
+		objectsRenderedSum = statistic.objectsRenderedByLayerZ().values().stream().reduce(0, Integer::sum);
+		unsuitableObjectsRenderedSum = statistic.unsuitableObjectsRenderedByLayerZ().values().stream().reduce(0, Integer::sum);
+		layersCountUpdated = statistic.chunksUpdatedByLayerZ().size();
+		layersCountRenderer = statistic.chunksRenderedByLayerZ().size();
 
 		//Для строк отладки, иначе деление на 0
 		if (loopsRender == 0) loopsRender = 1;

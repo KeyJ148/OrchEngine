@@ -17,10 +17,10 @@ public class Border extends GameObject {
 	}
 
 	public static void createAndAddAll(Location location, int size) {
-		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.NORTH, size));
-		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.EAST, size));
-		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.SOUTH, size));
-		location.getObjectsContainer().add(new Border(location.getWidth(), location.getHeight(), Type.WEST, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.NORTH, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.EAST, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.SOUTH, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.WEST, size));
 	}
 
 	public static record BorderData(int x, int y, int w, int h) {}

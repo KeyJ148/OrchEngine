@@ -29,7 +29,7 @@ public class LocationManager {
         setActiveLocation(location, true);
     }
 
-    //Сделать комнату активной (update и render), одновременно может быть максимум одна активная комната
+    //Сделать локацию активной (update и render), одновременно может быть максимум одна активная локация
     public void setActiveLocation(Location location, boolean saveInput) {
         //Перенести нажатые клавиши и настройки мыши/курсора или нет
         GuiLocationFrame newFrame = location.getGuiLocationFrame();

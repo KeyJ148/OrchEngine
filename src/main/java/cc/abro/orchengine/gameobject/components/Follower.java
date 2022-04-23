@@ -31,7 +31,7 @@ public class Follower extends Component {
         getGameObject().getComponent(Position.class).y = followUpGameObject.getComponent(Position.class).y;
         if (followDirectionDraw)
             getGameObject().getComponent(Position.class).setDirectionDraw(followUpGameObject.getComponent(Position.class).getDirectionDraw());
-        Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().update(getGameObject());
+        Context.getService(LocationManager.class).getActiveLocation().checkGameObjectChunkChanged(getGameObject());
     }
 
     @Override

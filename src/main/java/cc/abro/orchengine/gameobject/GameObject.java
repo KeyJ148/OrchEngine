@@ -5,11 +5,9 @@ import cc.abro.orchengine.location.Location;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static cc.abro.orchengine.location.objects.ObjectsContainer.LocationObjectHolder;
-
 public class GameObject {
 
-    private final LocationObjectHolder locationHolder = new LocationObjectHolder();
+    private final Location.ObjectHolder locationHolder = new Location.ObjectHolder();
     private final ComponentsContainer components;
     private boolean destroying = false;
     private boolean destroyed = false;
@@ -32,7 +30,7 @@ public class GameObject {
 
         if (destroying) {
             components.destroy();
-            getLocation().getObjectsContainer().remove(this);
+            getLocation().remove(this);
             destroying = false;
             destroyed = true;
         }
@@ -55,7 +53,7 @@ public class GameObject {
         return destroying || destroyed;
     }
 
-    public LocationObjectHolder getLocationHolder() {
+    public Location.ObjectHolder getLocationHolder() {
         return locationHolder;
     }
 

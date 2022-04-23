@@ -1,8 +1,5 @@
 package cc.abro.orchengine.analysis;
 
-import cc.abro.orchengine.context.Context;
-import cc.abro.orchengine.location.LocationManager;
-
 public class AnalysisStringBuilder {
 
     public static final int STRING_COUNT = 2;
@@ -65,17 +62,23 @@ public class AnalysisStringBuilder {
         sb.append(" mks");
         sb.append("          ");
 
-        sb.append("Objects: ");
-        //TODO sb.append(Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().getCountObjects());
+        sb.append("Objects (upd/rend/unsuit): ");
+        sb.append(analyzer.objectsUpdatedSum);
+        sb.append("/");
+        sb.append(analyzer.objectsRenderedSum);
+        sb.append("/");
+        sb.append(analyzer.unsuitableObjectsRenderedSum);
         sb.append("          ");
 
-        sb.append("Chunks: ");
-        //TODO sb.append(Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().layersContainer.chunkRender);
-        sb.append(" (");
-        sb.append(analyzer.chunkInLayer);
-        sb.append("*");
-        //TODO sb.append(Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().layersContainer.getCountLayers());
-        sb.append(")");
+        sb.append("Chunks (upd/rend): ");
+        sb.append(analyzer.chunksUpdatedSum);
+        sb.append("/");
+        sb.append(analyzer.chunksRenderedSum);
+        sb.append("          ");
+        sb.append("Layers (upd/rend): ");
+        sb.append(analyzer.layersCountUpdated);
+        sb.append("/");
+        sb.append(analyzer.layersCountRenderer);
         sb.append("          ");
 
         sb.append("Memory: ");

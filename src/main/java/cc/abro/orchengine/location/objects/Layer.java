@@ -4,124 +4,140 @@ import cc.abro.orchengine.gameobject.GameObject;
 import cc.abro.orchengine.gameobject.components.Movement;
 import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.util.Vector2;
+import lombok.Getter;
 
 import java.util.*;
-import java.util.Map;
 
 public class Layer {
 
-	private final int z;
+	@Getter private final int z;
 	private final int chunkSize;
-	private final ObjectsContainer mc; //TODO переименовать
-	//Двумерный динамический массив хранит все Чанки TODO поправить все комменты в пакете map
-	//Внешний массив хранит сортировку массивов по координате y
-	//Внутренний массив имеет чанки с одинаковой y, но разными x
-	private final Map<Vector2<Integer>, Chunk> chunks = new HashMap<>();
-	//Объекты чьи текстура или маска больше размера чанка, и поэтому их необходимо обрабатывать всегда
-	private final Set<GameObject> unsuitableObjects = new HashSet<>(); //TODO объекты добавляются вручную, а не определяются автоматически
+	//В качестве ключа координаты чанка в сетке чанков
+	private final Map<Vector2<Integer>, Chunk> chunkByCoords = new HashMap<>();
+	//Объекты, которые необходимо рендерить всегда (их текстура или маска могут быть больше размера чанка)
+	private final Set<GameObject> unsuitableObjects = new HashSet<>();
 
-	//TODO автоматически удалять неиспользуемые чанки? Обязательно надо, но когда? Когда ноль объектов? Вышли из зоны видимости?
-	//TODO убрать ObjectContainer
-	public Layer(ObjectsContainer mc, int z, int chunkSize) {
-		this.mc = mc;
+	@Getter private int chunksUpdated = 0; //Кол-во обновленных чанков
+	@Getter private int chunksRendered = 0; //Кол-во отрисованных чанков
+	@Getter private int objectsUpdated = 0; //Кол-во обновленных объектов
+	@Getter private int objectsRendered = 0; //Кол-во отрисованных объектов
+	@Getter private int unsuitableObjectsRendered = 0; //Кол-во отрисованных объектов, которые рендерятся вне системы чанков
+
+	public Layer(int z, int chunkSize) {
 		this.z = z;
 		this.chunkSize = chunkSize;
 	}
 
 	public void add(GameObject gameObject) {
-		getOrCreateChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
-				.add(gameObject);
+		getOrCreateChunk(gameObject).add(gameObject);
 	}
 
 	public void remove(GameObject gameObject) {
-		if (!unsuitableObjects.contains(gameObject)) {
-			getChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y)
-					.remove(gameObject);
-		} else {
-			unsuitableObjects.remove(gameObject);
-		}
+		getChunk(gameObject).remove(gameObject);
+		unsuitableObjects.remove(gameObject);
 	}
 
-	public int getZ() {
-		return z;
+	public void addUnsuitableObject(GameObject gameObject) {
+		unsuitableObjects.add(gameObject);
 	}
 
-	//Обновление объекта при перемещении из чанка в чанк
-	//TODO переименовать метод, указать что он про перемещение между чанками, мб убрать отсюда совсем
-	//TODO убедиться, что не вызывается для unsuitable обхектов
-	//TODO при очень сильных лагах (стельба масс патроном на 10к карте) все ещё при смене корпуса он может дублироваться и уехать
-	//TODO Полагаю, дело в том, что он проскакивает сразу 2 чанка и в старом чанке его уже нет и он не удаляется
-	public void update(GameObject gameObject) {
-		if (!gameObject.hasComponent(Movement.class)) return;
+	public void checkGameObjectChunkChanged(GameObject gameObject) {
+		if (!gameObject.hasComponent(Movement.class) || unsuitableObjects.contains(gameObject)) return;
 
 		Chunk chunkNow = getOrCreateChunk((int) gameObject.getComponent(Position.class).x, (int) gameObject.getComponent(Position.class).y);
 		Chunk chunkLast = getChunk((int) gameObject.getComponent(Movement.class).getXPrevious(), (int) gameObject.getComponent(Movement.class).getYPrevious());
 
-		if (!chunkLast.equals(chunkNow)) {
+		if (chunkLast != chunkNow) {
 			chunkLast.remove(gameObject);
 			chunkNow.add(gameObject);
 		}
 	}
 
-	//TODO рендер в отдельном потоке? Копировать все коры и т.п.
-	//TODO синк (смену буфферов) в отдельном потоке? Копировать надо что-то?
+	public void update(long delta, Collection<LocationUpdater> locationUpdaters) {
+		//Делаем копию сета, иначе получаем ConcurrentModificationException,
+		//т.к. во время апдейта можно создать новый объект и для этого будет создан новый чанк
+		Set<Chunk> updatedChunks = new HashSet<>();
+		if (locationUpdaters.isEmpty()) {
+			updatedChunks.addAll(chunkByCoords.values());
+		} else {
+			updatedChunks.addAll(chunkByCoords.values());
+		}
 
-	//TODO а нужна эта функция?
-	public void update(long delta) {
-		new HashSet<>(chunks.values()).forEach(chunk -> chunk.update(delta));
+		chunksUpdated = 0;
+		objectsUpdated = 0;
+		updatedChunks.forEach(chunk -> {
+			chunk.update(delta);
+			chunksUpdated++;
+			objectsUpdated += chunk.size();
+		});
 	}
 
-	//TODO по идее лучше не использовать эту функцию, но мб и не удалять
-	public Set<GameObject> getObjects() {
-		Set<GameObject> allObjects = new HashSet<>();
-		for (Chunk chunk : chunks.values()) {
+	//Отрисовка чанков вокруг позиции x, y. Размер width, height + 1 чанк с каждой стороны
+	public void render(int x, int y, int width, int height) {
+		int renderChunksByAxisX = width / chunkSize + ((width % chunkSize == 0) ? 0 : 1);
+		int renderChunksByAxisY = height / chunkSize + ((height % chunkSize == 0) ? 0 : 1);
+		//Текстура объекта может выходить за границу чанка, поэтому чанк прилегающий к любой границе надо обрабатывать (+1)
+		int renderSideChunksByAxisX = renderChunksByAxisX / 2 + 1;
+		int renderSideChunksByAxisY = renderChunksByAxisY / 2 + 1;
+
+		chunksRendered = 0;
+		objectsRendered = 0;
+		Vector2<Integer> renderChunkPos = getChunkPosition(x, y);
+		for (int i = renderChunkPos.x - renderSideChunksByAxisX; i <= renderChunkPos.x + renderSideChunksByAxisX; i++) {
+			for (int j = renderChunkPos.y - renderSideChunksByAxisY; j <= renderChunkPos.y + renderSideChunksByAxisY; j++) {
+				Chunk renderingChunk = chunkByCoords.get(new Vector2<>(i, j));
+				if (renderingChunk != null) {
+					renderingChunk.render();
+					chunksRendered++;
+					objectsRendered += renderingChunk.size();
+				}
+			}
+		}
+
+		//Рендер объектов, которые могут быть больше чанка и рендерятся всегда
+		unsuitableObjectsRendered = 0;
+		for (GameObject unsuitableGameObject : unsuitableObjects) {
+			unsuitableGameObject.draw();
+			unsuitableObjectsRendered++;
+		}
+	}
+
+	@Deprecated
+	public List<GameObject> getObjects() {
+		List<GameObject> allObjects = new ArrayList<>();
+		for (Chunk chunk : chunkByCoords.values()) {
 			allObjects.addAll(chunk.getObjects());
 		}
 		return allObjects;
 	}
 
-	//TODO width и height при этом левая граница (как у массива), котоаря не включается!
-	//TODO Указать это, и проверить, что так и работает, и в мапах ок (поиск по файлам)
-
-	//Отрисовка чанков вокруг позиции x, y
-	public void render(int x, int y, int width, int height) {
-		//TODO по идее рендеринг надо делать для всех тех же объектов, для которых и update, т.к. мы не знаем их размер
-		//width = 10000;
-		//height = 10000;
-
-		int renderChunksByAxisX = width / chunkSize + ((width % chunkSize == 0) ? 0 : 1);
-		int renderChunksByAxisY = height / chunkSize + ((height % chunkSize == 0) ? 0 : 1);
-		int renderSideChunksByAxisX = renderChunksByAxisX / 2;
-		int renderSideChunksByAxisY = renderChunksByAxisY / 2;
-
-		Vector2<Integer> renderChunkPos = getChunkPosition(x, y);
-		for (int i = renderChunkPos.x - renderSideChunksByAxisX; i <= renderChunkPos.x + renderSideChunksByAxisX; i++) {
-			for (int j = renderChunkPos.y - renderSideChunksByAxisY; j <= renderChunkPos.y + renderSideChunksByAxisY; j++) {
-				Chunk renderingChunk = chunks.get(new Vector2<>(i, j));
-				if (renderingChunk != null) {
-					mc.chunkRender++;
-					renderingChunk.render();
-				}
-			}
-		}
-
-
-
-		//Рендер объектов не помещающихся в чанке
-		for (GameObject unsuitableGameObject : unsuitableObjects) {
-			mc.unsuitableObjectsRender++;
-			unsuitableGameObject.draw();
-		}
+	public void destroy() {
+		chunkByCoords.values().forEach(Chunk::destroy);
 	}
 
+	private Chunk getChunk(GameObject gameObject) {
+		return getChunk(
+				(int) gameObject.getComponent(Position.class).x,
+				(int) gameObject.getComponent(Position.class).y);
+	}
+
+	//(x;y) -- координаты мировые (например, объекта), а не чанка в сетке чанков
 	private Chunk getChunk(int x, int y) {
-		return chunks.get(getChunkPosition(x, y));
+		return chunkByCoords.get(getChunkPosition(x, y));
 	}
 
+	private Chunk getOrCreateChunk(GameObject gameObject) {
+		return getOrCreateChunk(
+				(int) gameObject.getComponent(Position.class).x,
+				(int) gameObject.getComponent(Position.class).y);
+	}
+
+	//(x;y) -- координаты мировые(например, объекта), а не чанка в сетке чанков
 	private Chunk getOrCreateChunk(int x, int y) {
-		return chunks.computeIfAbsent(getChunkPosition(x, y), cp -> new Chunk());
+		return chunkByCoords.computeIfAbsent(getChunkPosition(x, y), cp -> new Chunk());
 	}
 
+	//Получить координаты чанка в сетке чанков по мировым координатам
 	private Vector2<Integer> getChunkPosition(int x, int y) {
 		return new Vector2<>(x / chunkSize, y / chunkSize);
 	}

@@ -2,7 +2,9 @@ package cc.abro.orchengine.location.objects;
 
 import cc.abro.orchengine.gameobject.GameObject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Chunk {
@@ -20,7 +22,9 @@ public class Chunk {
 	}
 
 	public void update(long delta) {
-		new HashSet<>(objects).forEach(gameObject -> gameObject.update(delta));
+		//Делаем копию сета, иначе получаем ConcurrentModificationException,
+		//т.к. во время апдейта можно создать новый объект и этот объект будет помещен в сет
+		new ArrayList<>(objects).forEach(gameObject -> gameObject.update(delta));
 	}
 
 	public void render() {
@@ -29,9 +33,15 @@ public class Chunk {
 		}
 	}
 
-	//TODO по идее лучше не использовать эту функцию, но мб и не удалять (как минимум не копировать массив!)
-	public Set<GameObject> getObjects() {
-		return objects;
+	public void destroy() {
+		for (GameObject gameObject : objects) {
+			gameObject.destroy();
+		}
+	}
+
+	@Deprecated
+	public List<GameObject> getObjects() {
+		return new ArrayList<>(objects);
 	}
 
 	public int size() {

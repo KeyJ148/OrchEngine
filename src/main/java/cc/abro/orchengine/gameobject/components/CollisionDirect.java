@@ -15,7 +15,7 @@ public class CollisionDirect extends Collision {
     private int range; //Максимальная дальность движения объекта
     private ArrayList<GameObject> dynamicObjects = new ArrayList<>();//Ид динамических объектов, с которыми надо проверять столкновения
     private Vector2<Integer> positionCollision; //Позиция столкновения
-    private int start = 0;//В комнате была проверена коллизия со всеми статическими объектами у которых id<start
+    private int start = 0;//В локации была проверена коллизия со всеми статическими объектами у которых id<start
     private boolean nearCollision = false;//Находимся близко к позиции столкновения
 
     public CollisionDirect(Mask mask, int range) {
@@ -83,13 +83,13 @@ public class CollisionDirect extends Collision {
     //Поиск в общем массиве id, которые динамичны и сталкиваются с этим объектом
     //Также поиск статичных объектов для проверки столкновения при помощи траектории
     private void separationCollisions() {
-        for (GameObject gameObjectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getObjectsContainer().getObjects()) {//Цикл перебора объектов в комнате
+        for (GameObject gameObjectFromRoom : Context.getService(LocationManager.class).getActiveLocation().getObjects()) {//Цикл перебора объектов в локации
             if (gameObjectFromRoom != null && gameObjectFromRoom.hasComponent(Collision.class)) {//Если объект не был уничтожен и у него есть маска
                 for (Class collisionObject : collisionObjects) {//Цикл перебора объектов с которыми надо проверять столкновения
-                    if (gameObjectFromRoom.getClass().equals(collisionObject)) {//Если с объектом из комнаты надо проверять столкновения
+                    if (gameObjectFromRoom.getClass().equals(collisionObject)) {//Если с объектом из локации надо проверять столкновения
                         if (gameObjectFromRoom.hasComponent(Movement.class))
-                            dynamicObjects.add(gameObjectFromRoom);//Если объект из комнаты динамичен
-                        else checkCollisionDirect(gameObjectFromRoom);//Если объект из комнаты статичен
+                            dynamicObjects.add(gameObjectFromRoom);//Если объект из локации динамичен
+                        else checkCollisionDirect(gameObjectFromRoom);//Если объект из локации статичен
                     }
                 }
             }

@@ -8,7 +8,7 @@ import org.liquidengine.legui.component.Frame;
 
 public class GuiLocationFrame {
 
-    private final Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
+    private final Frame guiFrame; //Объект хранящий все элементы gui в данной локации
     private KeyboardHandler keyboard; //Объект хранящий события клавиатуры
     private MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
 

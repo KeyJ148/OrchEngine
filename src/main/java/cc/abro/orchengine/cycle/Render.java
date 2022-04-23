@@ -134,7 +134,7 @@ public class Render implements Startable {
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //Очистка рендера
 
 		game.render(); //Отрисовка в главном игровом классе (ссылка передается в движок при инициализации)
-		locationManager.getActiveLocation().render(getWidth(), getHeight()); //Отрисовка комнаты
+		locationManager.getActiveLocation().render(getWidth(), getHeight()); //Отрисовка локации
 	}
 
 	@Override
