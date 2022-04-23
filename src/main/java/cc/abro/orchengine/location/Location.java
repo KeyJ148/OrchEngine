@@ -8,7 +8,7 @@ import cc.abro.orchengine.location.objects.ObjectsContainer;
 public class Location {
 
 	private final int width, height;
-	private final Camera camera = new Camera(); //Положение камеры в этой локации
+	private final Camera camera; //Положение камеры в этой локации
 	private final ObjectsContainer objectsContainer; //Массив со всеми чанками и объектами
 	private final GuiLocationFrame guiLocationFrame;
 
@@ -30,9 +30,21 @@ public class Location {
 		this.width = width;
 		this.height = height;
 
-		background = new Background();
+		camera = new Camera();
 		objectsContainer = new ObjectsContainer(width, height, chunkSize, this);
 		guiLocationFrame = new GuiLocationFrame();
+		background = new Background();
+	}
+
+	public Location(int width, int height, Camera camera, ObjectsContainer objectsContainer,
+					GuiLocationFrame guiLocationFrame, Background background) {
+		this.width = width;
+		this.height = height;
+
+		this.camera = camera;
+		this.objectsContainer = objectsContainer;
+		this.guiLocationFrame = guiLocationFrame;
+		this.background = background;
 	}
 
 	public void update(long delta) {
@@ -41,7 +53,7 @@ public class Location {
 		guiLocationFrame.update();
 	}
 
-	//Отрисовка комнаты с размерами width и height вокруг камеры TODO слово комната поменять на локация везде
+	//Отрисовка комнаты с размерами width и height вокруг камеры, рисуется +1 чанк TODO слово комната поменять на локация везде //TODO поправить комменты в этом пакете
 	public void render(int width, int height) {
 		render((int) camera.getX(), (int) camera.getY(), width, height);
 	}
@@ -59,22 +71,6 @@ public class Location {
 		guiLocationFrame.destroy();
 	}
 
-	public Background getBackground() {
-		return background;
-	}
-
-	public void setBackground(Background background) {
-		this.background = background;
-	}
-
-	public ObjectsContainer getObjectsContainer() {
-		return objectsContainer;
-	}
-
-	public GuiLocationFrame getGuiLocationFrame() {
-		return guiLocationFrame;
-	}
-
 	public int getWidth() {
 		return width;
 	}
@@ -85,5 +81,21 @@ public class Location {
 
 	public Camera getCamera() {
 		return camera;
+	}
+
+	public ObjectsContainer getObjectsContainer() {
+		return objectsContainer;
+	}
+
+	public GuiLocationFrame getGuiLocationFrame() {
+		return guiLocationFrame;
+	}
+
+	public Background getBackground() {
+		return background;
+	}
+
+	public void setBackground(Background background) {
+		this.background = background;
 	}
 }

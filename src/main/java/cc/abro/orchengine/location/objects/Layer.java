@@ -49,6 +49,8 @@ public class Layer {
 	//Обновление объекта при перемещении из чанка в чанк
 	//TODO переименовать метод, указать что он про перемещение между чанками, мб убрать отсюда совсем
 	//TODO убедиться, что не вызывается для unsuitable обхектов
+	//TODO при очень сильных лагах (стельба масс патроном на 10к карте) все ещё при смене корпуса он может дублироваться и уехать
+	//TODO Полагаю, дело в том, что он проскакивает сразу 2 чанка и в старом чанке его уже нет и он не удаляется
 	public void update(GameObject gameObject) {
 		if (!gameObject.hasComponent(Movement.class)) return;
 
@@ -60,6 +62,9 @@ public class Layer {
 			chunkNow.add(gameObject);
 		}
 	}
+
+	//TODO рендер в отдельном потоке? Копировать все коры и т.п.
+	//TODO синк (смену буфферов) в отдельном потоке? Копировать надо что-то?
 
 	//TODO а нужна эта функция?
 	public void update(long delta) {
@@ -81,9 +86,8 @@ public class Layer {
 	//Отрисовка чанков вокруг позиции x, y
 	public void render(int x, int y, int width, int height) {
 		//TODO по идее рендеринг надо делать для всех тех же объектов, для которых и update, т.к. мы не знаем их размер
-		//width = 8000;
-		//height = 8000;
-
+		//width = 10000;
+		//height = 10000;
 
 		int renderChunksByAxisX = width / chunkSize + ((width % chunkSize == 0) ? 0 : 1);
 		int renderChunksByAxisY = height / chunkSize + ((height % chunkSize == 0) ? 0 : 1);

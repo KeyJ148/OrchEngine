@@ -15,7 +15,6 @@ public class ObjectsContainer {
 	private final Location location;
 	private final Map<Integer, Layer> layerByZ = new TreeMap<>();
 
-	//TODO поправить комменты в этом пакете
 	//TODO статистику в другое место, а лучше через листенеры и т.п.
 	public int chunkRender = 0;//Кол-во отрисованных чанков
 	public int unsuitableObjectsRender = 0;//Кол-во отрисованных объектов, которые не поместились в чанки
