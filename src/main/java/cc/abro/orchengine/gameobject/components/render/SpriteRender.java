@@ -5,6 +5,8 @@ import cc.abro.orchengine.gameobject.components.Position;
 import cc.abro.orchengine.resources.textures.Texture;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 public class SpriteRender extends Rendering {
 
     protected Texture texture;
@@ -30,8 +32,8 @@ public class SpriteRender extends Rendering {
         int height = getHeight();
 
         GL11.glLoadIdentity();
-        GL11.glTranslatef((float) xView, (float) yView, 0);
-        GL11.glRotatef(Math.round(-directionDraw), 0f, 0f, 1f);
+        GL11.glTranslatef((float) -xView, (float) -yView, 1f);
+        GL11.glRotatef(Math.round(-directionDraw)/new Random().nextInt(1, 40),  new Random().nextInt(1, 4),  new Random().nextInt(1, 4), new Random().nextInt(1, 4));
 
         color.bind();
         texture.bind();
