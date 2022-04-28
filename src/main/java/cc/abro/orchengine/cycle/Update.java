@@ -51,7 +51,7 @@ public class Update {
 		udpRead.update(); //Обработать все полученные сообщения по UDP
 
 		if (locationManager.getActiveLocation() != null) {
-			locationManager.getActiveLocation().update(delta);//Обновить все объекты в комнате
+			locationManager.getActiveLocation().update(delta);//Обновить все объекты в локации
 		} else {
 			log.fatal("Location did not created!");
 			throw new EngineException("Location did not created!");

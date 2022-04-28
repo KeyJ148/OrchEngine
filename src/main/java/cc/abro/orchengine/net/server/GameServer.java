@@ -6,7 +6,6 @@ import cc.abro.orchengine.exceptions.EngineException;
 import cc.abro.orchengine.init.interfaces.NetServerReadInterface;
 import cc.abro.orchengine.init.interfaces.ServerInterface;
 import cc.abro.orchengine.net.server.readers.ServerReadUDP;
-import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.BufferedReader;
@@ -84,12 +83,6 @@ public class GameServer {
     public static void waitConnect() {
         try {
             connects = new Connect[peopleMax]; //Выделение места под массив подключений всех игроков
-            try {
-                SettingsStorageHandler.init();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(0);
-            }
 
             ServerSocket serverSocketTCP = new ServerSocket(port);
             socketUDP = new DatagramSocket(port);

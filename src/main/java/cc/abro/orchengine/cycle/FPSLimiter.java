@@ -2,18 +2,17 @@ package cc.abro.orchengine.cycle;
 
 public class FPSLimiter {
 
-    private int fpsLimit;
+    private final int sleepTime;
     private long variableYieldTime, lastTime;
 
     public FPSLimiter(int fpsLimit) {
-        this.fpsLimit = fpsLimit;
+        sleepTime = (fpsLimit <= 0) ? 0 : 1000000000 / fpsLimit;
     }
 
     //Для работы ограничителя кадров эту функцию необходимо вызывать каждый кадр
     public void sync() {
-        if (fpsLimit <= 0) return;
+        if (sleepTime == 0) return;
 
-        long sleepTime = 1000000000 / fpsLimit;
         long yieldTime = Math.min(sleepTime, variableYieldTime + sleepTime % (1000000));
         long overSleep = 0;
 

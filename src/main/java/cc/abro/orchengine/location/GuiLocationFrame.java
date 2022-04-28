@@ -8,22 +8,24 @@ import org.liquidengine.legui.component.Frame;
 
 public class GuiLocationFrame {
 
-    private final Frame guiFrame; //Объект хранящий все элементы gui в данной комнате
+    private final LeguiRender leguiRender;
+    private final Frame guiFrame; //Объект хранящий все элементы gui в данной локации
     private KeyboardHandler keyboard; //Объект хранящий события клавиатуры
     private MouseHandler mouse; //Объект хранящий события мыши и рисующий курсор на экране
 
     public GuiLocationFrame() {
-        guiFrame = Context.getService(LeguiRender.class).createFrame();
+        leguiRender = Context.getService(LeguiRender.class);
+        guiFrame = leguiRender.createFrame();
     }
 
     public void pollEvents() {
-        Context.getService(LeguiRender.class).pollEvents(getGuiFrame());
+        leguiRender.pollEvents(getGuiFrame());
     }
 
     public void update() {}
 
     public void render() {
-        Context.getService(LeguiRender.class).render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
+        leguiRender.render(getGuiFrame()); //Отрисовка интерфейса (LeGUI)
         getMouse().draw(); //Отрисовка курсора мыши
     }
 

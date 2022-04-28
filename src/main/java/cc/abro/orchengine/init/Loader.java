@@ -7,7 +7,6 @@ import cc.abro.orchengine.cycle.Engine;
 import cc.abro.orchengine.init.interfaces.GameInterface;
 import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.location.LocationManager;
-import cc.abro.orchengine.resources.settings.SettingsStorageHandler;
 import cc.abro.orchengine.util.LogUtils;
 import lombok.extern.log4j.Log4j2;
 
@@ -16,13 +15,12 @@ import java.util.Set;
 @Log4j2
 public class Loader {
 
-	public void start(Set<String> activeProfiles, Set<String> packagesForScan) { //TODO package-private было лучше
+	public void start(Set<String> activeProfiles, Set<String> packagesForScan) {
 		try {
 			Thread.currentThread().setName("Engine");
 			setupFinalizerService(); //Создание сервиса для корректного освобождения ресурсов при завершении программы
 			setupProfilesService(activeProfiles); //Создание сервиса по учету активных профилей
 			ContextAnnotationScanner.loadServicesAndBeans(activeProfiles, packagesForScan); //Сканирование пакетов и поиск сервисов и бинов
-			SettingsStorageHandler.init(); //Загрузка настроек
 			initServices(); //Запуск всех сервисов
 			initGame(); //Вызов инициализации у класса игры
 			Context.getService(Engine.class).run(); //Запуск главного цикла движка

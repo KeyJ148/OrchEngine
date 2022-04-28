@@ -40,7 +40,7 @@ public class MouseCursor {
     public void draw() {
         if (!cursor.hasComponent(Rendering.class)) return;
 
-        //Необходимо убрать флаг drawInThisStep, т.к. курсор отрисовывается и во время общей отрисовки комнаты
+        //Необходимо убрать флаг drawInThisStep, т.к. курсор отрисовывается и во время общей отрисовки локации
         //Потом отрисовывает интерфейс, и потом снова необходимо отрисовать курсор
         cursor.getComponent(Rendering.class).startNewStep();
         cursor.draw();

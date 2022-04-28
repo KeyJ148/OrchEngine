@@ -1,4 +1,4 @@
-package cc.abro.orchengine.location.map;
+package cc.abro.orchengine.location.objects;
 
 import cc.abro.orchengine.location.Location;
 import cc.abro.orchengine.gameobject.GameObject;
@@ -11,16 +11,16 @@ public class Border extends GameObject {
 	public Border(int roomWidth, int roomHeight, Type type, int size) {
 		BorderData borderData = type.getBorderData(roomWidth, roomHeight, size);
 
-		setComponent(new Position(borderData.x, borderData.y, 0, 0));
-		//Путь должен быть, иначе mask выкинет ошибку при парсе; //TODO height и width наоборот -- магия
-		setComponent(new Collision(MaskLoader.createDefaultMask(borderData.h, borderData.w)));
+		setComponent(new Position(borderData.x, borderData.y, 0));
+		//Путь должен быть, иначе mask выкинет ошибку при парсе;
+		setComponent(new Collision(MaskLoader.createDefaultMask(borderData.w, borderData.h)));
 	}
 
 	public static void createAndAddAll(Location location, int size) {
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.NORTH, size));
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.EAST, size));
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.SOUTH, size));
-		location.getMap().add(new Border(location.getWidth(), location.getHeight(), Type.WEST, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.NORTH, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.EAST, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.SOUTH, size));
+		location.add(new Border(location.getWidth(), location.getHeight(), Type.WEST, size));
 	}
 
 	public static record BorderData(int x, int y, int w, int h) {}
