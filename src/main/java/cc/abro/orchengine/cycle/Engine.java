@@ -3,7 +3,6 @@ package cc.abro.orchengine.cycle;
 import cc.abro.orchengine.analysis.Analyzer;
 import cc.abro.orchengine.context.EngineService;
 import cc.abro.orchengine.init.Finalizer;
-import cc.abro.orchengine.resources.settings.SettingsStorage;
 import org.lwjgl.glfw.GLFW;
 
 @EngineService
