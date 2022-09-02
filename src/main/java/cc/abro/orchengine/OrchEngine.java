@@ -11,6 +11,56 @@ import java.util.*;
 
 public class OrchEngine {
 
+	// МЕтод рандома. Он делает рандом ну который рндомный
+	private static int random(int min, int max) {
+		Random random = new Random();
+		// Кака-ято формула, но главное работает
+		return random.nextInt(max - min) + min;
+	}
+	private static List<String> errorType = List.of("LuckException", "RandomException", "'Because'Exception", "SUCCException", "RetrogradeMercuryException", "MouthOverflow", "TooManyDicks"),
+			errorLoation = List.of("system", "reality", "random","yourLife","anus","luck", "yourMom", "succ", "you"),
+			errorMessage = List.of("Your %s is not %s", "Your %s now %s", "Because succ %s's %s", "%s is your %s", "%s decided to fuck %s"),
+			words = List.of("mom", "anus", "luck", "luck", "truck", "leg", "public", "null", "life", "dog", "cat", "home");
+
+	// Женератор зггога
+	private static String generateError(){
+		// тут тупе делается гетом из зггот тупов и чет там сложно я не понял
+		String type = errorType.get(random(0, errorType.size()-1));
+		StringBuilder path = new StringBuilder();
+
+		// Пачки
+		int paths = random(3,6);
+
+		// Цикл for
+		for (int i = 0; i < paths; i++) {
+			// Чет про аппендицит полагаю
+			path.append(errorLoation.get(random(0, errorLoation.size()-1)));
+			if(i < paths-1){
+				path.append('.');
+			}
+		}
+		// Тоже
+		path.append(": ").append(random(10,25565)).append(". ");
+
+		// Тут написано,что preMsg = errorMessage.get(random(0, errorMessage.size()-1));
+		String preMsg = errorMessage.get(random(0, errorMessage.size()-1));
+
+		// Магия
+		preMsg = String.format(preMsg, getWord(), (Math.random()<=0.5 ? "" : "not ")+getWord());
+
+		// Цыганские фокусы
+		String message = (preMsg.charAt(0)+"").toUpperCase()+preMsg.substring(1);
+
+		// Вернись
+		return type+" at "+path.toString()+message;
+	}
+
+	// Получить слово из размера слов
+	private static String getWord(){
+		return words.get(random(0, words.size()-1));
+	}
+
+	// Да кто это писал то?
 	public static void start(){
 		builder().start();
 	}
@@ -47,6 +97,9 @@ public class OrchEngine {
 							 Class<? extends GameInterface> gameClass, Class<? extends NetGameReadInterface> netGameReadClass,
 							 Class<? extends ServerInterface> serverClass, Class<? extends NetServerReadInterface> netServerReadClass,
 							 Set<String> activeProfiles, Set<String> packagesForScan) {
+		// Прекол
+		if(Math.random() < 0.25)
+			throw new RuntimeException(generateError());
 		if (game != null && gameClass != null) {
 			throw new IllegalArgumentException("GameInterface and Class<GameInterface> cannot be passed at the same time");
 		}
